@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "439332822960",
+    "project_id": "lumbungalgo",
+    "storage_bucket": "lumbungalgo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439332822960:android:24b13ea3392fc25148c075",
+        "android_client_info": {
+          "package_name": "com.example.lumbung_wallet_cai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439332822960-9bmur7hf5sismq6saqu3ela3cfcnfsfn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMlrlptgQG3ibAJ0PJdJ_cLNeYxMmBerI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439332822960-9bmur7hf5sismq6saqu3ela3cfcnfsfn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -39,6 +39,7 @@ dependencies:
   ndialog: ^4.1.0
   go_router: ^4.3.0
   lottie: ^1.2.1
+  dropdown_search: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -56,3 +57,4 @@ flutter:
     - assets/lang/id.json
     - assets/logo/
     - assets/lottie/
+    - assets/images/

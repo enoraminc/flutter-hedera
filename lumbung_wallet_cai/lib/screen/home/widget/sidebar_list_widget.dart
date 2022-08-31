@@ -7,8 +7,17 @@ class SideBarListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       final isDarkTheme = CustomFunctions.isDarkTheme(context);
+      final user =
+          context.select((AuthBloc element) => element.state.currentUser);
+
       ChatUser? currentUser;
-      //     context.select((AuthBloc element) => element.state.currentUser);
+      if (user != null) {
+        currentUser = ChatUser(
+          avatar: user.avatarUrl,
+          name: user.displayName,
+          uid: user.email,
+        );
+      }
       return Container(
         width: CustomFunctions.getMediaWidth(context) / 3,
         decoration: BoxDecoration(
@@ -25,23 +34,20 @@ class SideBarListWidget extends StatelessWidget {
         child: Scaffold(
           floatingActionButton: Builder(
             builder: (context) {
-              // final user = context
-              //     .select((AuthBloc element) => element.state.currentUser);
-              // if (user != null) {
-              return FloatingActionButton(
-                onPressed: () {
-                  // context.read<GroundCubit>().changeSelectedGround(null);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const SetGroundScreen(),
-                  //   ),
-                  // );
-                },
-                child: const Icon(Icons.add),
-              );
-              // }
-              return SizedBox();
+              final user = context
+                  .select((AuthBloc element) => element.state.currentUser);
+              if (user?.isAdmin() ?? false) {
+                return FloatingActionButton(
+                  onPressed: () {
+                    context.read<SubWalletCubit>().changeSelectedData(null);
+
+                    context.push("${Routes.subWallet}/${Routes.set}");
+                  },
+                  child: const Icon(Icons.add),
+                  backgroundColor: Colors.orange,
+                );
+              }
+              return const SizedBox();
             },
           ),
           body: Column(
@@ -49,46 +55,65 @@ class SideBarListWidget extends StatelessWidget {
               // HEADER
               header(context, currentUser),
               // Content
-              // Expanded(
-              //   child: Builder(builder: (context) {
-              //     final selectedData = context.select(
-              //         (ExampleCubit element) => element.state.selectedData);
-              //     return ChatItemScreen<ExampleData>(
-              //       isCurrentSelected: (ExampleData data) =>
-              //           data.id == selectedData?.id,
-              //       items: ExampleData.getDataDummyList(),
-              //       itemTitle: (ExampleData data) => data.title,
-              //       subTitle: (ExampleData data) => data.description,
-              //       subTitle2: (ExampleData data) =>
-              //           contentTagLabel(data, context),
-              //       leadingWidget: (ExampleData data) =>
-              //           getLeadingIcon(data, context),
-              //       trailingWidget: (ExampleData data) =>
-              //           const SizedBox(height: 5, width: 5),
-              //       onTapItem: (ExampleData data) {
-              //         // context
-              //         //     .read<MainScreenBloc>()
-              //         //     .add(ToMainScreen(MainScreenType.groundDetail));
+              Expanded(
+                child: Builder(builder: (context) {
+                  final isLoading = context.select((SubWalletCubit element) =>
+                      element.state is SubWalletLoading);
 
-              //         context.read<ExampleCubit>().changeSelectedData(data);
+                  final selectedData = context.select(
+                      (SubWalletCubit element) =>
+                          element.state.selectedSubWallet);
 
-              //         // context.read<ChatMessageBloc>().add(
-              //         //     LoadChatMessages(path: data.id ?? "-", locale: ""));
+                  final subWalletList = context.select(
+                      (SubWalletCubit element) => element.state.subWalletList);
 
-              //         if (CustomFunctions.isMobile(context)) {
-              //           Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //               builder: (context) {
-              //                 return const ChatScreen();
-              //               },
-              //             ),
-              //           );
-              //         }
-              //       },
-              //     );
-              //   }),
-              // ),
+                  if (isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (subWalletList.isEmpty) {
+                    return const Center(
+                      child: Text('Item is Empty'),
+                    );
+                  }
+                  return ChatItemScreen<HederaSubWallet>(
+                    isCurrentSelected: (HederaSubWallet data) =>
+                        data.id == selectedData?.id,
+                    items: subWalletList,
+                    itemTitle: (HederaSubWallet data) => data.title,
+                    subTitle: (HederaSubWallet data) => data.description,
+                    subTitle2: (HederaSubWallet data) =>
+                        contentTagLabel(data, context),
+                    leadingWidget: (HederaSubWallet data) =>
+                        getLeadingIcon(data, context),
+                    trailingWidget: (HederaSubWallet data) =>
+                        const SizedBox(height: 5, width: 5),
+                    onTapItem: (HederaSubWallet data) {
+                      // context
+                      //     .read<MainScreenBloc>()
+                      //     .add(ToMainScreen(MainScreenType.groundDetail));
+
+                      context.read<SubWalletCubit>().changeSelectedData(data);
+
+                      context
+                          .read<ChatMessageBloc>()
+                          .add(LoadChatMessages(path: data.id, locale: ""));
+
+                      if (CustomFunctions.isMobile(context)) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const ChatScreen();
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  );
+                }),
+              ),
             ],
           ),
         ),
@@ -218,7 +243,7 @@ class SideBarListWidget extends StatelessWidget {
                 EasyDynamicTheme.of(context).changeTheme(dark: true);
               }
             } else if (item == 1) {
-              context.read<AuthBloc>().add(LogoutButtonPressed());
+              context.read<AuthBloc>().add(const LogoutButtonPressed());
             }
           },
         );
@@ -226,47 +251,47 @@ class SideBarListWidget extends StatelessWidget {
     );
   }
 
-  // Widget getLeadingIcon(ExampleData data, BuildContext context) {
-  //   return CircleAvatar(
-  //     radius: 18,
-  //     backgroundColor: Theme.of(context).primaryColor,
-  //     child: Text(
-  //       (data.title[0]).toUpperCase(),
-  //       style: const TextStyle(
-  //         fontSize: 18,
-  //         fontWeight: FontWeight.bold,
-  //         color: Colors.white,
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget getLeadingIcon(HederaSubWallet data, BuildContext context) {
+    return CircleAvatar(
+      radius: 18,
+      backgroundColor: Theme.of(context).primaryColor,
+      child: Text(
+        (data.title[0]).toUpperCase(),
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
 
-  // Widget contentTagLabel(ExampleData data, BuildContext context) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(top: 5),
-  //     child: Wrap(
-  //       spacing: 10,
-  //       children: [
-  //         Row(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             const CircleAvatar(
-  //               radius: 4,
-  //               backgroundColor: Colors.green,
-  //             ),
-  //             const SizedBox(
-  //               width: 5,
-  //             ),
-  //             Text(
-  //               data.state,
-  //               style: Theme.of(context).textTheme.headline2,
-  //               maxLines: 1,
-  //               overflow: TextOverflow.ellipsis,
-  //             ),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget contentTagLabel(HederaSubWallet data, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5),
+      child: Wrap(
+        spacing: 10,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircleAvatar(
+                radius: 4,
+                backgroundColor: Colors.green,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                data.state,
+                style: Theme.of(context).textTheme.headline2,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -26,8 +26,11 @@ class _LoginScreenState extends BaseStateful<LoginScreen> {
           }
           // Log.setLog(state.toString(), method: "LoginScreen");
           if (state is LoginSuccess || state is UserAlreadyLoginSuccess) {
-            context.go(
-              Routes.home,
+            Router.neglect(
+              context,
+              () => context.go(
+                Routes.home,
+              ),
             );
           }
 
@@ -44,10 +47,13 @@ class _LoginScreenState extends BaseStateful<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Lottie.asset(
-                  'assets/lottie/login.json',
-                  fit: BoxFit.fitWidth,
-                  repeat: true,
+                Spacer(),
+                Expanded(
+                  flex: 3,
+                  child: Lottie.asset(
+                    'assets/lottie/login.json',
+                    repeat: true,
+                  ),
                 ),
                 // Text(
                 //   'Silahkan masuk terlebih dahulu untuk memulai lumbung village',
@@ -78,6 +84,7 @@ class _LoginScreenState extends BaseStateful<LoginScreen> {
                     },
                   ),
                 ),
+                Spacer(),
               ],
             ),
           ),

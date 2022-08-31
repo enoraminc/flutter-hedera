@@ -12,15 +12,14 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
   Widget appBar() {
     return Builder(
       builder: (context) {
-        // final selectedData = context
-        //     .select((ExampleCubit element) => element.state.selectedData);
+        final selectedData = context.select(
+            (SubWalletCubit element) => element.state.selectedSubWallet);
         return ChatMessageHeader(
           leadingWidget: CircleAvatar(
             radius: 18,
             backgroundColor: Theme.of(context).primaryColor,
             child: Text(
-              // selectedData?.title[0] ?? "-", \
-              "-",
+              selectedData?.title[0] ?? "-",
               style: const TextStyle(fontSize: 20),
             ),
           ),
@@ -31,8 +30,7 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
             children: [
               Flexible(
                 child: Text(
-                  // selectedData?.title ?? "-",
-                  "-",
+                  "${selectedData?.title ?? "-"} (${selectedData?.accountId ?? "-"})",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
@@ -44,11 +42,20 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
             ],
           ),
           subTitle: Text(
-            // selectedData?.description ?? "",
-            "-",
+            selectedData?.description ?? "",
             style: Theme.of(context).textTheme.subtitle1,
           ),
-          actions: [],
+          actions: [
+            // RoundedButton(
+            //   text: "Explore",
+            //   isSmall: true,
+            //   selected: true,
+            //   onPressed: () {
+            //     launchUrlString(
+            //         "https://app.dragonglass.me/hedera/accounts/${selectedData?.accountId ?? "0"}");
+            //   },
+            // ),
+          ],
         );
       },
     );
@@ -58,12 +65,12 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
   Builder builder({required Widget child}) {
     return Builder(
       builder: (context) {
-        // final selectedData = context
-        //     .select((ExampleCubit element) => element.state.selectedData);
+        final selectedData = context.select(
+            (SubWalletCubit element) => element.state.selectedSubWallet);
 
-        // if (selectedData == null) {
-        return unselectedChatWidget(context);
-        // }
+        if (selectedData == null) {
+          return unselectedChatWidget(context);
+        }
         return child;
       },
     );
@@ -71,34 +78,94 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
 
   @override
   String currentChatId() {
-    // return context.read<ExampleCubit>().state.selectedData?.id ?? "";
-    return "";
+    return context.read<SubWalletCubit>().state.selectedSubWallet?.id ?? "";
   }
 
   @override
   Widget detailContentsWidget() {
     return Builder(
       builder: (context) {
-        // final selectedData = context
-        //     .select((ExampleCubit element) => element.state.selectedData);
+        final selectedData = context.select(
+            (SubWalletCubit element) => element.state.selectedSubWallet);
+
+        final walletSelectedList = selectedData?.users ?? [];
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text(
-            //   selectedData?.title ?? "-",
-            //   style: TextStyle(
-            //     fontSize: 24,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            // const SizedBox(height: 10),
-            // Text(
-            //   selectedData?.description ?? "-",
-            //   style: TextStyle(
-            //     fontSize: 18,
-            //   ),
-            // ),
+            Text(
+              selectedData?.title ?? "-",
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              selectedData?.description ?? "-",
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Account ID : ${selectedData?.accountId ?? "-"}",
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Users List",
+              style: Styles.commonTextStyle(
+                size: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            if (walletSelectedList.isEmpty)
+              Center(
+                child: Text(
+                  "Users is Empty",
+                  textAlign: TextAlign.center,
+                  style: Styles.commonTextStyle(
+                    size: 16,
+                  ),
+                ),
+              ),
+            ...walletSelectedList
+                .map(
+                  (wallet) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Theme.of(context).buttonColor,
+                        width: 1.0,
+                      ),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 5,
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            wallet,
+                            style: Styles.commonTextStyle(
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
             const SizedBox(height: 20),
           ],
         );
@@ -121,31 +188,21 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // FloatingButton(
-          //   title: "Example Button",
-          //   icon: Icons.download,
+          //   title: "Edit Sub Wallet",
+          //   icon: Icons.edit,
           //   onTap: () {
-          //     // showDetailContent(ground);
-          //     // context.read<GroundCubit>().changeSelectedGround(ground);
-          //     // router.navigateTo(context, Routes.pdf);
+          //     context.push("${Routes.subWallet}/${Routes.set}");
           //   },
           // ),
           // const SizedBox(
           //   height: 15,
           // ),
-          // user.email.toString().toLowerCase() == ground.founder!.email.toString().toLowerCase() ??
-          FloatingActionButton.small(
-            tooltip: "Wallet Details",
-            hoverElevation: 0.0,
-            elevation: 0.0,
-            backgroundColor: AppColors.primaryColorLight,
-            onPressed: () {
+          FloatingButton(
+            title: "Sub Wallet Details",
+            icon: Icons.info,
+            onTap: () {
               showDetailContent();
             },
-            heroTag: "detail",
-            child: const Icon(
-              Icons.info,
-              color: AppColors.kLightColor,
-            ),
           ),
         ],
       );
@@ -154,13 +211,21 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
 
   @override
   ChatUser? getUser() {
-    return ChatUser();
+    final user = context.read<AuthBloc>().state.currentUser;
+
+    return ChatUser(
+      avatar: user?.avatarUrl,
+      name: user?.displayName,
+      uid: user?.email,
+    );
   }
 
   @override
   Future<String?> uploadMediaMessage(Uint8List data,
-      [String extension = "png"]) {
-    return Future.value(null);
+      [String extension = "png"]) async {
+    String fileUrl = await StorageUtils.uploadMediaMessage(data, extension);
+
+    return fileUrl;
   }
 
   @override

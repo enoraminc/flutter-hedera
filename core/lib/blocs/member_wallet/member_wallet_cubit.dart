@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 
 import 'package:lumbung_common/utils/log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:equatable/equatable.dart';
 
 part 'member_wallet_state.dart';
 
@@ -31,6 +32,7 @@ class MemberWalletCubit extends Cubit<MemberWalletState> {
     if (data.isNotEmpty) {
       emit(FetchMemberWalletSuccess(
         memberWalletList: data,
+        selectedWallet: state.selectedWallet,
       ));
     }
   }
@@ -38,6 +40,7 @@ class MemberWalletCubit extends Cubit<MemberWalletState> {
   Future<void> fetchAllMemberWallet() async {
     emit(MemberWalletLoading(
       memberWalletList: state.memberWalletList,
+      selectedWallet: state.selectedWallet,
     ));
 
     await _getMemberWallet();
@@ -63,11 +66,13 @@ class MemberWalletCubit extends Cubit<MemberWalletState> {
 
       emit(FetchMemberWalletSuccess(
         memberWalletList: wallets,
+        selectedWallet: state.selectedWallet,
       ));
     }).catchError((e, s) {
       emit(FetchMemberWalletFailed(
         e.toString(),
         memberWalletList: state.memberWalletList,
+        selectedWallet: state.selectedWallet,
       ));
       Log.setLog("$e $s", method: "fetchAllMemberWallet Bloc");
     });
@@ -76,17 +81,20 @@ class MemberWalletCubit extends Cubit<MemberWalletState> {
   Future<void> fetchMemberAssets(String address) async {
     emit(MemberAssetLoading(
       memberWalletList: state.memberWalletList,
+      selectedWallet: state.selectedWallet,
     ));
 
     _memberWalletApi.getMemberAsaByAddress(address).then((value) {
       emit(FetchMemberAssetsSuccess(
         value,
         memberWalletList: state.memberWalletList,
+        selectedWallet: state.selectedWallet,
       ));
     }).catchError((e, s) {
       emit(FetchMemberAssetsFailed(
         e.toString(),
         memberWalletList: state.memberWalletList,
+        selectedWallet: state.selectedWallet,
       ));
       Log.setLog("$e $s", method: "fetchMemberAssets Bloc");
     });
@@ -96,6 +104,7 @@ class MemberWalletCubit extends Cubit<MemberWalletState> {
       String userEmail, num revokeAmount, String assetId) async {
     emit(SubmitMemberLoading(
       memberWalletList: state.memberWalletList,
+      selectedWallet: state.selectedWallet,
     ));
 
     _memberWalletApi
@@ -103,11 +112,41 @@ class MemberWalletCubit extends Cubit<MemberWalletState> {
         .then((value) {
       emit(SubmitMemberWalletSuccess(
         memberWalletList: state.memberWalletList,
+        selectedWallet: state.selectedWallet,
       ));
     }).catchError((e, s) {
       emit(SubmitMemberWalletFailed(
         e.toString(),
         memberWalletList: state.memberWalletList,
+        selectedWallet: state.selectedWallet,
+      ));
+      Log.setLog("$e $s", method: "fetchMemberAssets Bloc");
+    });
+  }
+
+  Future<void> changeSelectedWallet(HederaWallet? wallet) async {
+    emit(FetchMemberWalletSuccess(
+      memberWalletList: state.memberWalletList,
+      selectedWallet: wallet,
+    ));
+  }
+
+  Future<void> setMainWallet(HederaWallet wallet) async {
+    emit(SubmitMemberLoading(
+      memberWalletList: state.memberWalletList,
+      selectedWallet: state.selectedWallet,
+    ));
+
+    _memberWalletApi.setMainWallet(wallet).then((value) {
+      emit(SubmitMemberWalletSuccess(
+        memberWalletList: state.memberWalletList,
+        selectedWallet: wallet,
+      ));
+    }).catchError((e, s) {
+      emit(SubmitMemberWalletFailed(
+        e.toString(),
+        memberWalletList: state.memberWalletList,
+        selectedWallet: state.selectedWallet,
       ));
       Log.setLog("$e $s", method: "fetchMemberAssets Bloc");
     });

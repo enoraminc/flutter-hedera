@@ -1,13 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:core/blocs/auth/auth_bloc.dart';
+import 'package:core/blocs/member_wallet/member_wallet_cubit.dart';
 import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
 import 'package:core/model/hedera_sub_wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lumbung_wallet_cai/core/base/base_stateful.dart';
+import 'package:lumbung_wallet_cai/core/blocs/main_screen/mainscreen_type.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 
 import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';
 import 'package:core_cai_v3/base/base_chat_screen.dart';
@@ -21,6 +24,7 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:lumbung_wallet_cai/core/routes/routes.dart';
 import 'package:lumbung_wallet_cai/flavor_config.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lumbung_common/model/hedera/wallet.dart';
 
 import '../../core/blocs/main_screen/main_screen_bloc.dart';
 import '../../core/blocs/sidebar/sidebar_bloc.dart';
@@ -33,4 +37,5 @@ import '../../shared_widget/rounded_button.dart';
 part 'ui/home_screen.dart';
 
 part 'widget/sidebar_list_widget.dart';
-part 'widget/main_chat_screen.dart';
+part 'widget/sub_wallet_chat_screen.dart';
+part 'widget/main_wallet_chat_screen.dart';

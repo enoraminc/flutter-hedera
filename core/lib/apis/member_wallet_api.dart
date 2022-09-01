@@ -5,6 +5,7 @@ import 'package:lumbung_common/model/hedera/wallet.dart';
 import '../model/log_model.dart';
 
 abstract class MemberWalletApi extends BaseRepository {
+  Future<HederaWallet> setMainWallet(HederaWallet wallet);
   Future<List<HederaWallet>> getAllWalletMember();
   Future<List<HederaToken>> getMemberAsaByAddress(String address);
   Future<RevokeAssetLogModel> revokeAsset(

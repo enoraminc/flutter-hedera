@@ -15,6 +15,11 @@ class HederaSubWallet {
   final String description;
   final List<String> users;
 
+  static String activeState = "Active";
+  static String deletedState = "Deleted";
+
+  bool isDeleted() => state == deletedState;
+
   HederaSubWallet({
     required this.id,
     required this.accountId,

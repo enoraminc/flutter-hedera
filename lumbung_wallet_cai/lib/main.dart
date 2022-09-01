@@ -17,8 +17,8 @@ void main() async {
     values: FlavorValues(
       appName: "Lumbung Wallet",
       logoPath: "assets/logo.png",
-      versionNumber: '1.0.0',
-      versionDate: "31 August 2022",
+      versionNumber: '1.0.1',
+      versionDate: "1 September 2022",
       rempahApiUrl:
           "https://rempah-prod-dot-lumbungdemo.as.r.appspot.com/_api/lumbungrempah",
       hederaApiUrl:

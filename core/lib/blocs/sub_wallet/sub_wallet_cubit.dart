@@ -72,4 +72,38 @@ class SubWalletCubit extends Cubit<SubWalletState> {
       );
     });
   }
+
+  Future<void> deleteSubWallet() async {
+    emit(SubWalletSubmitLoading(
+      selectedSubWallet: state.selectedSubWallet,
+      subWalletList: state.subWalletList,
+    ));
+
+    if (state.selectedSubWallet == null) {
+      emit(SubWalletFailed(
+        message: "Sub Wallet Not Found",
+        selectedSubWallet: state.selectedSubWallet,
+        subWalletList: state.subWalletList,
+      ));
+      return;
+    }
+
+    final subWallet = state.selectedSubWallet!.copyWith(
+      state: HederaSubWallet.deletedState,
+    );
+
+    await subWalletApi.setSubWallet(subWallet).then((value) {
+      emit(SubWalletDeleteSuccess(
+        selectedSubWallet: null,
+        subWalletList: state.subWalletList,
+      ));
+    }).catchError((e, s) {
+      Log.setLog("$e $s", method: "setSubWallet Bloc");
+      emit(SubWalletFailed(
+        message: e.toString(),
+        selectedSubWallet: state.selectedSubWallet,
+        subWalletList: state.subWalletList,
+      ));
+    });
+  }
 }

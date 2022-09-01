@@ -1,124 +1,309 @@
 part of '../home.dart';
 
 class SideBarListWidget extends StatelessWidget {
-  const SideBarListWidget({Key? key}) : super(key: key);
+  const SideBarListWidget({Key? key, required this.controller})
+      : super(key: key);
+
+  final CustomPopupMenuController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      final isDarkTheme = CustomFunctions.isDarkTheme(context);
-      final user =
-          context.select((AuthBloc element) => element.state.currentUser);
+    return DefaultTabController(
+      length: 2,
+      child: Builder(builder: (context) {
+        final isDarkTheme = CustomFunctions.isDarkTheme(context);
+        final user =
+            context.select((AuthBloc element) => element.state.currentUser);
 
-      ChatUser? currentUser;
-      if (user != null) {
-        currentUser = ChatUser(
-          avatar: user.avatarUrl,
-          name: user.displayName,
-          uid: user.email,
+        ChatUser? currentUser;
+        if (user != null) {
+          currentUser = ChatUser(
+            avatar: user.avatarUrl,
+            name: user.displayName,
+            uid: user.email,
+          );
+        }
+        return Container(
+          width: CustomFunctions.getMediaWidth(context) / 3,
+          decoration: BoxDecoration(
+            color: isDarkTheme ? AppColors.chatListDark : AppColors.kLightColor,
+            border: (!CustomFunctions.isMobile(context))
+                ? Border(
+                    right: BorderSide(
+                      width: 1,
+                      color: Theme.of(context).appBarTheme.backgroundColor!,
+                    ),
+                  )
+                : null,
+          ),
+          child: Scaffold(
+            floatingActionButton: createButtonWidget(),
+            body: Column(
+              children: [
+                // HEADER
+                header(context, currentUser),
+                // Tab
+                tabBarWidget(context),
+                // Content
+                Expanded(
+                  child: itemList(),
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  Builder createButtonWidget() {
+    return Builder(
+      builder: (context) {
+        final user =
+            context.select((AuthBloc element) => element.state.currentUser);
+        if (user?.isAdmin() ?? false) {
+          return CustomPopupMenu(
+            menuBuilder: () => Builder(builder: (context) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Container(
+                  color: Theme.of(context).appBarTheme.backgroundColor,
+                  padding: const EdgeInsets.all(20),
+                  width: 300,
+                  // height: 300,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.orange,
+                        ),
+                        title: Text(
+                          'Create Main Wallet',
+                          style: Styles.commonTextStyle(
+                            size: 18,
+                          ),
+                        ),
+                        onTap: () {
+                          controller.hideMenu();
+                          context
+                              .read<MemberWalletCubit>()
+                              .changeSelectedWallet(null);
+
+                          context.push("${Routes.mainWallet}/${Routes.set}");
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      const Divider(
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(height: 5),
+                      ListTile(
+                        title: Text(
+                          'Create Sub Wallet',
+                          style: Styles.commonTextStyle(
+                            size: 18,
+                          ),
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.orange,
+                        ),
+                        onTap: () {
+                          controller.hideMenu();
+                          context
+                              .read<SubWalletCubit>()
+                              .changeSelectedData(null);
+
+                          context.push("${Routes.subWallet}/${Routes.set}");
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+            pressType: PressType.singleClick,
+            verticalMargin: -5,
+            controller: controller,
+            position: PreferredPosition.top,
+            barrierColor: Colors.black.withOpacity(.7),
+            child: const CircleAvatar(
+              radius: 25,
+              backgroundColor: Colors.orange,
+              child: Icon(
+                Icons.add,
+              ),
+            ),
+          );
+          // return FloatingActionButton(
+          //   onPressed: () {
+          //     context.read<SubWalletCubit>().changeSelectedData(null);
+
+          //     context.push("${Routes.subWallet}/${Routes.set}");
+          //   },
+          //   backgroundColor: Colors.orange,
+          //   child: const Icon(Icons.add),
+          // );
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+
+  Builder itemList() {
+    return Builder(builder: (context) {
+      final mainScreenType = context
+          .select((MainScreenBloc element) => element.state.currentScreen);
+
+      bool isLoading = false;
+      // Wallet
+      isLoading = context.select(
+          (MemberWalletCubit element) => element.state is MemberWalletLoading);
+
+      final selectedMainWallet = context
+          .select((MemberWalletCubit element) => element.state.selectedWallet);
+
+      final mainWalletList = context.select(
+          (MemberWalletCubit element) => element.state.memberWalletList);
+
+      // Sub Wallet
+      isLoading = context.select(
+          (SubWalletCubit element) => element.state is SubWalletLoading);
+
+      final selectedSubWallet = context
+          .select((SubWalletCubit element) => element.state.selectedSubWallet);
+
+      final subWalletList = context
+          .select((SubWalletCubit element) => element.state.subWalletList);
+
+      if (isLoading) {
+        return const Center(
+          child: CircularProgressIndicator(),
         );
       }
-      return Container(
-        width: CustomFunctions.getMediaWidth(context) / 3,
-        decoration: BoxDecoration(
-          color: isDarkTheme ? AppColors.chatListDark : AppColors.kLightColor,
-          border: (!CustomFunctions.isMobile(context))
-              ? Border(
-                  right: BorderSide(
-                    width: 1,
-                    color: Theme.of(context).appBarTheme.backgroundColor!,
-                  ),
-                )
-              : null,
-        ),
-        child: Scaffold(
-          floatingActionButton: Builder(
-            builder: (context) {
-              final user = context
-                  .select((AuthBloc element) => element.state.currentUser);
-              if (user?.isAdmin() ?? false) {
-                return FloatingActionButton(
-                  onPressed: () {
-                    context.read<SubWalletCubit>().changeSelectedData(null);
 
-                    context.push("${Routes.subWallet}/${Routes.set}");
+      if (mainScreenType == MainScreenType.mainWalletDetail) {
+        if (mainWalletList.isEmpty) {
+          return const Center(
+            child: Text('Item is Empty'),
+          );
+        }
+
+        return ChatItemScreen<HederaWallet>(
+          isCurrentSelected: (HederaWallet data) =>
+              data.id == selectedMainWallet?.id,
+          items: mainWalletList,
+          itemTitle: (HederaWallet data) => data.displayName,
+          subTitle: (HederaWallet data) => data.email,
+          subTitle2: (HederaWallet data) =>
+              contentTagLabel(data.state, context),
+          leadingWidget: (HederaWallet data) =>
+              getLeadingIcon(data.displayName, context),
+          trailingWidget: (HederaWallet data) =>
+              const SizedBox(height: 5, width: 5),
+          onTapItem: (HederaWallet data) {
+            context.read<MemberWalletCubit>().changeSelectedWallet(data);
+
+            context
+                .read<ChatMessageBloc>()
+                .add(LoadChatMessages(path: data.id, locale: ""));
+
+            if (CustomFunctions.isMobile(context)) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const MainWalletChatScreen();
                   },
-                  child: const Icon(Icons.add),
-                  backgroundColor: Colors.orange,
-                );
-              }
-              return const SizedBox();
-            },
-          ),
-          body: Column(
-            children: [
-              // HEADER
-              header(context, currentUser),
-              // Content
-              Expanded(
-                child: Builder(builder: (context) {
-                  final isLoading = context.select((SubWalletCubit element) =>
-                      element.state is SubWalletLoading);
+                ),
+              );
+            }
+          },
+        );
+      } else if (mainScreenType == MainScreenType.subWalletDetail) {
+        if (subWalletList.isEmpty) {
+          return const Center(
+            child: Text('Item is Empty'),
+          );
+        }
 
-                  final selectedData = context.select(
-                      (SubWalletCubit element) =>
-                          element.state.selectedSubWallet);
+        return ChatItemScreen<HederaSubWallet>(
+          isCurrentSelected: (HederaSubWallet data) =>
+              data.id == selectedSubWallet?.id,
+          items: subWalletList,
+          itemTitle: (HederaSubWallet data) => data.title,
+          subTitle: (HederaSubWallet data) => data.description,
+          subTitle2: (HederaSubWallet data) =>
+              contentTagLabel(data.state, context),
+          leadingWidget: (HederaSubWallet data) =>
+              getLeadingIcon(data.title, context),
+          trailingWidget: (HederaSubWallet data) =>
+              const SizedBox(height: 5, width: 5),
+          onTapItem: (HederaSubWallet data) {
+            context.read<SubWalletCubit>().changeSelectedData(data);
 
-                  final subWalletList = context.select(
-                      (SubWalletCubit element) => element.state.subWalletList);
+            context
+                .read<ChatMessageBloc>()
+                .add(LoadChatMessages(path: data.id, locale: ""));
 
-                  if (isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (subWalletList.isEmpty) {
-                    return const Center(
-                      child: Text('Item is Empty'),
-                    );
-                  }
-                  return ChatItemScreen<HederaSubWallet>(
-                    isCurrentSelected: (HederaSubWallet data) =>
-                        data.id == selectedData?.id,
-                    items: subWalletList,
-                    itemTitle: (HederaSubWallet data) => data.title,
-                    subTitle: (HederaSubWallet data) => data.description,
-                    subTitle2: (HederaSubWallet data) =>
-                        contentTagLabel(data, context),
-                    leadingWidget: (HederaSubWallet data) =>
-                        getLeadingIcon(data, context),
-                    trailingWidget: (HederaSubWallet data) =>
-                        const SizedBox(height: 5, width: 5),
-                    onTapItem: (HederaSubWallet data) {
-                      // context
-                      //     .read<MainScreenBloc>()
-                      //     .add(ToMainScreen(MainScreenType.groundDetail));
+            if (CustomFunctions.isMobile(context)) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const SubWalletChatScreen();
+                  },
+                ),
+              );
+            }
+          },
+        );
+      }
 
-                      context.read<SubWalletCubit>().changeSelectedData(data);
+      return const SizedBox();
+    });
+  }
 
-                      context
-                          .read<ChatMessageBloc>()
-                          .add(LoadChatMessages(path: data.id, locale: ""));
-
-                      if (CustomFunctions.isMobile(context)) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const ChatScreen();
-                            },
-                          ),
-                        );
-                      }
-                    },
-                  );
-                }),
-              ),
-            ],
+  Container tabBarWidget(BuildContext context) {
+    return Container(
+      height: 50.0,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        border: Border(
+          right: BorderSide(
+            width: 1,
+            color: Theme.of(context).appBarTheme.backgroundColor!,
           ),
         ),
-      );
-    });
+      ),
+      child: TabBar(
+        tabs: const [
+          Tab(
+            text: "Main Wallet",
+          ),
+          Tab(
+            text: "Sub Wallet",
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            context
+                .read<MainScreenBloc>()
+                .add(ToMainScreen(MainScreenType.mainWalletDetail));
+          } else {
+            context
+                .read<MainScreenBloc>()
+                .add(ToMainScreen(MainScreenType.subWalletDetail));
+          }
+
+          context.read<SubWalletCubit>().changeSelectedData(null);
+          context.read<MemberWalletCubit>().changeSelectedWallet(null);
+        },
+      ),
+    );
   }
 
   Container header(BuildContext context, ChatUser? currentUser) {
@@ -251,12 +436,12 @@ class SideBarListWidget extends StatelessWidget {
     );
   }
 
-  Widget getLeadingIcon(HederaSubWallet data, BuildContext context) {
+  Widget getLeadingIcon(String title, BuildContext context) {
     return CircleAvatar(
       radius: 18,
       backgroundColor: Theme.of(context).primaryColor,
       child: Text(
-        (data.title[0]).toUpperCase(),
+        (title[0]).toUpperCase(),
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -266,7 +451,7 @@ class SideBarListWidget extends StatelessWidget {
     );
   }
 
-  Widget contentTagLabel(HederaSubWallet data, BuildContext context) {
+  Widget contentTagLabel(String title, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Wrap(
@@ -283,7 +468,7 @@ class SideBarListWidget extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                data.state,
+                title,
                 style: Theme.of(context).textTheme.headline2,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

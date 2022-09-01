@@ -1,13 +1,13 @@
 part of '../home.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+class SubWalletChatScreen extends StatefulWidget {
+  const SubWalletChatScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<SubWalletChatScreen> createState() => _SubWalletChatScreenState();
 }
 
-class _ChatScreenState extends BaseChatScreen<ChatScreen> {
+class _SubWalletChatScreenState extends BaseChatScreen<SubWalletChatScreen> {
   @override
   Widget appBar() {
     return Builder(
@@ -176,27 +176,42 @@ class _ChatScreenState extends BaseChatScreen<ChatScreen> {
   @override
   Widget floatingActionsWidget() {
     return Builder(builder: (context) {
-      // GroundModel? ground =
-      //     context.select((GroundCubit element) => element.state.selectedGround);
-      // final user =
-      //     context.select((AuthBloc element) => element.state.currentUser);
-
-      // if (ground == null) return const SizedBox();
+      final user =
+          context.select((AuthBloc element) => element.state.currentUser);
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // FloatingButton(
-          //   title: "Edit Sub Wallet",
-          //   icon: Icons.edit,
-          //   onTap: () {
-          //     context.push("${Routes.subWallet}/${Routes.set}");
-          //   },
-          // ),
-          // const SizedBox(
-          //   height: 15,
-          // ),
+          if (user?.isAdmin() ?? false) ...[
+            FloatingButton(
+              title: "Delete Sub Wallet",
+              icon: Icons.delete,
+              onTap: () {
+                showCustomDialog(
+                  title: "Delete Sub Wallet",
+                  description:
+                      "Are you sure you want to delete this sub wallet?",
+                  onTap: () {
+                    context.read<SubWalletCubit>().deleteSubWallet();
+                  },
+                );
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            FloatingButton(
+              title: "Edit Sub Wallet",
+              icon: Icons.edit,
+              onTap: () {
+                context.push("${Routes.subWallet}/${Routes.set}");
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
           FloatingButton(
             title: "Sub Wallet Details",
             icon: Icons.info,

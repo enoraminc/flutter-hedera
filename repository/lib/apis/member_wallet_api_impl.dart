@@ -92,4 +92,26 @@ class MemberWalletApiImpl extends MemberWalletApi {
       rethrow;
     }
   }
+
+  @override
+  Future<HederaWallet> setMainWallet(HederaWallet wallet) async {
+    if (wallet.email.isEmpty) {
+      throw Exception("Email cant be empty");
+    }
+
+    try {
+      final data = await request(
+        '$url/wallet/set',
+        RequestType.post,
+        body: wallet.toMap(),
+        useToken: true,
+        firebase: firebase,
+      );
+
+      return HederaWallet.fromMap(data);
+    } catch (e, s) {
+      Log.setLog("$e $s", method: "setMainWallet");
+      rethrow;
+    }
+  }
 }

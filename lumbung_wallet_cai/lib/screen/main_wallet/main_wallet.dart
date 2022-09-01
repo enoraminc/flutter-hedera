@@ -18,5 +18,5 @@ import '../../shared_widget/custom_text_field.dart';
 import '../../shared_widget/custom_text_form_field.dart';
 import '../../shared_widget/rounded_button.dart';
 
+part 'ui/set_main_wallet_screen.dart';
 part 'ui/detail_sub_wallet_screen.dart';
-part 'ui/set_sub_wallet_screen.dart';

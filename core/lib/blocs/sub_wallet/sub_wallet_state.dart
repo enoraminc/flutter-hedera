@@ -46,6 +46,13 @@ class SubWalletSubmitSuccess extends SubWalletState {
   });
 }
 
+class SubWalletDeleteSuccess extends SubWalletState {
+  const SubWalletDeleteSuccess({
+    required super.selectedSubWallet,
+    required super.subWalletList,
+  });
+}
+
 class SubWalletFailed extends SubWalletState {
   final String message;
   const SubWalletFailed({

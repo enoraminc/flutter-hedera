@@ -8,12 +8,17 @@ class SetSubWalletScreen extends StatefulWidget {
 }
 
 class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   HederaWallet? activeWallet;
   List<HederaWallet> walletSelectedList = [];
 
   void onSave() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     HederaSubWallet? subWallet =
         context.read<SubWalletCubit>().state.selectedSubWallet ??
             HederaSubWallet.empty();
@@ -35,7 +40,6 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
     walletSelectedList = List<HederaWallet>.from((selectedData?.users ?? [])
         .map((e) => HederaWallet.empty().copyWith(email: e)));
 
-    context.read<MemberWalletCubit>().fetchAllMemberWallet();
     super.initState();
   }
 
@@ -51,31 +55,33 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
         }
 
         if (state is SubWalletSubmitSuccess) {
-          context.read<SubWalletCubit>().getSubWallet();
           context.pop();
         } else if (state is SubWalletFailed) {
           showSnackBar(state.message, isError: true);
         }
       },
       child: BaseCaiScreen(
-        mainWidget: Container(
-          color: Theme.of(context).backgroundColor,
-          width: CustomFunctions.isMobile(context)
-              ? MediaQuery.of(context).size.width
-              : 650,
-          child: ListView(
-            physics: const ClampingScrollPhysics(),
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _bodyHeader(),
-              const SizedBox(height: 16),
-              titleField(),
-              const SizedBox(height: 15),
-              descriptionField(),
-              const SizedBox(height: 15),
-              memberSelectorWidget(),
-              const SizedBox(height: 15),
-            ],
+        mainWidget: Form(
+          key: _formKey,
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            width: CustomFunctions.isMobile(context)
+                ? MediaQuery.of(context).size.width
+                : 650,
+            child: ListView(
+              physics: const ClampingScrollPhysics(),
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _bodyHeader(),
+                const SizedBox(height: 16),
+                titleField(),
+                const SizedBox(height: 15),
+                descriptionField(),
+                const SizedBox(height: 15),
+                memberSelectorWidget(),
+                const SizedBox(height: 15),
+              ],
+            ),
           ),
         ),
       ),
@@ -147,8 +153,6 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                                 ),
                               ),
                             ),
-                            validator: (v) =>
-                                v == null ? "required field" : null,
                             dropdownSearchTextStyle:
                                 Theme.of(context).primaryTextTheme.bodyText1,
                             dropdownSearchDecoration: InputDecoration(
@@ -301,12 +305,19 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
   Widget titleField() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: CustomTextField(
+      child: CustomTextFormField(
         controller: titleController,
-        text: "Sub Wallet Name",
+        text: "Name",
         keyboardType: TextInputType.text,
-        hint: "Sub Wallet name..",
+        hint: "Name..",
         onChanged: (value) {},
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Name field is required';
+          }
+
+          return null;
+        },
       ),
     );
   }
@@ -316,10 +327,10 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: CustomTextField(
         controller: descriptionController,
-        text: "Sub Wallet Description",
+        text: "Description",
         keyboardType: TextInputType.multiline,
         maxLines: 5,
-        hint: "Sub Wallet Description..",
+        hint: "Description..",
         onChanged: (value) {},
       ),
     );
@@ -347,7 +358,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
               IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => Navigator.pop(context),
-                color: Theme.of(context).cursorColor,
+                color: Theme.of(context).textSelectionTheme.cursorColor,
               ),
               const SizedBox(
                 width: 20,

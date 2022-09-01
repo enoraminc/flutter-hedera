@@ -4,8 +4,8 @@ import 'dart:math' as math;
 import '../core/utils/text_formatter.dart';
 import '../core/utils/text_styles.dart';
 
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
+class CustomTextFormField extends StatelessWidget {
+  const CustomTextFormField({
     Key? key,
     required this.controller,
     this.keyboardType = TextInputType.text,
@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines,
     this.suffix,
     this.prefix,
+    required this.validator,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -37,6 +38,8 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final Widget? suffix;
   final Widget? prefix;
+
+  final String? Function(String? t)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +85,7 @@ class CustomTextField extends StatelessWidget {
             children: [
               prefix != null ? prefix! : const SizedBox(),
               Expanded(
-                child: TextField(
+                child: TextFormField(
                   controller: controller,
                   keyboardType: keyboardType,
                   readOnly: readOnly,
@@ -109,6 +112,7 @@ class CustomTextField extends StatelessWidget {
                   ],
                   autofocus: false,
                   onChanged: onChanged,
+                  validator: validator,
                 ),
               ),
               suffix != null ? suffix! : const SizedBox(),
@@ -172,5 +176,13 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       selection: newSelection,
       composing: TextRange.empty,
     );
+  }
+}
+
+extension EmailValidator on String {
+  bool isValidEmail() {
+    return RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(this);
   }
 }

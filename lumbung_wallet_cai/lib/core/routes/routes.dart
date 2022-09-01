@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumbung_wallet_cai/screen/home/home.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lumbung_wallet_cai/screen/main_wallet/main_wallet.dart';
 import 'package:lumbung_wallet_cai/screen/sub_wallet/sub_wallet.dart';
 
 import '../../screen/auth/auth.dart';
@@ -14,6 +15,7 @@ class Routes {
   static String login = "/login";
   static String home = "/home";
 
+  static String mainWallet = "/main-wallet";
   static String subWallet = "/sub-wallet";
 
   static GoRouter getRouter(AuthBloc authBloc) => GoRouter(
@@ -32,6 +34,20 @@ class Routes {
             builder: (BuildContext context, GoRouterState state) {
               return const HomeScreen();
             },
+          ),
+          GoRoute(
+            path: mainWallet,
+            builder: (BuildContext context, GoRouterState state) {
+              return const DetailMainWalletScreen();
+            },
+            routes: [
+              GoRoute(
+                path: set,
+                builder: (BuildContext context, GoRouterState state) {
+                  return const SetMainWalletScreen();
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: subWallet,

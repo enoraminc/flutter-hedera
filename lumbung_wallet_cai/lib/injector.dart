@@ -6,6 +6,7 @@ import 'package:core/apis/auth_api.dart';
 import 'package:core/apis/user_api.dart';
 import 'package:core/apis/hedera_sub_wallet_api.dart';
 import 'package:core/apis/member_wallet_api.dart';
+import 'package:core/apis/book_api.dart';
 
 import 'package:core_cai_v3/api/chat_message_api.dart';
 import 'package:lumbung_common/api/hedera/hedera_api.dart';
@@ -15,6 +16,7 @@ import 'package:repository/apis/user_api_impl.dart';
 import 'package:repository/apis/hedera_sub_wallet_api_impl.dart';
 import 'package:repository/apis/member_wallet_api_impl.dart';
 import 'package:repository/apis/chat_message_api_impl.dart';
+import 'package:repository/apis/book_api_impl.dart';
 
 import 'package:lumbung_common/go_api/hedera/hedera_api_impl.dart';
 
@@ -68,6 +70,16 @@ Future<void> setupLocator() async {
 
   locator.registerSingleton<MemberWalletApi>(
     MemberWalletApiImpl(
+      url: FlavorConfig.instance.values.hederaApiUrl,
+    ),
+    signalsReady: true,
+  );
+
+  ///
+  /// Book
+  ///
+  locator.registerSingleton<BookApi>(
+    BookApiImpl(
       url: FlavorConfig.instance.values.hederaApiUrl,
     ),
     signalsReady: true,

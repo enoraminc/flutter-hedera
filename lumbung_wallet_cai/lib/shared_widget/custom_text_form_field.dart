@@ -22,6 +22,7 @@ class CustomTextFormField extends StatelessWidget {
     this.suffix,
     this.prefix,
     required this.validator,
+    this.fieldOnly = false,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -38,6 +39,7 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLines;
   final Widget? suffix;
   final Widget? prefix;
+  final bool fieldOnly;
 
   final String? Function(String? t)? validator;
 
@@ -47,28 +49,30 @@ class CustomTextFormField extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                text,
+        if (!fieldOnly) ...[
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  text,
+                  style: Styles.commonTextStyle(
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                additionalText,
                 style: Styles.commonTextStyle(
                   size: 18,
                   fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-            ),
-            Text(
-              additionalText,
-              style: Styles.commonTextStyle(
-                size: 18,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10),
+            ],
+          ),
+          SizedBox(height: 10),
+        ],
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).appBarTheme.backgroundColor,

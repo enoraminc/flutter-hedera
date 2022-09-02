@@ -2,6 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+enum HederaNetwork {
+  mainnet,
+  testnet,
+}
+
 class FlavorValues {
   FlavorValues({
     required this.appName,
@@ -10,6 +15,7 @@ class FlavorValues {
     required this.versionDate,
     required this.rempahApiUrl,
     required this.hederaApiUrl,
+    required this.hederaNetwork,
   });
 
   String appName;
@@ -18,6 +24,7 @@ class FlavorValues {
   String versionDate;
   final String rempahApiUrl;
   final String hederaApiUrl;
+  final HederaNetwork hederaNetwork;
 
   FlavorValues copyWith({
     String? appName,
@@ -26,6 +33,7 @@ class FlavorValues {
     String? versionDate,
     String? rempahApiUrl,
     String? groundApiUrl,
+    HederaNetwork? hederaNetwork,
   }) {
     return FlavorValues(
       appName: appName ?? this.appName,
@@ -34,6 +42,7 @@ class FlavorValues {
       versionDate: versionDate ?? this.versionDate,
       rempahApiUrl: rempahApiUrl ?? this.rempahApiUrl,
       hederaApiUrl: groundApiUrl ?? this.hederaApiUrl,
+      hederaNetwork: hederaNetwork ?? this.hederaNetwork,
     );
   }
 }

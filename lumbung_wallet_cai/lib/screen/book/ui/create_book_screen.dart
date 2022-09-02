@@ -1,17 +1,22 @@
-part of '../sub_wallet.dart';
+part of '../book.dart';
 
-class SetSubWalletScreen extends StatefulWidget {
-  const SetSubWalletScreen({Key? key}) : super(key: key);
+class CreateBookScreen extends StatefulWidget {
+  const CreateBookScreen({super.key, required this.id});
+  final String id;
 
   @override
-  State<SetSubWalletScreen> createState() => _SetSubWalletScreenState();
+  State<CreateBookScreen> createState() => _CreateBookScreenState();
 }
 
-class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
+class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController limitController = TextEditingController();
+
+  List<MemberBook> memberBookList = [];
+
   HederaWallet? activeWallet;
   List<HederaWallet> walletSelectedList = [];
 
@@ -19,44 +24,37 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    HederaSubWallet? subWallet =
-        context.read<SubWalletCubit>().state.selectedSubWallet ??
-            HederaSubWallet.empty();
 
-    subWallet = subWallet.copyWith(
+    // HederaWallet? wallet =
+    //     context.read<MemberWalletCubit>().state.selectedWallet ??
+    //         HederaWallet.empty();
+
+    final book = BookModel(
+      id: "",
+      subWalletId: widget.id,
       title: titleController.text,
       description: descriptionController.text,
-      users: walletSelectedList.map((e) => e.email).toList(),
+      memberBookList: memberBookList,
+      network: "",
     );
 
-    context.read<SubWalletCubit>().setSubWallet(subWallet);
-  }
-
-  @override
-  void initState() {
-    final selectedData = context.read<SubWalletCubit>().state.selectedSubWallet;
-    titleController.text = selectedData?.title ?? "";
-    descriptionController.text = selectedData?.description ?? "";
-    walletSelectedList = List<HederaWallet>.from((selectedData?.users ?? [])
-        .map((e) => HederaWallet.empty().copyWith(email: e)));
-
-    super.initState();
+    context.read<BookCubit>().setBook(book);
   }
 
   @override
   Widget body() {
-    return BlocListener<SubWalletCubit, SubWalletState>(
+    return BlocListener<BookCubit, BookState>(
       listener: (context, state) {
-        if (state is SubWalletSubmitLoading) {
+        if (state is SubmitBookLoading) {
           loading = LoadingUtil.build(context, dismissable: true);
           loading?.show();
         } else {
           loading?.dismiss();
         }
 
-        if (state is SubWalletSubmitSuccess) {
+        if (state is SetBookSuccess) {
           context.pop();
-        } else if (state is SubWalletFailed) {
+        } else if (state is BookFailed) {
           showSnackBar(state.message, isError: true);
         }
       },
@@ -78,7 +76,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                 const SizedBox(height: 15),
                 descriptionField(),
                 const SizedBox(height: 15),
-                memberSelectorWidget(),
+                setLimitMemberWidget(),
                 const SizedBox(height: 15),
               ],
             ),
@@ -88,7 +86,44 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
     );
   }
 
-  Builder memberSelectorWidget() {
+  Widget titleField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: CustomTextFormField(
+        controller: titleController,
+        text: "Title",
+        keyboardType: TextInputType.text,
+        hint: "title..",
+        onChanged: (value) {},
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Title field is required';
+          }
+
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget descriptionField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: CustomTextFormField(
+        controller: descriptionController,
+        text: "Description",
+        keyboardType: TextInputType.multiline,
+        maxLines: 5,
+        hint: "description..",
+        onChanged: (value) {},
+        validator: (value) {
+          return null;
+        },
+      ),
+    );
+  }
+
+  Builder setLimitMemberWidget() {
     return Builder(
       builder: (context) {
         final memberWalletList = context.select(
@@ -104,7 +139,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Add User to Sub Wallet",
+                "Set Limit Payable Member",
                 style: Styles.commonTextStyle(
                   size: 18,
                   fontWeight: FontWeight.bold,
@@ -133,6 +168,21 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    Expanded(
+                      child: CustomTextFormField(
+                        controller: limitController,
+                        text: "Limit",
+                        keyboardType: TextInputType.number,
+                        hint: "Limit..",
+                        fieldOnly: true,
+                        onChanged: (value) {},
+                        validator: (value) {
+                          return null;
+                        },
+                        isNumber: true,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
                     RoundedButton(
                       text: "",
                       selected: true,
@@ -145,6 +195,15 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                         setState(() {
                           if (activeWallet != null) {
                             walletSelectedList.add(activeWallet!);
+                            memberBookList.add(
+                              MemberBook(
+                                  email: activeWallet?.email ?? "",
+                                  name: activeWallet?.displayName ?? "",
+                                  limitPayable: int.tryParse(limitController
+                                          .text
+                                          .replaceAll(".", "")) ??
+                                      0),
+                            );
                           }
                           activeWallet = null;
                         });
@@ -154,26 +213,26 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                 ),
               const SizedBox(height: 20),
               Text(
-                "Selected User List",
+                "Limit Payable Member List",
                 style: Styles.commonTextStyle(
                   size: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 10),
-              if (walletSelectedList.isEmpty)
+              if (memberBookList.isEmpty)
                 Center(
                   child: Text(
-                    "Selected User is Empty",
+                    "Limit Payable Member List is Empty",
                     textAlign: TextAlign.center,
                     style: Styles.commonTextStyle(
                       size: 16,
                     ),
                   ),
                 ),
-              ...walletSelectedList
+              ...memberBookList
                   .map(
-                    (wallet) => Container(
+                    (book) => Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
@@ -193,10 +252,21 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              wallet.email,
+                              "${book.name} - ${book.email}",
                               style: Styles.commonTextStyle(
                                 size: 18,
                               ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              formatAmount(book.limitPayable),
+                              style: Styles.commonTextStyle(
+                                size: 18,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -204,7 +274,9 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                             onTap: () {
                               setState(() {
                                 walletSelectedList.removeWhere(
-                                    (element) => element.email == wallet.email);
+                                    (element) => element.email == book.email);
+                                memberBookList.removeWhere(
+                                    (element) => element.email == book.email);
                               });
                             },
                             child: const Icon(
@@ -224,44 +296,8 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
     );
   }
 
-  Widget titleField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: CustomTextFormField(
-        controller: titleController,
-        text: "Name",
-        keyboardType: TextInputType.text,
-        hint: "Name..",
-        onChanged: (value) {},
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Name field is required';
-          }
-
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget descriptionField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: CustomTextField(
-        controller: descriptionController,
-        text: "Description",
-        keyboardType: TextInputType.multiline,
-        maxLines: 5,
-        hint: "Description..",
-        onChanged: (value) {},
-      ),
-    );
-  }
-
   Widget _bodyHeader() {
     return Builder(builder: (context) {
-      final selectedData = context
-          .select((SubWalletCubit element) => element.state.selectedSubWallet);
       return Container(
         height: 56.0,
         decoration: BoxDecoration(
@@ -291,9 +327,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                   child: RichText(
                     text: TextSpan(
                       style: Theme.of(context).textTheme.bodyText1,
-                      text: selectedData != null
-                          ? "Edit Sub Wallet"
-                          : "Create Sub Wallet",
+                      text: "Create Book",
                     ),
                   ),
                 ),

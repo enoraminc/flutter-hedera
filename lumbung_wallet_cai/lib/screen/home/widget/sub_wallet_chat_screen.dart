@@ -178,12 +178,23 @@ class _SubWalletChatScreenState extends BaseChatScreen<SubWalletChatScreen> {
     return Builder(builder: (context) {
       final user =
           context.select((AuthBloc element) => element.state.currentUser);
-
+      final selectedData = context
+          .select((SubWalletCubit element) => element.state.selectedSubWallet);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (user?.isAdmin() ?? false) ...[
+            FloatingButton(
+              title: "Book",
+              icon: Icons.book,
+              onTap: () {
+                context.push("${Routes.book}/${selectedData?.id ?? ""}");
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             FloatingButton(
               title: "Delete Sub Wallet",
               icon: Icons.delete,

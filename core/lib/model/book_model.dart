@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 
 class BookModel {
   final String id;
+  final String topicId;
   final String title;
   final String description;
   final String subWalletId;
@@ -13,6 +14,7 @@ class BookModel {
   final String network;
   BookModel({
     required this.id,
+    required this.topicId,
     required this.title,
     required this.description,
     required this.subWalletId,
@@ -24,6 +26,7 @@ class BookModel {
 
   BookModel copyWith({
     String? id,
+    String? topicId,
     String? title,
     String? description,
     String? subWalletId,
@@ -34,6 +37,7 @@ class BookModel {
   }) {
     return BookModel(
       id: id ?? this.id,
+      topicId: topicId ?? this.topicId,
       title: title ?? this.title,
       description: description ?? this.description,
       subWalletId: subWalletId ?? this.subWalletId,
@@ -47,6 +51,7 @@ class BookModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'topicId': topicId,
       'title': title,
       'description': description,
       'subWalletId': subWalletId,
@@ -60,6 +65,7 @@ class BookModel {
   factory BookModel.fromMap(Map<String, dynamic> map) {
     return BookModel(
       id: map['id'] ?? '',
+      topicId: map['topicId'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       subWalletId: map['subWalletId'] ?? '',
@@ -82,7 +88,7 @@ class BookModel {
 
   @override
   String toString() {
-    return 'BookModel(id: $id, title: $title, description: $description, subWalletId: $subWalletId, memberBookList: $memberBookList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network)';
+    return 'BookModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, memberBookList: $memberBookList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network)';
   }
 
   @override
@@ -92,6 +98,7 @@ class BookModel {
 
     return other is BookModel &&
         other.id == id &&
+        other.topicId == topicId &&
         other.title == title &&
         other.description == description &&
         other.subWalletId == subWalletId &&
@@ -104,6 +111,7 @@ class BookModel {
   @override
   int get hashCode {
     return id.hashCode ^
+        topicId.hashCode ^
         title.hashCode ^
         description.hashCode ^
         subWalletId.hashCode ^

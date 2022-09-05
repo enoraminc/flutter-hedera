@@ -31,6 +31,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
 
     final book = BookModel(
       id: "",
+      topicId: "",
       subWalletId: widget.id,
       title: titleController.text,
       description: descriptionController.text,

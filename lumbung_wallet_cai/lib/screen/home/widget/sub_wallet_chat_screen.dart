@@ -185,16 +185,16 @@ class _SubWalletChatScreenState extends BaseChatScreen<SubWalletChatScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (user?.isAdmin() ?? false) ...[
-            FloatingButton(
-              title: "Book",
-              icon: Icons.book,
-              onTap: () {
-                context.push("${Routes.book}/${selectedData?.id ?? ""}");
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
+            // FloatingButton(
+            //   title: "Book",
+            //   icon: Icons.book,
+            //   onTap: () {
+            //     context.push("${Routes.book}/${selectedData?.id ?? ""}");
+            //   },
+            // ),
+            // const SizedBox(
+            //   height: 15,
+            // ),
             FloatingButton(
               title: "Delete Sub Wallet",
               icon: Icons.delete,

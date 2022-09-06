@@ -60,7 +60,7 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
-          loading = LoadingUtil.build(context, dismissable: true);
+          loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();
@@ -86,7 +86,7 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
     return BlocListener<MemberWalletCubit, MemberWalletState>(
       listener: (context, state) {
         if (state is SubmitMemberLoading) {
-          loading = LoadingUtil.build(context, dismissable: true);
+          loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();
@@ -106,7 +106,7 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
     return BlocListener<SubWalletCubit, SubWalletState>(
       listener: (context, state) {
         if (state is SubWalletLoading) {
-          loading = LoadingUtil.build(context, dismissable: true);
+          loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();

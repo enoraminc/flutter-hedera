@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lumbunghedera_dashboard/core/routes/routes.dart';
 
 import '../core/utils/custom_function.dart';
 import '../core/utils/text_styles.dart';
@@ -30,11 +32,21 @@ class CustomAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 40,
-              width: 40,
-              child: Image.asset(
-                "assets/logo/logo.png",
+            InkWell(
+              onTap: () {
+                Router.neglect(
+                  context,
+                  () => context.go(
+                    Routes.dashboard,
+                  ),
+                );
+              },
+              child: SizedBox(
+                height: 35,
+                width: 35,
+                child: Image.asset(
+                  "assets/logo/logo.png",
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -45,14 +57,14 @@ class CustomAppBar extends StatelessWidget {
                 Text(
                   FlavorConfig.instance.values.appName,
                   style: Styles.commonTextStyle(
-                    size: 18,
+                    size: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   FlavorConfig.instance.values.versionNumber,
                   style: Styles.commonTextStyle(
-                    size: 14,
+                    size: 12,
                   ),
                 ),
               ],

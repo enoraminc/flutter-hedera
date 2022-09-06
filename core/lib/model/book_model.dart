@@ -8,6 +8,7 @@ class BookModel {
   final String title;
   final String description;
   final String subWalletId;
+  final String type;
   final List<MemberBook> memberBookList;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -18,11 +19,16 @@ class BookModel {
     required this.title,
     required this.description,
     required this.subWalletId,
+    required this.type,
     required this.memberBookList,
     this.createdAt,
     this.updatedAt,
     required this.network,
   });
+
+  static String cashbonType = "Cashbon";
+
+  static List<String> typeList = [cashbonType];
 
   BookModel copyWith({
     String? id,
@@ -30,6 +36,7 @@ class BookModel {
     String? title,
     String? description,
     String? subWalletId,
+    String? type,
     List<MemberBook>? memberBookList,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -41,6 +48,7 @@ class BookModel {
       title: title ?? this.title,
       description: description ?? this.description,
       subWalletId: subWalletId ?? this.subWalletId,
+      type: type ?? this.type,
       memberBookList: memberBookList ?? this.memberBookList,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -55,6 +63,7 @@ class BookModel {
       'title': title,
       'description': description,
       'subWalletId': subWalletId,
+      'type': type,
       'memberBookList': memberBookList.map((x) => x.toMap()).toList(),
       'createdAt': createdAt?.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
@@ -69,6 +78,7 @@ class BookModel {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       subWalletId: map['subWalletId'] ?? '',
+      type: map['type'] ?? '',
       memberBookList: List<MemberBook>.from(
           map['memberBookList']?.map((x) => MemberBook.fromMap(x))),
       createdAt: map['createdAt'] != null
@@ -88,7 +98,7 @@ class BookModel {
 
   @override
   String toString() {
-    return 'BookModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, memberBookList: $memberBookList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network)';
+    return 'BookModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, type: $type, memberBookList: $memberBookList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network)';
   }
 
   @override
@@ -102,6 +112,7 @@ class BookModel {
         other.title == title &&
         other.description == description &&
         other.subWalletId == subWalletId &&
+        other.type == type &&
         listEquals(other.memberBookList, memberBookList) &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
@@ -115,110 +126,11 @@ class BookModel {
         title.hashCode ^
         description.hashCode ^
         subWalletId.hashCode ^
+        type.hashCode ^
         memberBookList.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode ^
         network.hashCode;
-  }
-}
-
-class BookItem {
-  final int sequenceNumber;
-  final String bookId;
-  final String subWalletId;
-  final DateTime? date;
-  final MemberBook memberBook;
-  final int debit;
-  final int credit;
-  BookItem({
-    required this.sequenceNumber,
-    required this.bookId,
-    required this.subWalletId,
-    this.date,
-    required this.memberBook,
-    required this.debit,
-    required this.credit,
-  });
-
-  BookItem copyWith({
-    int? sequenceNumber,
-    String? bookId,
-    String? subWalletId,
-    DateTime? date,
-    MemberBook? memberBook,
-    int? debit,
-    int? credit,
-  }) {
-    return BookItem(
-      sequenceNumber: sequenceNumber ?? this.sequenceNumber,
-      bookId: bookId ?? this.bookId,
-      subWalletId: subWalletId ?? this.subWalletId,
-      date: date ?? this.date,
-      memberBook: memberBook ?? this.memberBook,
-      debit: debit ?? this.debit,
-      credit: credit ?? this.credit,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'sequenceNumber': sequenceNumber,
-      'bookId': bookId,
-      'subWalletId': subWalletId,
-      'date': date?.millisecondsSinceEpoch,
-      'memberBook': memberBook.toMap(),
-      'debit': debit,
-      'credit': credit,
-    };
-  }
-
-  factory BookItem.fromMap(Map<String, dynamic> map) {
-    return BookItem(
-      sequenceNumber: map['sequenceNumber']?.toInt() ?? 0,
-      bookId: map['bookId'] ?? '',
-      subWalletId: map['subWalletId'] ?? '',
-      date: map['date'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['date'])
-          : null,
-      memberBook: MemberBook.fromMap(map['memberBook']),
-      debit: map['debit']?.toInt() ?? 0,
-      credit: map['credit']?.toInt() ?? 0,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory BookItem.fromJson(String source) =>
-      BookItem.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'BookItem(sequenceNumber: $sequenceNumber, bookId: $bookId, subWalletId: $subWalletId, date: $date, memberBook: $memberBook, debit: $debit, credit: $credit)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is BookItem &&
-        other.sequenceNumber == sequenceNumber &&
-        other.bookId == bookId &&
-        other.subWalletId == subWalletId &&
-        other.date == date &&
-        other.memberBook == memberBook &&
-        other.debit == debit &&
-        other.credit == credit;
-  }
-
-  @override
-  int get hashCode {
-    return sequenceNumber.hashCode ^
-        bookId.hashCode ^
-        subWalletId.hashCode ^
-        date.hashCode ^
-        memberBook.hashCode ^
-        debit.hashCode ^
-        credit.hashCode;
   }
 }
 
@@ -281,4 +193,58 @@ class MemberBook {
 
   @override
   int get hashCode => name.hashCode ^ email.hashCode ^ limitPayable.hashCode;
+}
+
+class BookMessageDataModel {
+  final String data;
+  final int topicSequenceNumber;
+  BookMessageDataModel({
+    required this.data,
+    required this.topicSequenceNumber,
+  });
+
+  BookMessageDataModel copyWith({
+    String? data,
+    int? topicSequenceNumber,
+  }) {
+    return BookMessageDataModel(
+      data: data ?? this.data,
+      topicSequenceNumber: topicSequenceNumber ?? this.topicSequenceNumber,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'data': data,
+      'topicSequenceNumber': topicSequenceNumber,
+    };
+  }
+
+  factory BookMessageDataModel.fromMap(Map<String, dynamic> map) {
+    return BookMessageDataModel(
+      data: map['data'] ?? '',
+      topicSequenceNumber: map['topicSequenceNumber']?.toInt() ?? 0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory BookMessageDataModel.fromJson(String source) =>
+      BookMessageDataModel.fromMap(json.decode(source));
+
+  @override
+  String toString() =>
+      'BookMessageDataModel(data: $data, topicSequenceNumber: $topicSequenceNumber)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BookMessageDataModel &&
+        other.data == data &&
+        other.topicSequenceNumber == topicSequenceNumber;
+  }
+
+  @override
+  int get hashCode => data.hashCode ^ topicSequenceNumber.hashCode;
 }

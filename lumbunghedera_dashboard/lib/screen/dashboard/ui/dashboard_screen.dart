@@ -55,13 +55,16 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
       return CustomTableWidget(
         title: 'Books',
         isLoading: isLoading,
+        onTap: (String topicId) {
+          context.push("${Routes.book}/$topicId");
+        },
         columns: const [
           "ID",
           "Title",
           "Description",
         ],
         rows: books
-            .take(5)
+            // .take(5)
             .map((book) => [
                   book.topicId,
                   book.title,
@@ -87,7 +90,7 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
           "Email",
         ],
         rows: walletList
-            .take(5)
+            // .take(5)
             .map((wallet) => [
                   wallet.accountId,
                   wallet.displayName,
@@ -115,7 +118,7 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
           "Users",
         ],
         rows: subWalletList
-            .take(5)
+            // .take(5)
             .map((wallet) => [
                   wallet.accountId,
                   wallet.title,
@@ -187,7 +190,7 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
-          loading = LoadingUtil.build(context, dismissable: true);
+          loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();

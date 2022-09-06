@@ -49,4 +49,23 @@ class BookApiImpl extends BookApi {
       rethrow;
     }
   }
+
+  @override
+  Future<List<BookMessageDataModel>> getBookMessageData(String topicId) async {
+    try {
+      final data = await request(
+        '$url/consensus/message/$topicId',
+        RequestType.get,
+        useToken: true,
+        firebase: firebase,
+      );
+
+      return data
+          .map<BookMessageDataModel>((e) => BookMessageDataModel.fromMap(e))
+          .toList();
+    } catch (e, s) {
+      Log.setLog("$e $s", method: "getBookMessageData");
+      rethrow;
+    }
+  }
 }

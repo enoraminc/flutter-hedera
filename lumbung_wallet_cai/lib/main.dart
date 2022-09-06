@@ -18,15 +18,15 @@ void main() async {
       hederaNetwork: HederaNetwork.testnet,
       appName: "Lumbung Wallet",
       logoPath: "assets/logo.png",
-      versionNumber: '1.0.2',
-      versionDate: "2 September 2022",
+      versionNumber: '1.0.3',
+      versionDate: "6 September 2022",
       rempahApiUrl:
           "https://rempah-prod-dot-lumbungdemo.as.r.appspot.com/_api/lumbungrempah",
       // hederaApiUrl:
       //     "https://hedera-prod-dot-lumbungdemo.as.r.appspot.com/_api/hedera",
       hederaApiUrl:
           "https://hedera-dev-dot-lumbungdemo.as.r.appspot.com/_api/hedera",
-      // hederaApiUrl: "http://192.168.1.7:8080/_api/hedera",
+      // hederaApiUrl: "http://192.168.1.2:8080/_api/hedera",
     ),
   );
 

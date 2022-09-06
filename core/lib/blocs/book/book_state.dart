@@ -22,6 +22,10 @@ class SubmitBookLoading extends BookState {
   const SubmitBookLoading({required super.bookList});
 }
 
+class BookMessageLoading extends BookState {
+  const BookMessageLoading({required super.bookList});
+}
+
 class SetBookSuccess extends BookState {
   const SetBookSuccess({required super.bookList});
 }
@@ -33,4 +37,16 @@ class GetBookSuccess extends BookState {
 class BookFailed extends BookState {
   final String message;
   const BookFailed({required this.message, required super.bookList});
+}
+
+class GetBookMessageDataSuccess extends BookState {
+  final List<BookMessageDataModel> data;
+  const GetBookMessageDataSuccess(
+      {required this.data, required super.bookList});
+}
+
+class GetBookMessageDataFailed extends BookState {
+  final String message;
+  const GetBookMessageDataFailed(
+      {required this.message, required super.bookList});
 }

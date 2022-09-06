@@ -1,8 +1,7 @@
 part of '../book.dart';
 
 class BookScreen extends StatefulWidget {
-  const BookScreen({super.key, required this.id});
-  final String id;
+  const BookScreen({super.key});
 
   @override
   State<BookScreen> createState() => _BookScreenState();
@@ -18,7 +17,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
   }
 
   Future<void> onRefresh() async {
-    context.read<BookCubit>().getBook(widget.id);
+    context.read<BookCubit>().getBook("");
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -70,7 +69,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
     return Builder(builder: (context) {
       final subWalletSelected = context.select((SubWalletCubit element) =>
           element.state.subWalletList
-              .firstWhereOrNull((element) => element.id == widget.id));
+              .firstWhereOrNull((element) => element.id == ""));
       return Container(
         height: 56.0,
         decoration: BoxDecoration(
@@ -121,7 +120,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
                 ),
               ),
               const SizedBox(width: 15.0),
-              createBookButton()
+              // createBookButton()
             ],
           ),
         ),
@@ -129,50 +128,50 @@ class _BookScreenState extends BaseStateful<BookScreen> {
     });
   }
 
-  Widget createBookButton() {
-    return Builder(builder: (context) {
-      final currentUser =
-          context.select((AuthBloc element) => element.state.currentUser);
+  // Widget createBookButton() {
+  //   return Builder(builder: (context) {
+  //     final currentUser =
+  //         context.select((AuthBloc element) => element.state.currentUser);
 
-      // if (!PermissionsUtils.isEditAllowed(
-      //     user: currentUser, ground: selectedGround)) {
-      //   return const SizedBox();
-      // }
+  //     // if (!PermissionsUtils.isEditAllowed(
+  //     //     user: currentUser, ground: selectedGround)) {
+  //     //   return const SizedBox();
+  //     // }
 
-      if (!(currentUser?.isAdmin() ?? false)) {
-        return const SizedBox();
-      }
+  //     if (!(currentUser?.isAdmin() ?? false)) {
+  //       return const SizedBox();
+  //     }
 
-      return InkWell(
-        onTap: () {
-          context.push("${Routes.book}/${widget.id}/set");
-        },
-        child: Container(
-          width: 120,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.transparent,
-              style: BorderStyle.solid,
-              width: 1.0,
-            ),
-            color: Colors.orange,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Center(
-            child: Text(
-              "Create Book",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1,
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
+  //     return InkWell(
+  //       onTap: () {
+  //         context.push("${Routes.book}/${widget.id}/set");
+  //       },
+  //       child: Container(
+  //         width: 120,
+  //         decoration: BoxDecoration(
+  //           border: Border.all(
+  //             color: Colors.transparent,
+  //             style: BorderStyle.solid,
+  //             width: 1.0,
+  //           ),
+  //           color: Colors.orange,
+  //           borderRadius: BorderRadius.circular(8),
+  //         ),
+  //         child: const Center(
+  //           child: Text(
+  //             "Create Book",
+  //             style: TextStyle(
+  //               color: Colors.white,
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.w600,
+  //               letterSpacing: 1,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   });
+  // }
 
   Widget _webView() {
     return Row(

@@ -44,7 +44,7 @@ class _SetMainWalletScreenState extends BaseStateful<SetMainWalletScreen> {
     return BlocListener<MemberWalletCubit, MemberWalletState>(
       listener: (context, state) {
         if (state is SubmitMemberLoading) {
-          loading = LoadingUtil.build(context, dismissable: true);
+          loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();

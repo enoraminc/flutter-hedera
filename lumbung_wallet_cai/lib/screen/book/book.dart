@@ -6,6 +6,7 @@ import 'package:core/model/book_model.dart';
 import 'package:core/model/hedera_sub_wallet.dart';
 import 'package:core_cai_v3/base/base_cai_screen.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:lumbung_wallet_cai/core/base/base_stateful.dart';
 import 'package:collection/collection.dart';
@@ -25,6 +26,9 @@ import '../../shared_widget/custom_text_field.dart';
 import '../../shared_widget/custom_text_form_field.dart';
 import '../../shared_widget/main_wallet_selector.dart';
 import '../../shared_widget/rounded_button.dart';
+import '../../shared_widget/sub_wallet_selector.dart';
 
 part 'ui/book_screen.dart';
 part 'ui/create_book_screen.dart';
+
+part 'widget/book_type_selector_widget.dart';

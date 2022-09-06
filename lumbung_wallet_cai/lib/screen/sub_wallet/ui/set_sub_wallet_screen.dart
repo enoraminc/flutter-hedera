@@ -48,7 +48,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
     return BlocListener<SubWalletCubit, SubWalletState>(
       listener: (context, state) {
         if (state is SubWalletSubmitLoading) {
-          loading = LoadingUtil.build(context, dismissable: true);
+          loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();

@@ -6,4 +6,6 @@ import '../model/log_model.dart';
 abstract class BookApi extends BaseRepository {
   Future<BookModel> setBook(BookModel book);
   Future<List<BookModel>> getBook(String subWalletId);
+
+  Future<List<BookMessageDataModel>> getBookMessageData(String topicId);
 }

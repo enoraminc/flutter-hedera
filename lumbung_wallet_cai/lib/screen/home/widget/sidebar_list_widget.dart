@@ -118,6 +118,31 @@ class SideBarListWidget extends StatelessWidget {
                           context.push("${Routes.subWallet}/${Routes.set}");
                         },
                       ),
+                      const SizedBox(height: 5),
+                      const Divider(
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(height: 5),
+                      ListTile(
+                        title: Text(
+                          'Creat Book',
+                          style: Styles.commonTextStyle(
+                            size: 18,
+                          ),
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.orange,
+                        ),
+                        onTap: () {
+                          controller.hideMenu();
+                          context
+                              .read<SubWalletCubit>()
+                              .changeSelectedData(null);
+
+                          context.push("${Routes.book}/${Routes.set}");
+                        },
+                      ),
                     ],
                   ),
                 ),

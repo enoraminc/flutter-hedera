@@ -1,8 +1,7 @@
 part of '../book.dart';
 
 class CreateBookScreen extends StatefulWidget {
-  const CreateBookScreen({super.key, required this.id});
-  final String id;
+  const CreateBookScreen({super.key});
 
   @override
   State<CreateBookScreen> createState() => _CreateBookScreenState();
@@ -19,6 +18,9 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
 
   HederaWallet? activeWallet;
   List<HederaWallet> walletSelectedList = [];
+  HederaSubWallet? subWalletSelected;
+
+  String bookType = BookModel.cashbonType;
 
   void onSave() {
     if (!_formKey.currentState!.validate()) {
@@ -32,11 +34,12 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
     final book = BookModel(
       id: "",
       topicId: "",
-      subWalletId: widget.id,
+      subWalletId: subWalletSelected?.id ?? "-",
       title: titleController.text,
       description: descriptionController.text,
       memberBookList: memberBookList,
       network: "",
+      type: bookType,
     );
 
     context.read<BookCubit>().setBook(book);
@@ -47,7 +50,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
     return BlocListener<BookCubit, BookState>(
       listener: (context, state) {
         if (state is SubmitBookLoading) {
-          loading = LoadingUtil.build(context, dismissable: true);
+          loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();
@@ -72,10 +75,14 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _bodyHeader(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 15),
+                setSubWalletWidget(),
+                const SizedBox(height: 15),
                 titleField(),
                 const SizedBox(height: 15),
                 descriptionField(),
+                const SizedBox(height: 15),
+                bookTypeField(),
                 const SizedBox(height: 15),
                 setLimitMemberWidget(),
                 const SizedBox(height: 15),
@@ -124,6 +131,73 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
     );
   }
 
+  Widget bookTypeField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: BookTypeSelectorWidget(
+        onChange: (String? type) {
+          setState(() {
+            if (type?.isNotEmpty ?? false) {
+              bookType = type ?? "";
+            }
+          });
+        },
+        selectedType: bookType,
+      ),
+    );
+  }
+
+  Builder setSubWalletWidget() {
+    return Builder(
+      builder: (context) {
+        final subWalletList = context
+            .select((SubWalletCubit element) => element.state.subWalletList);
+
+        final isLoading = context.select(
+            (SubWalletCubit element) => element.state is SubWalletLoading);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Set Sub Wallet",
+                style: Styles.commonTextStyle(
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (isLoading)
+                FadeShimmer(
+                  height: 50,
+                  width: double.infinity,
+                  radius: 4,
+                  fadeTheme: CustomFunctions.isDarkTheme(context)
+                      ? FadeTheme.dark
+                      : FadeTheme.light,
+                )
+              else
+                SubWalletSelector(
+                  activeWallet: subWalletSelected,
+                  subWalletList: subWalletList
+                      .where((element) => element.id != subWalletSelected?.id)
+                      .toList(),
+                  onChange: (wallet) {
+                    setState(() {
+                      subWalletSelected = wallet;
+                    });
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Builder setLimitMemberWidget() {
     return Builder(
       builder: (context) {
@@ -148,7 +222,14 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
               ),
               const SizedBox(height: 10),
               if (isLoading)
-                const CircularProgressIndicator()
+                FadeShimmer(
+                  height: 50,
+                  width: double.infinity,
+                  radius: 4,
+                  fadeTheme: CustomFunctions.isDarkTheme(context)
+                      ? FadeTheme.dark
+                      : FadeTheme.light,
+                )
               else
                 Row(
                   children: [

@@ -29,7 +29,7 @@ class _SplashScreenState extends BaseStateful<SplashScreen> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoading) {
-            loading = LoadingUtil.build(context, dismissable: true);
+            loading = LoadingUtil.build(context);
             loading?.show();
           } else {
             loading?.dismiss();

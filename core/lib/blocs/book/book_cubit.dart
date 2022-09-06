@@ -55,4 +55,29 @@ class BookCubit extends Cubit<BookState> {
       );
     });
   }
+
+  Future<void> getBookMessageData(String topicId) async {
+    emit(BookMessageLoading(
+      bookList: state.bookList,
+    ));
+
+    await bookApi.getBookMessageData(topicId).then((value) {
+      Log.setLog(
+        "Total Book Message : ${value.length}",
+        method: "getBookMessageData Bloc",
+      );
+      emit(GetBookMessageDataSuccess(
+        data: value,
+        bookList: state.bookList,
+      ));
+    }).catchError((e, s) {
+      Log.setLog("$e $s", method: "getBookMessageData Bloc");
+      emit(
+        GetBookMessageDataFailed(
+          message: e.toString(),
+          bookList: state.bookList,
+        ),
+      );
+    });
+  }
 }

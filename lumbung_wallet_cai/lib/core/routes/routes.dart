@@ -67,17 +67,15 @@ class Routes {
             ],
           ),
           GoRoute(
-            path: "$book/:id",
+            path: book,
             builder: (BuildContext context, GoRouterState state) {
-              final id = state.params["id"] ?? "";
-              return BookScreen(id: id);
+              return BookScreen();
             },
             routes: [
               GoRoute(
                 path: set,
                 builder: (BuildContext context, GoRouterState state) {
-                  final id = state.params["id"] ?? "";
-                  return CreateBookScreen(id: id);
+                  return CreateBookScreen();
                 },
               ),
             ],

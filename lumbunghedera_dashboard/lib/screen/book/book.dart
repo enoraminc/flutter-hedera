@@ -12,7 +12,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lumbunghedera_dashboard/core/base/base_stateful.dart';
 import 'package:collection/collection.dart';
-import 'package:lumbunghedera_dashboard/core/utils/date_utils.dart';
+import 'package:core/utils/date_utils.dart';
 import 'package:lumbunghedera_dashboard/core/utils/text_styles.dart';
 
 import '../../core/utils/loading_util.dart';

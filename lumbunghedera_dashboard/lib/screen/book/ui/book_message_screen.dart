@@ -127,6 +127,9 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
               title: 'Data',
               isLoading: isLoading,
               isWithPadding: false,
+              onExport: () {
+                context.read<BookCubit>().exportBook(bookMessageList);
+              },
               columns: const [
                 "Sequence Number",
                 "Date",
@@ -186,6 +189,9 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
           setState(() {
             bookMessageList = state.data;
           });
+        }
+        if (state is ExportBookFailed) {
+          showSnackBar(state.message, isError: true);
         }
       },
     );

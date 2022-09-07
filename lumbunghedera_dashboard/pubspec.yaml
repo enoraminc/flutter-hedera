@@ -28,6 +28,8 @@ dependencies:
     path: ../../lumbung_localizations
     # git: git@bitbucket.org:enoram/lumbung_localizations.git
 
+
+
   cupertino_icons: ^1.0.2
   flutter_bloc: ^7.3.1
   awesome_dialog: ^2.1.1
@@ -61,3 +63,4 @@ flutter:
     - assets/logo/
     - assets/lottie/
     - assets/images/
+    - assets/excel/export-cashbon-book.xlsx

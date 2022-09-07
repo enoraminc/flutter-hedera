@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:core/blocs/auth/auth_bloc.dart';
+import 'package:core/blocs/book/book_cubit.dart';
 import 'package:core/blocs/member_wallet/member_wallet_cubit.dart';
 import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
 import 'package:core/model/hedera_sub_wallet.dart';
@@ -32,10 +33,15 @@ import '../../core/utils/app_colors.dart';
 import '../../core/utils/loading_util.dart';
 import '../../core/utils/storage_utils.dart';
 import '../../core/utils/text_styles.dart';
+import '../../shared_widget/leading_icon_widget.dart';
 import '../../shared_widget/rounded_button.dart';
+import '../book/book.dart';
+import '../main_wallet/main_wallet.dart';
+import '../sub_wallet/sub_wallet.dart';
 
 part 'ui/home_screen.dart';
 
 part 'widget/sidebar_list_widget.dart';
 part 'widget/sub_wallet_chat_screen.dart';
 part 'widget/main_wallet_chat_screen.dart';
+part 'widget/book_chat_screen.dart';

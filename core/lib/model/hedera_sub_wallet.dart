@@ -13,7 +13,9 @@ class HederaSubWallet {
 
   final String title;
   final String description;
+
   final List<String> users;
+  final List<UserData> userList;
 
   static String activeState = "Active";
   static String deletedState = "Deleted";
@@ -31,6 +33,7 @@ class HederaSubWallet {
     required this.title,
     required this.description,
     required this.users,
+    required this.userList,
   });
 
   factory HederaSubWallet.empty() {
@@ -43,6 +46,7 @@ class HederaSubWallet {
       state: "",
       title: "",
       users: [],
+      userList: [],
     );
   }
 
@@ -57,6 +61,7 @@ class HederaSubWallet {
     String? title,
     String? description,
     List<String>? users,
+    List<UserData>? userList,
   }) {
     return HederaSubWallet(
       id: id ?? this.id,
@@ -69,6 +74,7 @@ class HederaSubWallet {
       title: title ?? this.title,
       description: description ?? this.description,
       users: users ?? this.users,
+      userList: userList ?? this.userList,
     );
   }
 
@@ -84,6 +90,7 @@ class HederaSubWallet {
       'title': title,
       'description': description,
       'users': users,
+      'userList': userList.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -103,6 +110,8 @@ class HederaSubWallet {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       users: List<String>.from(map['users']),
+      userList: List<UserData>.from(
+          (map['userList'] ?? []).map((x) => UserData.fromMap(x))),
     );
   }
 
@@ -113,7 +122,7 @@ class HederaSubWallet {
 
   @override
   String toString() {
-    return 'HederaSubWallet(id: $id, accountId: $accountId, privateKey: $privateKey, state: $state, createdAt: $createdAt, updatedAt: $updatedAt, network: $network, title: $title, description: $description, users: $users)';
+    return 'HederaSubWallet(id: $id, accountId: $accountId, privateKey: $privateKey, state: $state, createdAt: $createdAt, updatedAt: $updatedAt, network: $network, title: $title, description: $description, users: $users, userList: $userList)';
   }
 
   @override
@@ -131,7 +140,8 @@ class HederaSubWallet {
         other.network == network &&
         other.title == title &&
         other.description == description &&
-        listEquals(other.users, users);
+        listEquals(other.users, users) &&
+        listEquals(other.userList, userList);
   }
 
   @override
@@ -145,6 +155,68 @@ class HederaSubWallet {
         network.hashCode ^
         title.hashCode ^
         description.hashCode ^
-        users.hashCode;
+        users.hashCode ^
+        userList.hashCode;
   }
+}
+
+class UserData {
+  final String name;
+  final String email;
+  final String avatarUrl;
+  UserData({
+    required this.name,
+    required this.email,
+    required this.avatarUrl,
+  });
+
+  UserData copyWith({
+    String? name,
+    String? email,
+    String? avatarUrl,
+  }) {
+    return UserData(
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+      'avatarUrl': avatarUrl,
+    };
+  }
+
+  factory UserData.fromMap(Map<String, dynamic> map) {
+    return UserData(
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      avatarUrl: map['avatarUrl'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory UserData.fromJson(String source) =>
+      UserData.fromMap(json.decode(source));
+
+  @override
+  String toString() =>
+      'UserData(name: $name, email: $email, avatarUrl: $avatarUrl)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is UserData &&
+        other.name == name &&
+        other.email == email &&
+        other.avatarUrl == avatarUrl;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ email.hashCode ^ avatarUrl.hashCode;
 }

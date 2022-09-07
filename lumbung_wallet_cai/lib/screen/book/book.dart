@@ -5,6 +5,8 @@ import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
 import 'package:core/model/book_model.dart';
 import 'package:core/model/hedera_sub_wallet.dart';
 import 'package:core_cai_v3/base/base_cai_screen.dart';
+import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';
+import 'package:core_cai_v3/widgets/chat_item_screen.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +26,14 @@ import '../../core/utils/hedera_utils.dart';
 import '../../core/utils/text_styles.dart';
 import '../../shared_widget/custom_text_field.dart';
 import '../../shared_widget/custom_text_form_field.dart';
+import '../../shared_widget/leading_icon_widget.dart';
 import '../../shared_widget/main_wallet_selector.dart';
 import '../../shared_widget/rounded_button.dart';
 import '../../shared_widget/sub_wallet_selector.dart';
+import '../home/home.dart';
 
 part 'ui/book_screen.dart';
 part 'ui/create_book_screen.dart';
 
 part 'widget/book_type_selector_widget.dart';
+part 'widget/book_sidebar_list_widget.dart';

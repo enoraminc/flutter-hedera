@@ -9,7 +9,7 @@ class SideBarListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Builder(builder: (context) {
         final isDarkTheme = CustomFunctions.isDarkTheme(context);
         final user =
@@ -88,7 +88,7 @@ class SideBarListWidget extends StatelessWidget {
                           controller.hideMenu();
                           context
                               .read<MemberWalletCubit>()
-                              .changeSelectedWallet(null);
+                              .changeSelectedData(null);
 
                           context.push("${Routes.mainWallet}/${Routes.set}");
                         },
@@ -182,111 +182,13 @@ class SideBarListWidget extends StatelessWidget {
       final mainScreenType = context
           .select((MainScreenBloc element) => element.state.currentScreen);
 
-      bool isLoading = false;
-      // Wallet
-      isLoading = context.select(
-          (MemberWalletCubit element) => element.state is MemberWalletLoading);
-
-      final selectedMainWallet = context
-          .select((MemberWalletCubit element) => element.state.selectedWallet);
-
-      final mainWalletList = context.select(
-          (MemberWalletCubit element) => element.state.memberWalletList);
-
-      // Sub Wallet
-      isLoading = context.select(
-          (SubWalletCubit element) => element.state is SubWalletLoading);
-
-      final selectedSubWallet = context
-          .select((SubWalletCubit element) => element.state.selectedSubWallet);
-
-      final subWalletList = context
-          .select((SubWalletCubit element) => element.state.subWalletList);
-
-      if (isLoading) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-
       if (mainScreenType == MainScreenType.mainWalletDetail) {
-        if (mainWalletList.isEmpty) {
-          return const Center(
-            child: Text('Item is Empty'),
-          );
-        }
-
-        return ChatItemScreen<HederaWallet>(
-          isCurrentSelected: (HederaWallet data) =>
-              data.id == selectedMainWallet?.id,
-          items: mainWalletList,
-          itemTitle: (HederaWallet data) => data.displayName,
-          subTitle: (HederaWallet data) => data.email,
-          subTitle2: (HederaWallet data) =>
-              contentTagLabel(data.state, context),
-          leadingWidget: (HederaWallet data) =>
-              getLeadingIcon(data.displayName, context),
-          trailingWidget: (HederaWallet data) =>
-              const SizedBox(height: 5, width: 5),
-          onTapItem: (HederaWallet data) {
-            context.read<MemberWalletCubit>().changeSelectedWallet(data);
-
-            context
-                .read<ChatMessageBloc>()
-                .add(LoadChatMessages(path: data.id, locale: ""));
-
-            if (CustomFunctions.isMobile(context)) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const MainWalletChatScreen();
-                  },
-                ),
-              );
-            }
-          },
-        );
+        return const MainWalletSidebarListWidget();
       } else if (mainScreenType == MainScreenType.subWalletDetail) {
-        if (subWalletList.isEmpty) {
-          return const Center(
-            child: Text('Item is Empty'),
-          );
-        }
-
-        return ChatItemScreen<HederaSubWallet>(
-          isCurrentSelected: (HederaSubWallet data) =>
-              data.id == selectedSubWallet?.id,
-          items: subWalletList,
-          itemTitle: (HederaSubWallet data) => data.title,
-          subTitle: (HederaSubWallet data) => data.description,
-          subTitle2: (HederaSubWallet data) =>
-              contentTagLabel(data.state, context),
-          leadingWidget: (HederaSubWallet data) =>
-              getLeadingIcon(data.title, context),
-          trailingWidget: (HederaSubWallet data) =>
-              const SizedBox(height: 5, width: 5),
-          onTapItem: (HederaSubWallet data) {
-            context.read<SubWalletCubit>().changeSelectedData(data);
-
-            context
-                .read<ChatMessageBloc>()
-                .add(LoadChatMessages(path: data.id, locale: ""));
-
-            if (CustomFunctions.isMobile(context)) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const SubWalletChatScreen();
-                  },
-                ),
-              );
-            }
-          },
-        );
+        return const SubWalletSidebarListWidget();
+      } else if (mainScreenType == MainScreenType.bookDetail) {
+        return const BookSidebarListWidget();
       }
-
       return const SizedBox();
     });
   }
@@ -312,20 +214,28 @@ class SideBarListWidget extends StatelessWidget {
           Tab(
             text: "Sub Wallet",
           ),
+          Tab(
+            text: "Book",
+          ),
         ],
         onTap: (index) {
           if (index == 0) {
             context
                 .read<MainScreenBloc>()
                 .add(ToMainScreen(MainScreenType.mainWalletDetail));
-          } else {
+          } else if (index == 1) {
             context
                 .read<MainScreenBloc>()
                 .add(ToMainScreen(MainScreenType.subWalletDetail));
+          } else {
+            context
+                .read<MainScreenBloc>()
+                .add(ToMainScreen(MainScreenType.bookDetail));
           }
 
           context.read<SubWalletCubit>().changeSelectedData(null);
-          context.read<MemberWalletCubit>().changeSelectedWallet(null);
+          context.read<MemberWalletCubit>().changeSelectedData(null);
+          context.read<BookCubit>().changeSelectedData(null);
         },
       ),
     );
@@ -368,13 +278,13 @@ class SideBarListWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 15.0),
-            if (CustomFunctions.isMobile(context))
-              IconButton(
-                icon: const Icon(
-                  Icons.search,
-                ),
-                onPressed: () {},
-              ),
+            // if (CustomFunctions.isMobile(context))
+            // IconButton(
+            //   icon: const Icon(
+            //     Icons.search,
+            //   ),
+            //   onPressed: () {},
+            // ),
             getPopupMenu(context),
           ],
         ),
@@ -458,50 +368,6 @@ class SideBarListWidget extends StatelessWidget {
           },
         );
       },
-    );
-  }
-
-  Widget getLeadingIcon(String title, BuildContext context) {
-    return CircleAvatar(
-      radius: 18,
-      backgroundColor: Theme.of(context).primaryColor,
-      child: Text(
-        (title[0]).toUpperCase(),
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget contentTagLabel(String title, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5),
-      child: Wrap(
-        spacing: 10,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircleAvatar(
-                radius: 4,
-                backgroundColor: Colors.green,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headline2,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

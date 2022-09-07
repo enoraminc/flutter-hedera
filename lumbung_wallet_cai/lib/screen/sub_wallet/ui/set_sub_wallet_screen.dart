@@ -13,6 +13,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   HederaWallet? activeWallet;
+
   List<HederaWallet> walletSelectedList = [];
 
   void onSave() {
@@ -27,6 +28,13 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
       title: titleController.text,
       description: descriptionController.text,
       users: walletSelectedList.map((e) => e.email).toList(),
+      userList: walletSelectedList
+          .map((e) => UserData(
+                name: e.displayName,
+                email: e.email,
+                avatarUrl: e.profileImage,
+              ))
+          .toList(),
     );
 
     context.read<SubWalletCubit>().setSubWallet(subWallet);
@@ -37,8 +45,12 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
     final selectedData = context.read<SubWalletCubit>().state.selectedSubWallet;
     titleController.text = selectedData?.title ?? "";
     descriptionController.text = selectedData?.description ?? "";
-    walletSelectedList = List<HederaWallet>.from((selectedData?.users ?? [])
-        .map((e) => HederaWallet.empty().copyWith(email: e)));
+    walletSelectedList = List<HederaWallet>.from(
+        (selectedData?.userList ?? []).map((e) => HederaWallet.empty().copyWith(
+              email: e.email,
+              displayName: e.name,
+              profileImage: e.avatarUrl,
+            )));
 
     super.initState();
   }

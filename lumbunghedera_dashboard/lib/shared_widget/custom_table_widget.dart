@@ -15,6 +15,7 @@ class CustomTableWidget extends StatelessWidget {
     this.onSort,
     this.onTap,
     this.onSeeAllTap,
+    this.onExport,
     this.isWithPadding = true,
   }) : super(key: key);
 
@@ -27,6 +28,7 @@ class CustomTableWidget extends StatelessWidget {
   final Function(String id)? onTap;
   final Function()? onSeeAllTap;
   final bool isWithPadding;
+  final Function()? onExport;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +52,20 @@ class CustomTableWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              if (onExport != null) ...[
+                const SizedBox(width: 10),
+                RoundedButton(
+                  text: "Export",
+                  selected: true,
+                  isSmall: true,
+                  selectedColor: Colors.orange,
+                  onPressed: () {
+                    onExport?.call();
+                  },
+                ),
+              ],
               if (onSeeAllTap != null) ...[
+                const SizedBox(width: 10),
                 RoundedButton(
                   text: "See All",
                   selected: true,
@@ -61,8 +75,8 @@ class CustomTableWidget extends StatelessWidget {
                     onSeeAllTap?.call();
                   },
                 ),
-                if (isWithPadding) const SizedBox(width: 20),
               ],
+              if (isWithPadding) const SizedBox(width: 20),
             ],
           ),
           const SizedBox(height: 10),

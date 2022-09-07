@@ -13,6 +13,8 @@ class BookModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String network;
+  final String state;
+
   BookModel({
     required this.id,
     required this.topicId,
@@ -24,7 +26,11 @@ class BookModel {
     this.createdAt,
     this.updatedAt,
     required this.network,
+    required this.state,
   });
+
+  static String activeState = "Active";
+  static String deletedState = "Deleted";
 
   static String cashbonType = "Cashbon";
 
@@ -41,6 +47,7 @@ class BookModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? network,
+    String? state,
   }) {
     return BookModel(
       id: id ?? this.id,
@@ -53,6 +60,7 @@ class BookModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       network: network ?? this.network,
+      state: state ?? this.state,
     );
   }
 
@@ -68,6 +76,7 @@ class BookModel {
       'createdAt': createdAt?.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
       'network': network,
+      'state': state,
     };
   }
 
@@ -88,6 +97,7 @@ class BookModel {
           ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
           : null,
       network: map['network'] ?? '',
+      state: map['state'] ?? '',
     );
   }
 
@@ -98,7 +108,7 @@ class BookModel {
 
   @override
   String toString() {
-    return 'BookModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, type: $type, memberBookList: $memberBookList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network)';
+    return 'BookModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, type: $type, memberBookList: $memberBookList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network, state: $state)';
   }
 
   @override
@@ -116,7 +126,8 @@ class BookModel {
         listEquals(other.memberBookList, memberBookList) &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
-        other.network == network;
+        other.network == network &&
+        other.state == state;
   }
 
   @override
@@ -130,7 +141,8 @@ class BookModel {
         memberBookList.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode ^
-        network.hashCode;
+        network.hashCode ^
+        state.hashCode;
   }
 }
 

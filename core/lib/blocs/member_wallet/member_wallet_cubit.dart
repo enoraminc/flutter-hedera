@@ -124,7 +124,7 @@ class MemberWalletCubit extends Cubit<MemberWalletState> {
     });
   }
 
-  Future<void> changeSelectedWallet(HederaWallet? wallet) async {
+  Future<void> changeSelectedData(HederaWallet? wallet) async {
     emit(FetchMemberWalletSuccess(
       memberWalletList: state.memberWalletList,
       selectedWallet: wallet,

@@ -13,6 +13,7 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
   Future<void> onRefresh() async {
     context.read<SubWalletCubit>().getSubWallet();
     context.read<MemberWalletCubit>().fetchAllMemberWallet();
+    context.read<BookCubit>().getBook("");
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -30,6 +31,7 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
         authListener(),
         mainWalletListener(),
         subWalletListener(),
+        bookListener(),
       ],
       child: BaseCaiScreen(
         sidebarWidget: BlocBuilder<SidebarBloc, SidebarState>(
@@ -47,6 +49,8 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
             } else if (mainState.currentScreen ==
                 MainScreenType.subWalletDetail) {
               return const SubWalletChatScreen();
+            } else if (mainState.currentScreen == MainScreenType.bookDetail) {
+              return const BookChatScreen();
             }
 
             return Container();
@@ -117,6 +121,29 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
         }
 
         if (state is SubWalletFailed) {
+          showSnackBar(state.message, isError: true);
+        }
+      },
+    );
+  }
+
+  BlocListener<BookCubit, BookState> bookListener() {
+    return BlocListener<BookCubit, BookState>(
+      listener: (context, state) {
+        if (state is SubmitBookLoading) {
+          loading = LoadingUtil.build(context);
+          loading?.show();
+        } else {
+          loading?.dismiss();
+        }
+        if (state is DeleteBookSuccess || state is SetBookSuccess) {
+          onRefresh();
+        }
+
+        if (state is BookFailed) {
+          showSnackBar(state.message, isError: true);
+        }
+        if (state is DeleteBookFailed) {
           showSnackBar(state.message, isError: true);
         }
       },

@@ -40,6 +40,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
       memberBookList: memberBookList,
       network: "",
       type: bookType,
+      state: BookModel.activeState,
     );
 
     context.read<BookCubit>().setBook(book);
@@ -201,11 +202,11 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
   Builder setLimitMemberWidget() {
     return Builder(
       builder: (context) {
-        final memberWalletList = context.select(
-            (MemberWalletCubit element) => element.state.memberWalletList);
+        // final memberWalletList = context.select(
+        //     (MemberWalletCubit element) => element.state.memberWalletList);
 
-        final isLoading = context.select((MemberWalletCubit element) =>
-            element.state is MemberWalletLoading);
+        // final isLoading = context.select((MemberWalletCubit element) =>
+        //     element.state is MemberWalletLoading);
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -221,78 +222,82 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              if (isLoading)
-                FadeShimmer(
-                  height: 50,
-                  width: double.infinity,
-                  radius: 4,
-                  fadeTheme: CustomFunctions.isDarkTheme(context)
-                      ? FadeTheme.dark
-                      : FadeTheme.light,
-                )
-              else
-                Row(
-                  children: [
-                    Expanded(
-                      child: MainWalletSelector(
-                        activeWallet: activeWallet,
-                        memberWalletList: memberWalletList
-                            .where((element) => !walletSelectedList
-                                .map((e) => e.email)
-                                .toList()
-                                .contains(element.email))
-                            .toList(),
-                        onChange: (wallet) {
-                          setState(() {
-                            activeWallet = wallet;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: CustomTextFormField(
-                        controller: limitController,
-                        text: "Limit",
-                        keyboardType: TextInputType.number,
-                        hint: "Limit..",
-                        fieldOnly: true,
-                        onChanged: (value) {},
-                        validator: (value) {
-                          return null;
-                        },
-                        isNumber: true,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    RoundedButton(
-                      text: "",
-                      selected: true,
-                      icon: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      selectedColor: Colors.orange,
-                      onPressed: () {
+              // if (isLoading)
+              //   FadeShimmer(
+              //     height: 50,
+              //     width: double.infinity,
+              //     radius: 4,
+              //     fadeTheme: CustomFunctions.isDarkTheme(context)
+              //         ? FadeTheme.dark
+              //         : FadeTheme.light,
+              //   )
+              // else
+              Row(
+                children: [
+                  Expanded(
+                    child: MainWalletSelector(
+                      activeWallet: activeWallet,
+                      memberWalletList: (subWalletSelected?.userList ?? [])
+                          .map((e) => HederaWallet.empty().copyWith(
+                                email: e.email,
+                                displayName: e.name,
+                                profileImage: e.avatarUrl,
+                              ))
+                          .where((element) => !walletSelectedList
+                              .map((e) => e.email)
+                              .toList()
+                              .contains(element.email))
+                          .toList(),
+                      onChange: (wallet) {
                         setState(() {
-                          if (activeWallet != null) {
-                            walletSelectedList.add(activeWallet!);
-                            memberBookList.add(
-                              MemberBook(
-                                  email: activeWallet?.email ?? "",
-                                  name: activeWallet?.displayName ?? "",
-                                  limitPayable: int.tryParse(limitController
-                                          .text
-                                          .replaceAll(".", "")) ??
-                                      0),
-                            );
-                          }
-                          activeWallet = null;
+                          activeWallet = wallet;
                         });
                       },
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: CustomTextFormField(
+                      controller: limitController,
+                      text: "Limit",
+                      keyboardType: TextInputType.number,
+                      hint: "Limit..",
+                      fieldOnly: true,
+                      onChanged: (value) {},
+                      validator: (value) {
+                        return null;
+                      },
+                      isNumber: true,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  RoundedButton(
+                    text: "",
+                    selected: true,
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    selectedColor: Colors.orange,
+                    onPressed: () {
+                      setState(() {
+                        if (activeWallet != null) {
+                          walletSelectedList.add(activeWallet!);
+                          memberBookList.add(
+                            MemberBook(
+                                email: activeWallet?.email ?? "",
+                                name: activeWallet?.displayName ?? "",
+                                limitPayable: int.tryParse(limitController.text
+                                        .replaceAll(".", "")) ??
+                                    0),
+                          );
+                        }
+                        activeWallet = null;
+                      });
+                    },
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               Text(
                 "Limit Payable Member List",

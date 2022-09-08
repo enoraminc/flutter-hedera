@@ -103,11 +103,11 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
   Builder memberSelectorWidget() {
     return Builder(
       builder: (context) {
-        final memberWalletList = context.select(
-            (MemberWalletCubit element) => element.state.memberWalletList);
+        final memberWalletList = context
+            .select((MainWalletCubit element) => element.state.mainWalletList);
 
-        final isLoading = context.select((MemberWalletCubit element) =>
-            element.state is MemberWalletLoading);
+        final isLoading = context.select(
+            (MainWalletCubit element) => element.state is MemberWalletLoading);
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),

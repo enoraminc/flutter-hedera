@@ -11,8 +11,8 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
   final CustomPopupMenuController _controller = CustomPopupMenuController();
 
   Future<void> onRefresh() async {
-    context.read<SubWalletCubit>().getSubWallet();
-    context.read<MemberWalletCubit>().fetchAllMemberWallet();
+    context.read<SubWalletCubit>().fetchSubWallet();
+    context.read<MainWalletCubit>().fetchMainWallet();
     context.read<BookCubit>().getBook("");
 
     await Future.delayed(const Duration(milliseconds: 100));
@@ -86,8 +86,8 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
     );
   }
 
-  BlocListener<MemberWalletCubit, MemberWalletState> mainWalletListener() {
-    return BlocListener<MemberWalletCubit, MemberWalletState>(
+  BlocListener<MainWalletCubit, MainWalletState> mainWalletListener() {
+    return BlocListener<MainWalletCubit, MainWalletState>(
       listener: (context, state) {
         if (state is SubmitMemberLoading) {
           loading = LoadingUtil.build(context);

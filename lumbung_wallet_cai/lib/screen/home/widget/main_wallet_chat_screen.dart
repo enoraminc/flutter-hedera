@@ -12,8 +12,8 @@ class _MainWalletChatScreenState extends BaseChatScreen<MainWalletChatScreen> {
   Widget appBar() {
     return Builder(
       builder: (context) {
-        final selectedData = context.select(
-            (MemberWalletCubit element) => element.state.selectedWallet);
+        final selectedData = context
+            .select((MainWalletCubit element) => element.state.selectedWallet);
         return ChatMessageHeader(
           leadingWidget: CircleAvatar(
             radius: 18,
@@ -65,8 +65,8 @@ class _MainWalletChatScreenState extends BaseChatScreen<MainWalletChatScreen> {
   Builder builder({required Widget child}) {
     return Builder(
       builder: (context) {
-        final selectedData = context.select(
-            (MemberWalletCubit element) => element.state.selectedWallet);
+        final selectedData = context
+            .select((MainWalletCubit element) => element.state.selectedWallet);
 
         if (selectedData == null) {
           return unselectedChatWidget(context);
@@ -78,15 +78,15 @@ class _MainWalletChatScreenState extends BaseChatScreen<MainWalletChatScreen> {
 
   @override
   String currentChatId() {
-    return context.read<MemberWalletCubit>().state.selectedWallet?.id ?? "";
+    return context.read<MainWalletCubit>().state.selectedWallet?.id ?? "";
   }
 
   @override
   Widget detailContentsWidget() {
     return Builder(
       builder: (context) {
-        final selectedData = context.select(
-            (MemberWalletCubit element) => element.state.selectedWallet);
+        final selectedData = context
+            .select((MainWalletCubit element) => element.state.selectedWallet);
 
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,

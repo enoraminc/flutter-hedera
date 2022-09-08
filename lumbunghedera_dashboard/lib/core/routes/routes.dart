@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lumbunghedera_dashboard/screen/book/book.dart';
 import 'package:lumbunghedera_dashboard/screen/dashboard/dashboard.dart';
+import 'package:lumbunghedera_dashboard/screen/wallet/wallet.dart';
 
 import '../../screen/auth/auth.dart';
 
@@ -15,10 +16,12 @@ class Routes {
   static String login = "/login";
   static String dashboard = "/dashboard";
 
-  static String mainWallet = "/main-wallet";
-  static String subWallet = "/sub-wallet";
+  static String wallet = "/wallet";
+  static String mainWallet = "main";
+  static String subWallet = "sub";
 
   static String book = "/book";
+  static String convertBook = "convert";
 
   static GoRouter getRouter(AuthBloc authBloc) => GoRouter(
         initialLocation: splash,
@@ -27,66 +30,98 @@ class Routes {
         routes: <GoRoute>[
           GoRoute(
             path: splash,
-            builder: (BuildContext context, GoRouterState state) {
-              return const SplashScreen();
-            },
+            // builder: (BuildContext context, GoRouterState state) {
+            //   return const SplashScreen();
+            // },
+            pageBuilder: (context, state) => CustomTransitionPage<void>(
+              key: state.pageKey,
+              child: const SplashScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) =>
+                      FadeTransition(opacity: animation, child: child),
+            ),
           ),
           GoRoute(
             path: login,
-            builder: (BuildContext context, GoRouterState state) {
-              return const LoginScreen();
-            },
+            // builder: (BuildContext context, GoRouterState state) {
+            //   return const LoginScreen();
+            // },
+            pageBuilder: (context, state) => CustomTransitionPage<void>(
+              key: state.pageKey,
+              child: const LoginScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) =>
+                      FadeTransition(opacity: animation, child: child),
+            ),
           ),
           GoRoute(
             path: dashboard,
-            builder: (BuildContext context, GoRouterState state) {
-              return const DashboardScreen();
-            },
+            // builder: (BuildContext context, GoRouterState state) {
+            //   return const DashboardScreen();
+            // },
+            pageBuilder: (context, state) => CustomTransitionPage<void>(
+              key: state.pageKey,
+              child: const DashboardScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) =>
+                      FadeTransition(opacity: animation, child: child),
+            ),
           ),
           GoRoute(
-            path: "$book/:id",
-            builder: (BuildContext context, GoRouterState state) {
-              final id = state.params["id"] ?? "";
-              return BookMessageScreen(topicId: id);
+            path: book,
+            // builder: (BuildContext context, GoRouterState state) {
+            //   final id = state.queryParams["id"] ?? "";
+            //   return BookScreen(
+            //     id: id,
+            //   );
+            // },
+            pageBuilder: (context, state) {
+              final id = state.queryParams["id"] ?? "";
+              return CustomTransitionPage<void>(
+                key: state.pageKey,
+                child: BookScreen(
+                  id: id,
+                ),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) =>
+                        FadeTransition(opacity: animation, child: child),
+              );
             },
-            // routes: [
-            //   GoRoute(
-            //     path: set,
-            //     builder: (BuildContext context, GoRouterState state) {
-            //       final id = state.params["id"] ?? "";
-            //       return BookMessageScreen(id: id);
-            //     },
-            //   ),
-            // ],
+            routes: [
+              GoRoute(
+                path: "$convertBook/:id",
+                builder: (BuildContext context, GoRouterState state) {
+                  final id = state.params["id"] ?? "";
+                  return BookMessageScreen(topicId: id);
+                },
+              ),
+            ],
           ),
-          // GoRoute(
-          //   path: mainWallet,
-          //   builder: (BuildContext context, GoRouterState state) {
-          //     return const DetailMainWalletScreen();
-          //   },
-          //   routes: [
-          //     GoRoute(
-          //       path: set,
-          //       builder: (BuildContext context, GoRouterState state) {
-          //         return const SetMainWalletScreen();
-          //       },
-          //     ),
-          //   ],
-          // ),
-          // GoRoute(
-          //   path: subWallet,
-          //   builder: (BuildContext context, GoRouterState state) {
-          //     return const DetailSubWalletScreen();
-          //   },
-          //   routes: [
-          //     GoRoute(
-          //       path: set,
-          //       builder: (BuildContext context, GoRouterState state) {
-          //         return const SetSubWalletScreen();
-          //       },
-          //     ),
-          //   ],
-          // ),
+          GoRoute(
+            path: "$wallet/:type",
+            builder: (BuildContext context, GoRouterState state) {
+              final id = state.queryParams["id"] ?? "";
+              final type = state.params["type"] ?? "";
+              return WalletScreen(
+                id: id,
+                type: type,
+              );
+            },
+            pageBuilder: (context, state) {
+              final id = state.queryParams["id"] ?? "";
+              final type = state.params["type"] ?? "";
+              return CustomTransitionPage<void>(
+                key: state.pageKey,
+                child: WalletScreen(
+                  id: id,
+                  type: type,
+                ),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) =>
+                        FadeTransition(opacity: animation, child: child),
+              );
+            },
+          ),
         ],
         redirect: (GoRouterState state) {
           final loggingIn = state.subloc == '/login' || state.subloc == '/';

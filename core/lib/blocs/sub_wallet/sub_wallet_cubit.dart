@@ -46,7 +46,7 @@ class SubWalletCubit extends Cubit<SubWalletState> {
     });
   }
 
-  Future<void> getSubWallet() async {
+  Future<void> fetchSubWallet() async {
     emit(SubWalletLoading(
       selectedSubWallet: state.selectedSubWallet,
       subWalletList: state.subWalletList,

@@ -9,8 +9,8 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends BaseStateful<DashboardScreen> {
   Future<void> onRefresh() async {
-    context.read<SubWalletCubit>().getSubWallet();
-    context.read<MemberWalletCubit>().fetchAllMemberWallet();
+    context.read<SubWalletCubit>().fetchSubWallet();
+    context.read<MainWalletCubit>().fetchMainWallet();
     context.read<BookCubit>().getBook("");
 
     await Future.delayed(const Duration(milliseconds: 100));
@@ -56,7 +56,10 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
         title: 'Books',
         isLoading: isLoading,
         onTap: (String topicId) {
-          context.push("${Routes.book}/$topicId");
+          context.push("${Routes.book}/?id=$topicId");
+        },
+        onSeeAllTap: () {
+          context.go(Routes.book);
         },
         columns: const [
           "ID",
@@ -64,7 +67,7 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
           "Description",
         ],
         rows: books
-            // .take(5)
+            .take(5)
             .map((book) => [
                   book.topicId,
                   book.title,
@@ -78,19 +81,25 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
   Builder mainWalletTableWidget() {
     return Builder(builder: (context) {
       final isLoading = context.select(
-          (MemberWalletCubit element) => element.state is MemberWalletLoading);
-      final walletList = context.select(
-          (MemberWalletCubit element) => element.state.memberWalletList);
+          (MainWalletCubit element) => element.state is MemberWalletLoading);
+      final walletList = context
+          .select((MainWalletCubit element) => element.state.mainWalletList);
       return CustomTableWidget(
         title: 'Main Wallet',
         isLoading: isLoading,
+        onSeeAllTap: () {
+          context.go("${Routes.wallet}/${Routes.mainWallet}");
+        },
+        onTap: (String id) {
+          context.go("${Routes.wallet}/${Routes.mainWallet}?id=$id");
+        },
         columns: const [
           "ID",
           "Name",
           "Email",
         ],
         rows: walletList
-            // .take(5)
+            .take(5)
             .map((wallet) => [
                   wallet.accountId,
                   wallet.displayName,
@@ -111,6 +120,12 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
       return CustomTableWidget(
         title: 'Sub Wallet',
         isLoading: isLoading,
+        onSeeAllTap: () {
+          context.go("${Routes.wallet}/${Routes.subWallet}");
+        },
+        onTap: (String id) {
+          context.go("${Routes.wallet}/${Routes.subWallet}?id=$id");
+        },
         columns: const [
           "ID",
           "Name",
@@ -118,7 +133,7 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
           "Users",
         ],
         rows: subWalletList
-            // .take(5)
+            .take(5)
             .map((wallet) => [
                   wallet.accountId,
                   wallet.title,
@@ -154,10 +169,10 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
         const SizedBox(width: 10),
         Expanded(
           child: Builder(builder: (context) {
-            final isLoading = context.select((MemberWalletCubit element) =>
+            final isLoading = context.select((MainWalletCubit element) =>
                 element.state is MemberWalletLoading);
-            final value = context.select((MemberWalletCubit element) =>
-                element.state.memberWalletList.length);
+            final value = context.select((MainWalletCubit element) =>
+                element.state.mainWalletList.length);
             return BoxContentWidget(
               icon: FontAwesomeIcons.wallet,
               title: "Main Wallet",

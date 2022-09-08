@@ -18,7 +18,7 @@ import 'package:core/blocs/auth/auth_bloc.dart';
 import 'package:lumbung_common/bloc/hedera/hedera_cubit.dart';
 
 import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';
-import 'package:core/blocs/member_wallet/member_wallet_cubit.dart';
+import 'package:core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
 
 import 'core/routes/routes.dart';
@@ -74,8 +74,8 @@ class _MyAppState extends State<MyApp> {
             sharedPreferences,
           ),
         ),
-        BlocProvider<MemberWalletCubit>(
-          create: (_) => MemberWalletCubit(
+        BlocProvider<MainWalletCubit>(
+          create: (_) => MainWalletCubit(
             locator.get<MemberWalletApi>(),
             sharedPreferences,
           ),

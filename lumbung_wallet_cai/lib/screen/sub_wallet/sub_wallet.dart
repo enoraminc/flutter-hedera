@@ -1,4 +1,5 @@
-import 'package:core/blocs/member_wallet/member_wallet_cubit.dart';
+
+import 'package:core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
 import 'package:core/model/hedera_sub_wallet.dart';
 import 'package:core_cai_v3/base/base_cai_screen.dart';

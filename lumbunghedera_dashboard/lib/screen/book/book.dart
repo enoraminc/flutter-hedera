@@ -14,10 +14,16 @@ import 'package:lumbunghedera_dashboard/core/base/base_stateful.dart';
 import 'package:collection/collection.dart';
 import 'package:core/utils/date_utils.dart';
 import 'package:lumbunghedera_dashboard/core/utils/text_styles.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../core/routes/routes.dart';
+import '../../core/utils/hedera_utils.dart';
 import '../../core/utils/loading_util.dart';
 import '../../shared_widget/base_screen.dart';
 import '../../shared_widget/custom_app_bar.dart';
 import '../../shared_widget/custom_table_widget.dart';
+import '../../shared_widget/rounded_button.dart';
 
 part 'ui/book_message_screen.dart';
+part 'ui/book_screen.dart';

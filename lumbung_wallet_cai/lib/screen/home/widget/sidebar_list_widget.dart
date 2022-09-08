@@ -87,7 +87,7 @@ class SideBarListWidget extends StatelessWidget {
                         onTap: () {
                           controller.hideMenu();
                           context
-                              .read<MemberWalletCubit>()
+                              .read<MainWalletCubit>()
                               .changeSelectedData(null);
 
                           context.push("${Routes.mainWallet}/${Routes.set}");
@@ -234,7 +234,7 @@ class SideBarListWidget extends StatelessWidget {
           }
 
           context.read<SubWalletCubit>().changeSelectedData(null);
-          context.read<MemberWalletCubit>().changeSelectedData(null);
+          context.read<MainWalletCubit>().changeSelectedData(null);
           context.read<BookCubit>().changeSelectedData(null);
         },
       ),

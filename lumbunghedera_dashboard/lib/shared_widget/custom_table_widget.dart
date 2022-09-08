@@ -4,6 +4,7 @@ import 'package:lumbunghedera_dashboard/shared_widget/rounded_button.dart';
 
 import '../core/utils/custom_function.dart';
 import '../core/utils/text_styles.dart';
+import 'package:data_table_2/data_table_2.dart';
 
 class CustomTableWidget extends StatelessWidget {
   const CustomTableWidget({
@@ -38,6 +39,7 @@ class CustomTableWidget extends StatelessWidget {
         color: Theme.of(context).appBarTheme.backgroundColor,
         borderRadius: BorderRadius.circular(5),
       ),
+      width: double.infinity,
       child: Column(
         children: [
           Row(
@@ -93,6 +95,7 @@ class CustomTableWidget extends StatelessWidget {
                   width: double.infinity,
                   child: DataTable(
                     showCheckboxColumn: false, // <-- this is important
+
                     columns: columns
                         .map(
                           (item) => DataColumn(
@@ -127,6 +130,121 @@ class CustomTableWidget extends StatelessWidget {
                             .toList(),
                       );
                     }).toList(),
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomTableWidget2 extends StatelessWidget {
+  const CustomTableWidget2({
+    Key? key,
+    required this.title,
+    required this.columns,
+    required this.rows,
+    required this.isLoading,
+    this.onSort,
+    this.onTap,
+    this.isWithPadding = true,
+    this.buttonList = const [],
+  }) : super(key: key);
+
+  final String title;
+
+  final List<String> columns;
+  final List<List<String>> rows;
+  final bool isLoading;
+  final Function(int colIndex)? onSort;
+  final Function(String id)? onTap;
+  final bool isWithPadding;
+  final List<Widget> buttonList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(isWithPadding ? 10 : 0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      width: double.infinity,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (isWithPadding) const SizedBox(width: 20),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Styles.commonTextStyle(
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              if (buttonList.isNotEmpty) ...buttonList,
+              if (isWithPadding) const SizedBox(width: 20),
+            ],
+          ),
+          const SizedBox(height: 10),
+          isLoading
+              ? Expanded(
+                  child: FadeShimmer(
+                    height: double.infinity,
+                    width: double.infinity,
+                    radius: 4,
+                    fadeTheme: CustomFunctions.isDarkTheme(context)
+                        ? FadeTheme.dark
+                        : FadeTheme.light,
+                  ),
+                )
+              : Expanded(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DataTable2(
+                      showCheckboxColumn: false, // <-- this is important
+                      columnSpacing: 12,
+                      horizontalMargin: 12,
+                      minWidth: 600,
+                      columns: columns
+                          .map(
+                            (item) => DataColumn2(
+                                fixedWidth: item == columns.first ? 180 : null,
+                                label: Text(
+                                  item,
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .bodyText1,
+                                ),
+                                onSort: (colIndex, _) {
+                                  onSort?.call(colIndex);
+                                }),
+                          )
+                          .toList(),
+                      rows: rows.map((items) {
+                        return DataRow2(
+                          onSelectChanged: (newValue) {
+                            onTap?.call(items.first);
+                          },
+                          specificRowHeight: 150,
+                          cells: items
+                              .map(
+                                (item) => DataCell(
+                                  Text(
+                                    item,
+                                    style: Styles.commonTextStyle(
+                                      size: 16,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
         ],

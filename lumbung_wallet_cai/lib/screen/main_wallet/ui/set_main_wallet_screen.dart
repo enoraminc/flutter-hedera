@@ -19,7 +19,7 @@ class _SetMainWalletScreenState extends BaseStateful<SetMainWalletScreen> {
     }
 
     HederaWallet? wallet =
-        context.read<MemberWalletCubit>().state.selectedWallet ??
+        context.read<MainWalletCubit>().state.selectedWallet ??
             HederaWallet.empty();
 
     wallet = wallet.copyWith(
@@ -27,12 +27,12 @@ class _SetMainWalletScreenState extends BaseStateful<SetMainWalletScreen> {
       email: emailController.text.toLowerCase(),
     );
 
-    context.read<MemberWalletCubit>().setMainWallet(wallet);
+    context.read<MainWalletCubit>().setMainWallet(wallet);
   }
 
   @override
   void initState() {
-    final selectedData = context.read<MemberWalletCubit>().state.selectedWallet;
+    final selectedData = context.read<MainWalletCubit>().state.selectedWallet;
     nameController.text = selectedData?.displayName ?? "";
     emailController.text = selectedData?.email ?? "";
 
@@ -41,7 +41,7 @@ class _SetMainWalletScreenState extends BaseStateful<SetMainWalletScreen> {
 
   @override
   Widget body() {
-    return BlocListener<MemberWalletCubit, MemberWalletState>(
+    return BlocListener<MainWalletCubit, MainWalletState>(
       listener: (context, state) {
         if (state is SubmitMemberLoading) {
           loading = LoadingUtil.build(context);
@@ -129,7 +129,7 @@ class _SetMainWalletScreenState extends BaseStateful<SetMainWalletScreen> {
   Widget _bodyHeader() {
     return Builder(builder: (context) {
       final selectedData = context
-          .select((MemberWalletCubit element) => element.state.selectedWallet);
+          .select((MainWalletCubit element) => element.state.selectedWallet);
       return Container(
         height: 56.0,
         decoration: BoxDecoration(

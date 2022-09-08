@@ -8,13 +8,13 @@ class MainWalletSidebarListWidget extends StatelessWidget {
     return Builder(builder: (context) {
       // Sub Wallet
       final isLoading = context.select(
-          (MemberWalletCubit element) => element.state is MemberWalletLoading);
+          (MainWalletCubit element) => element.state is MemberWalletLoading);
 
       final selectedMainWallet = context
-          .select((MemberWalletCubit element) => element.state.selectedWallet);
+          .select((MainWalletCubit element) => element.state.selectedWallet);
 
-      final mainWalletList = context.select(
-          (MemberWalletCubit element) => element.state.memberWalletList);
+      final mainWalletList = context
+          .select((MainWalletCubit element) => element.state.mainWalletList);
 
       if (isLoading) {
         return const Center(
@@ -41,7 +41,7 @@ class MainWalletSidebarListWidget extends StatelessWidget {
         trailingWidget: (HederaWallet data) =>
             const SizedBox(height: 5, width: 5),
         onTapItem: (HederaWallet data) {
-          context.read<MemberWalletCubit>().changeSelectedData(data);
+          context.read<MainWalletCubit>().changeSelectedData(data);
 
           context
               .read<ChatMessageBloc>()

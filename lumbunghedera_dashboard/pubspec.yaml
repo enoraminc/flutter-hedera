@@ -44,6 +44,7 @@ dependencies:
   custom_pop_up_menu: ^1.2.2
   proste_indexed_stack: ^0.2.4
   font_awesome_flutter: ^9.2.0
+  data_table_2: ^2.3.7
 
 
 dev_dependencies:

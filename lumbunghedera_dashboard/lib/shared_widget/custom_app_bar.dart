@@ -26,8 +26,10 @@ class CustomAppBar extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+        ),
         width: CustomFunctions.getMediaWidth(context),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,28 +52,123 @@ class CustomAppBar extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  FlavorConfig.instance.values.appName,
-                  style: Styles.commonTextStyle(
-                    size: 16,
-                    fontWeight: FontWeight.bold,
+            Container(
+              padding: const EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    FlavorConfig.instance.values.appName,
+                    style: Styles.commonTextStyle(
+                      size: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  FlavorConfig.instance.values.versionNumber,
-                  style: Styles.commonTextStyle(
-                    size: 12,
+                  Text(
+                    FlavorConfig.instance.values.versionNumber,
+                    style: Styles.commonTextStyle(
+                      size: 12,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const Spacer(),
-            const ProfileDropdown(),
+            const SizedBox(width: 5),
+            CustomFunctions.isMobile(context)
+                ? const Spacer()
+                : Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        tabWidget(
+                          context,
+                          route: Routes.dashboard,
+                          title: "Dashboard",
+                        ),
+                        tabWidget(
+                          context,
+                          route: Routes.book,
+                          title: "Book",
+                        ),
+                        tabWidget(
+                          context,
+                          route: "${Routes.wallet}/${Routes.mainWallet}",
+                          title: "Wallet",
+                        ),
+                      ],
+                    ),
+                  ),
+            const SizedBox(width: 5),
+            const Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+              ),
+              child: ProfileDropdown(),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  InkWell tabWidget(
+    BuildContext context, {
+    required String route,
+    required String title,
+  }) {
+    final currentRoute = GoRouter.of(context).location.split("?").first;
+
+    // print("==== $route $currentRoute");///
+
+    return InkWell(
+      onTap: () {
+        if (currentRoute != route) {
+          Router.neglect(
+            context,
+            () => context.go(route),
+          );
+        }
+      },
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.only(
+          top: 20,
+          bottom: 20,
+          left: 15,
+          right: 15,
+        ),
+        decoration: BoxDecoration(
+          border: currentRoute == route
+              ? const Border(
+                  bottom: BorderSide(
+                    color: Colors.orange,
+                    width: 3.0,
+                  ),
+                )
+              : const Border(
+                  bottom: BorderSide(
+                    color: Colors.transparent,
+                    width: 3.0,
+                  ),
+                ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: currentRoute == route ? FontWeight.bold : null,
+            color: currentRoute == route
+                ? CustomFunctions.isDarkTheme(context)
+                    ? Colors.white
+                    : Colors.black
+                : Colors.grey,
+          ),
         ),
       ),
     );

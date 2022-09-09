@@ -126,12 +126,25 @@ class _BookChatScreenState extends BaseChatScreen<BookChatScreen> {
       final user =
           context.select((AuthBloc element) => element.state.currentUser);
 
+      final book =
+          context.select((BookCubit element) => element.state.selectedBook);
       // if (ground == null) return const SizedBox();
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          FloatingButton(
+            title: "Submit Cashbon",
+            icon: Icons.input,
+            onTap: () {
+              context.push(
+                  "${Routes.book}/${Routes.submitCashbon}/${book?.topicId}");
+            },
+          ),
+          const SizedBox(
+            height: 15,
+          ),
           FloatingButton(
             title: "Delete Book",
             icon: Icons.delete,

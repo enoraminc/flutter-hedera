@@ -34,6 +34,7 @@ import '../home/home.dart';
 
 part 'ui/book_screen.dart';
 part 'ui/create_book_screen.dart';
+part 'ui/submit_cashbon_member_screen.dart';
 
 part 'widget/book_type_selector_widget.dart';
 part 'widget/book_sidebar_list_widget.dart';

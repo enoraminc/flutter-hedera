@@ -1,5 +1,6 @@
 import 'package:core/apis/book_api.dart';
 import 'package:core/model/book_model.dart';
+import 'package:core/model/cashbon_book_model.dart';
 import 'package:lumbung_common/utils/log.dart';
 import 'package:lumbung_common/base/base_repository.dart';
 
@@ -65,6 +66,40 @@ class BookApiImpl extends BookApi {
           .toList();
     } catch (e, s) {
       Log.setLog("$e $s", method: "getBookMessageData");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<CashbonBookItemModel> submitCashbonMember(
+      {required String bookId,
+      required int amount,
+      required String type}) async {
+    if (bookId.isEmpty) {
+      throw Exception("Book id cant be empty");
+    }
+    if (type.isEmpty) {
+      throw Exception("Type cant be empty");
+    }
+    if (amount <= 0) {
+      throw Exception("Amount must be higher than 0");
+    }
+    try {
+      final data = await request(
+        '$url/book/cashbon/submit',
+        RequestType.post,
+        body: {
+          "bookId": bookId,
+          "amount": amount,
+          "type": type.toLowerCase(),
+        },
+        useToken: true,
+        firebase: firebase,
+      );
+
+      return CashbonBookItemModel.fromMap(data);
+    } catch (e, s) {
+      Log.setLog("$e $s", method: "submitCashbonMember");
       rethrow;
     }
   }

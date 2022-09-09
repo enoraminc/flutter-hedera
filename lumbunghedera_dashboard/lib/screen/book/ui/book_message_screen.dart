@@ -206,12 +206,12 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
       final isLoading = context
           .select((BookCubit element) => element.state is BookMessageLoading);
 
-      List<CashbonBookItemModel> cashbonBookList = [];
+      List<BookMessageDataModel> memberBookMessageList = [];
 
       bookMessageList.forEach((bookMessage) {
         final cashbon = CashbonBookItemModel.fromJson(bookMessage.data);
         if (cashbon.memberBook.email == payableMemberSelected?.email) {
-          cashbonBookList.add(cashbon);
+          memberBookMessageList.add(bookMessage);
         }
       });
 
@@ -274,7 +274,7 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
               ),
               const SizedBox(height: 5),
               Text(
-                "Payable Limit : ${formatAmount(cashbonBookList.lastOrNull?.memberBook.limitPayable ?? 0)}",
+                "Payable Limit : ${formatAmount(payableMemberSelected?.limitPayable ?? 0)}",
                 style: Styles.commonTextStyle(
                   size: 16,
                 ),
@@ -292,14 +292,21 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
                 "Debit",
                 "Balanced",
               ],
-              rows: cashbonBookList
-                  .map((cashbon) {
+              rows: memberBookMessageList
+                  .map((bookMessage) {
+                    final cashbon =
+                        CashbonBookItemModel.fromJson(bookMessage.data);
                     int balance = 0;
 
-                    for (var element in cashbonBookList) {
-                      if (element.sequenceNumber <= cashbon.sequenceNumber) {
-                        balance += element.debit;
-                        balance -= element.credit;
+                    for (BookMessageDataModel element
+                        in memberBookMessageList) {
+                      if (element.topicSequenceNumber <=
+                          bookMessage.topicSequenceNumber) {
+                        final check =
+                            CashbonBookItemModel.fromJson(element.data);
+
+                        balance += check.debit;
+                        balance -= check.credit;
                       }
                     }
 

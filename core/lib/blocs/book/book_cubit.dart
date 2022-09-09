@@ -157,4 +157,36 @@ class BookCubit extends Cubit<BookState> {
       );
     }
   }
+
+  Future<void> submitCashbonMember({
+    required String type,
+    required int amount,
+  }) async {
+    emit(SubmitBookLoading(
+      bookList: state.bookList,
+      selectedBook: state.selectedBook,
+    ));
+
+    await bookApi
+        .submitCashbonMember(
+      amount: amount,
+      type: type,
+      bookId: state.selectedBook?.id ?? "",
+    )
+        .then((value) {
+      emit(SetBookSuccess(
+        bookList: state.bookList,
+        selectedBook: state.selectedBook,
+      ));
+    }).catchError((e, s) {
+      Log.setLog("$e $s", method: "submitCashbonMember Bloc");
+      emit(
+        BookFailed(
+          message: e.toString(),
+          bookList: state.bookList,
+          selectedBook: state.selectedBook,
+        ),
+      );
+    });
+  }
 }

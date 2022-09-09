@@ -20,6 +20,7 @@ class Routes {
   static String mainWallet = "/main-wallet";
   static String subWallet = "/sub-wallet";
   static String book = "/book";
+  static String submitCashbon = "book/cashbon";
 
   static GoRouter getRouter(AuthBloc authBloc) => GoRouter(
         initialLocation: splash,
@@ -76,6 +77,15 @@ class Routes {
                 path: set,
                 builder: (BuildContext context, GoRouterState state) {
                   return CreateBookScreen();
+                },
+              ),
+              GoRoute(
+                path: "$submitCashbon/:id",
+                builder: (BuildContext context, GoRouterState state) {
+                  final id = state.params["id"] ?? "";
+                  return SubmitCashbonMemberScreen(
+                    bookId: id,
+                  );
                 },
               ),
             ],

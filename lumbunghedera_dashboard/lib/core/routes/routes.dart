@@ -3,7 +3,8 @@ import 'package:core/utils/log.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lumbunghedera_dashboard/screen/book/book.dart';
+import 'package:lumbunghedera_dashboard/screen/job/job.dart';
+import 'package:lumbunghedera_dashboard/screen/journal/journal.dart';
 import 'package:lumbunghedera_dashboard/screen/dashboard/dashboard.dart';
 import 'package:lumbunghedera_dashboard/screen/wallet/wallet.dart';
 
@@ -11,6 +12,7 @@ import '../../screen/auth/auth.dart';
 
 class Routes {
   static String set = "set";
+  static String create = "create";
 
   static String splash = "/";
   static String login = "/login";
@@ -20,8 +22,10 @@ class Routes {
   static String mainWallet = "main";
   static String subWallet = "sub";
 
-  static String book = "/book";
-  static String convertBook = "convert";
+  static String journal = "/journal";
+  static String convertJournal = "convert";
+
+  static String job = "/job";
 
   static GoRouter getRouter(AuthBloc authBloc) => GoRouter(
         initialLocation: splash,
@@ -68,18 +72,12 @@ class Routes {
             ),
           ),
           GoRoute(
-            path: book,
-            // builder: (BuildContext context, GoRouterState state) {
-            //   final id = state.queryParams["id"] ?? "";
-            //   return BookScreen(
-            //     id: id,
-            //   );
-            // },
+            path: journal,
             pageBuilder: (context, state) {
               final id = state.queryParams["id"] ?? "";
               return CustomTransitionPage<void>(
                 key: state.pageKey,
-                child: BookScreen(
+                child: JournalScreen(
                   id: id,
                 ),
                 transitionsBuilder:
@@ -89,10 +87,16 @@ class Routes {
             },
             routes: [
               GoRoute(
-                path: "$convertBook/:id",
+                path: "$convertJournal/:id",
                 builder: (BuildContext context, GoRouterState state) {
                   final id = state.params["id"] ?? "";
-                  return BookMessageScreen(topicId: id);
+                  return JournalMessageScreen(topicId: id);
+                },
+              ),
+              GoRoute(
+                path: create,
+                builder: (BuildContext context, GoRouterState state) {
+                  return const CreateJournalScreen();
                 },
               ),
             ],
@@ -115,6 +119,34 @@ class Routes {
                 child: WalletScreen(
                   id: id,
                   type: type,
+                ),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) =>
+                        FadeTransition(opacity: animation, child: child),
+              );
+            },
+            routes: [
+              GoRoute(
+                path: set,
+                builder: (BuildContext context, GoRouterState state) {
+                  final type = state.params["type"] ?? "";
+                  if (type == Routes.mainWallet) {
+                    return const SetMainWalletScreen();
+                  } else {
+                    return const SetSubWalletScreen();
+                  }
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: job,
+            pageBuilder: (context, state) {
+              final id = state.queryParams["id"] ?? "";
+              return CustomTransitionPage<void>(
+                key: state.pageKey,
+                child: JobScreen(
+                  id: id,
                 ),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) =>

@@ -1,10 +1,10 @@
-part of '../book.dart';
+part of '../journal.dart';
 
-class BookTypeSelectorWidget extends StatelessWidget {
+class JournalTypeSelectorWidget extends StatelessWidget {
   final String? selectedType;
   final Function(String? type) onChange;
 
-  const BookTypeSelectorWidget({
+  const JournalTypeSelectorWidget({
     super.key,
     required this.selectedType,
     required this.onChange,

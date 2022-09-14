@@ -1,13 +1,17 @@
-part of '../book.dart';
+part of '../journal.dart';
 
-class CreateBookScreen extends StatefulWidget {
-  const CreateBookScreen({super.key});
+class CreateJournalScreen extends StatefulWidget {
+  const CreateJournalScreen({super.key});
 
   @override
-  State<CreateBookScreen> createState() => _CreateBookScreenState();
+  State<CreateJournalScreen> createState() => _CreateJournalScreenState();
 }
 
-class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
+class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
+  Future<void> onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+  }
+
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController titleController = TextEditingController();
@@ -20,7 +24,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
   List<HederaWallet> walletSelectedList = [];
   HederaSubWallet? subWalletSelected;
 
-  String bookType = JournalModel.cashbonType;
+  String journalType = JournalModel.cashbonType;
 
   void onSave() {
     if (!_formKey.currentState!.validate()) {
@@ -39,7 +43,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
       description: descriptionController.text,
       memberBookList: memberBookList,
       network: "",
-      type: bookType,
+      type: journalType,
       state: JournalModel.activeState,
     );
 
@@ -48,56 +52,41 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
 
   @override
   Widget body() {
-    return BlocListener<JournalCubit, JournalState>(
-      listener: (context, state) {
-        if (state is SubmitJournalLoading) {
-          loading = LoadingUtil.build(context);
-          loading?.show();
-        } else {
-          loading?.dismiss();
-        }
-
-        if (state is SetJournalSuccess) {
-          context.pop();
-        } else if (state is JournalFailed) {
-          showSnackBar(state.message, isError: true);
-        }
-      },
-      child: BaseCaiScreen(
-        mainWidget: Form(
-          key: _formKey,
-          child: Container(
-            color: Theme.of(context).backgroundColor,
-            width: CustomFunctions.isMobile(context)
-                ? MediaQuery.of(context).size.width
-                : 650,
-            child: ListView(
-              physics: const ClampingScrollPhysics(),
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _bodyHeader(),
-                const SizedBox(height: 15),
-                setSubWalletWidget(),
-                const SizedBox(height: 15),
-                titleField(),
-                const SizedBox(height: 15),
-                descriptionField(),
-                const SizedBox(height: 15),
-                bookTypeField(),
-                const SizedBox(height: 15),
-                setLimitMemberWidget(),
-                const SizedBox(height: 15),
-              ],
-            ),
-          ),
+    return MultiBlocListener(
+      listeners: [
+        journalListener(),
+      ],
+      child: Form(
+        key: _formKey,
+        child: BaseScreen(
+          onRefresh: onRefresh,
+          appBar: _appBar(),
+          children: [
+            const SizedBox(height: 10),
+            setSubWalletWidget(),
+            const SizedBox(height: 15),
+            titleField(),
+            const SizedBox(height: 15),
+            descriptionField(),
+            const SizedBox(height: 15),
+            bookTypeField(),
+            const SizedBox(height: 15),
+            setLimitMemberWidget(),
+            const SizedBox(height: 20),
+            // messageListWidget(),
+          ],
         ),
       ),
     );
   }
 
   Widget titleField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: CustomTextFormField(
         controller: titleController,
         text: "Title",
@@ -116,8 +105,12 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
   }
 
   Widget descriptionField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: CustomTextFormField(
         controller: descriptionController,
         text: "Description",
@@ -133,17 +126,21 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
   }
 
   Widget bookTypeField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: BookTypeSelectorWidget(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: JournalTypeSelectorWidget(
         onChange: (String? type) {
           setState(() {
             if (type?.isNotEmpty ?? false) {
-              bookType = type ?? "";
+              journalType = type ?? "";
             }
           });
         },
-        selectedType: bookType,
+        selectedType: journalType,
       ),
     );
   }
@@ -157,8 +154,12 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
         final isLoading = context.select(
             (SubWalletCubit element) => element.state is SubWalletLoading);
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).appBarTheme.backgroundColor,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -208,8 +209,12 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
         // final isLoading = context.select((MemberWalletCubit element) =>
         //     element.state is MemberWalletLoading);
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).appBarTheme.backgroundColor,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -383,58 +388,29 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
     );
   }
 
-  Widget _bodyHeader() {
-    return Builder(builder: (context) {
-      return Container(
-        height: 56.0,
-        decoration: BoxDecoration(
-          color: Theme.of(context).appBarTheme.backgroundColor,
-          border: Border(
-            right: BorderSide(
-              width: 1,
-              color: Theme.of(context).appBarTheme.backgroundColor!,
-            ),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-                color: Theme.of(context).textSelectionTheme.cursorColor,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: RichText(
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.bodyText1,
-                      text: "Create Book",
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 15.0),
-              SizedBox(
-                height: 50,
-                width: 100,
-                child: RoundedButton(
-                  text: "Save",
-                  onPressed: onSave,
-                  selected: true,
-                  selectedColor: Colors.orange,
-                  isSmall: true,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
+  Widget _appBar() {
+    return CustomSecondAppBar(
+      title: "Create Journal",
+      onActionTap: onSave,
+    );
+  }
+
+  BlocListener<JournalCubit, JournalState> journalListener() {
+    return BlocListener<JournalCubit, JournalState>(
+      listener: (context, state) {
+        if (state is SubmitJournalLoading) {
+          loading = LoadingUtil.build(context);
+          loading?.show();
+        } else {
+          loading?.dismiss();
+        }
+
+        if (state is SetJournalSuccess) {
+          context.pop();
+        } else if (state is JournalFailed) {
+          showSnackBar(state.message, isError: true);
+        }
+      },
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:core/model/book_model.dart';
+import 'package:core/model/journal_model.dart';
 import 'package:core/model/cashbon_book_model.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -13,6 +13,7 @@ import 'package:lumbung_common/model/rab_kedai_token.dart';
 import 'package:lumbung_common/utils/log.dart';
 import 'package:intl/intl.dart';
 
+import '../model/concensus_model.dart';
 import 'date_utils.dart';
 
 class ExcelUtils {
@@ -28,7 +29,7 @@ class ExcelUtils {
   }
 
   static Future<Uint8List>? generateCashbonExcel(
-      List<BookMessageDataModel> bookMessageList) async {
+      List<ConcensusMessageDataModel> bookMessageList) async {
     try {
       final byteData =
           await rootBundle.load('assets/excel/export-cashbon-book.xlsx');
@@ -70,7 +71,7 @@ class ExcelUtils {
         final cashbon = CashbonBookItemModel.fromJson(bookMessage.data);
         int balance = 0;
 
-        for (BookMessageDataModel element in bookMessageList) {
+        for (ConcensusMessageDataModel element in bookMessageList) {
           if (element.topicSequenceNumber <= bookMessage.topicSequenceNumber) {
             final check = CashbonBookItemModel.fromJson(element.data);
 

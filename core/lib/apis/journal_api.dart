@@ -1,14 +1,13 @@
 import 'package:core/model/cashbon_book_model.dart';
 import 'package:lumbung_common/base/base_repository.dart';
 
-import '../model/book_model.dart';
+import '../model/concensus_model.dart';
+import '../model/journal_model.dart';
 import '../model/log_model.dart';
 
-abstract class BookApi extends BaseRepository {
-  Future<BookModel> setBook(BookModel book);
-  Future<List<BookModel>> getBook(String subWalletId);
-
-  Future<List<BookMessageDataModel>> getBookMessageData(String topicId);
+abstract class JournalApi extends BaseRepository {
+  Future<JournalModel> setJournal(JournalModel book);
+  Future<List<JournalModel>> getJournal(String subWalletId);
 
   Future<CashbonBookItemModel> submitCashbonMember({
     required String bookId,

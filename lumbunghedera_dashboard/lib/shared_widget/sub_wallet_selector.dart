@@ -1,20 +1,18 @@
+import 'package:core/model/hedera_sub_wallet.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:lumbung_common/model/hedera/wallet.dart';
 
 import '../core/utils/text_styles.dart';
 
-class MainWalletSelector extends StatelessWidget {
-  final List<HederaWallet> memberWalletList;
-  final HederaWallet? activeWallet;
-  final Function(HederaWallet? wallet) onChange;
+class SubWalletSelector extends StatelessWidget {
+  final HederaSubWallet? activeWallet;
+  final List<HederaSubWallet> subWalletList;
+  final Function(HederaSubWallet? wallet) onChange;
 
-  const MainWalletSelector({
+  const SubWalletSelector({
     super.key,
-    required this.memberWalletList,
     required this.activeWallet,
+    required this.subWalletList,
     required this.onChange,
   });
 
@@ -33,7 +31,7 @@ class MainWalletSelector extends StatelessWidget {
         ),
         padding: const EdgeInsets.only(left: 10),
         alignment: Alignment.center,
-        child: DropdownSearch<HederaWallet>(
+        child: DropdownSearch<HederaSubWallet>(
           popupProps: PopupProps.dialog(
             dialogProps: DialogProps(
               backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -49,7 +47,7 @@ class MainWalletSelector extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
               decoration: InputDecoration(
-                hintText: "Search User",
+                hintText: "Search Sub Wallet",
                 border: const OutlineInputBorder(),
                 hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
               ),
@@ -57,15 +55,16 @@ class MainWalletSelector extends StatelessWidget {
           ),
           dropdownSearchTextStyle: Theme.of(context).primaryTextTheme.bodyText1,
           dropdownSearchDecoration: InputDecoration(
-            hintText: "Select User",
+            hintText: "Select Sub Wallet",
             contentPadding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
             border: InputBorder.none,
             hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
           ),
-          items: memberWalletList.toList(),
+          items: subWalletList.toList(),
           onChanged: onChange,
-          itemAsString: (type) => "${type.displayName} - ${type.email}",
+          itemAsString: (type) => "${type.title} - ${type.accountId}",
           selectedItem: activeWallet,
+          validator: (t) => t?.id == null ? "This field is required" : null,
         ),
       ),
     );

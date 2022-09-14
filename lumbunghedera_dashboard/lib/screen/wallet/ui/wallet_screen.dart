@@ -15,6 +15,8 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends BaseStateful<WalletScreen> {
+  final CustomPopupMenuController _controller = CustomPopupMenuController();
+
   String? typeWallet;
   String? selectedWalletId;
 
@@ -69,6 +71,7 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
             appBar: const CustomAppBar(),
             tabWidget: tabWidget(),
             isLoading: isLoading,
+            customButton: createButtonWidget(),
             onBack: () {
               setState(() {
                 selectedWalletId = null;
@@ -418,12 +421,108 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
     });
   }
 
+  Builder createButtonWidget() {
+    return Builder(
+      builder: (context) {
+        final user =
+            context.select((AuthBloc element) => element.state.currentUser);
+        if (user?.isAdmin() ?? false) {
+          return CustomPopupMenu(
+            menuBuilder: () => Builder(builder: (context) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Container(
+                  color: Theme.of(context).appBarTheme.backgroundColor,
+                  padding: const EdgeInsets.all(20),
+                  width: 300,
+                  // height: 300,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.orange,
+                        ),
+                        title: Text(
+                          'Create Main Wallet',
+                          style: Styles.commonTextStyle(
+                            size: 18,
+                          ),
+                        ),
+                        onTap: () {
+                          _controller.hideMenu();
+                          context
+                              .read<MainWalletCubit>()
+                              .changeSelectedData(null);
+
+                          context.push(
+                              "${Routes.wallet}/${Routes.mainWallet}/${Routes.set}");
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      const Divider(
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(height: 5),
+                      ListTile(
+                        title: Text(
+                          'Create Sub Wallet',
+                          style: Styles.commonTextStyle(
+                            size: 18,
+                          ),
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.orange,
+                        ),
+                        onTap: () {
+                          _controller.hideMenu();
+                          context
+                              .read<SubWalletCubit>()
+                              .changeSelectedData(null);
+
+                          context.push(
+                              "${Routes.wallet}/${Routes.subWallet}/${Routes.set}");
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+            pressType: PressType.singleClick,
+            verticalMargin: -5,
+            controller: _controller,
+            position: PreferredPosition.top,
+            barrierColor: Colors.black.withOpacity(.7),
+            child: const CircleAvatar(
+              radius: 25,
+              backgroundColor: Colors.orange,
+              child: Icon(
+                Icons.add,
+              ),
+            ),
+          );
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+
   BlocListener<MainWalletCubit, MainWalletState> mainWalletListener() {
     return BlocListener<MainWalletCubit, MainWalletState>(
       listener: (context, state) {
         if (state is FetchMemberWalletFailed) {
           showSnackBar(state.message, isError: true);
         }
+        if (state is SubmitMemberWalletSuccess) {
+          onRefresh();
+        }
+
+        // if (state is SubWalletFailed) {
+        //   showSnackBar(state.message, isError: true);
+        // }
       },
     );
   }
@@ -431,6 +530,14 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
   BlocListener<SubWalletCubit, SubWalletState> subWalletListener() {
     return BlocListener<SubWalletCubit, SubWalletState>(
       listener: (context, state) {
+        if (state is SubWalletFailed) {
+          showSnackBar(state.message, isError: true);
+        }
+        if (state is SubWalletDeleteSuccess ||
+            state is SubWalletSubmitSuccess) {
+          onRefresh();
+        }
+
         if (state is SubWalletFailed) {
           showSnackBar(state.message, isError: true);
         }

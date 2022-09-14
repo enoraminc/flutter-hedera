@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:core/blocs/auth/auth_bloc.dart';
-import 'package:core/blocs/book/book_cubit.dart';
+import 'package:core/blocs/journal/journal_cubit.dart';
 import 'package:core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
 import 'package:core/model/hedera_sub_wallet.dart';

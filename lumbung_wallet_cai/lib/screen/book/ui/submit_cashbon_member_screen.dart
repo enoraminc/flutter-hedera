@@ -27,7 +27,7 @@ class _SubmitCashbonMemberScreenState
       return;
     }
 
-    context.read<BookCubit>().submitCashbonMember(
+    context.read<JournalCubit>().submitCashbonMember(
           type: type,
           amount: int.tryParse(amountController.text.replaceAll(".", "")) ?? 0,
         );
@@ -35,18 +35,18 @@ class _SubmitCashbonMemberScreenState
 
   @override
   Widget body() {
-    return BlocListener<BookCubit, BookState>(
+    return BlocListener<JournalCubit, JournalState>(
       listener: (context, state) {
-        if (state is SubmitBookLoading) {
+        if (state is SubmitJournalLoading) {
           loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();
         }
 
-        if (state is SetBookSuccess) {
+        if (state is SetJournalSuccess) {
           context.pop();
-        } else if (state is BookFailed) {
+        } else if (state is JournalFailed) {
           showSnackBar(state.message, isError: true);
         }
       },
@@ -101,8 +101,8 @@ class _SubmitCashbonMemberScreenState
 
   Widget walletSelector() {
     return Builder(builder: (context) {
-      final book =
-          context.select((BookCubit element) => element.state.selectedBook);
+      final book = context
+          .select((JournalCubit element) => element.state.selectedJournal);
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),

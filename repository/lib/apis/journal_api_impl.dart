@@ -1,20 +1,21 @@
-import 'package:core/apis/book_api.dart';
-import 'package:core/model/book_model.dart';
+import 'package:core/apis/journal_api.dart';
+import 'package:core/model/concensus_model.dart';
+import 'package:core/model/journal_model.dart';
 import 'package:core/model/cashbon_book_model.dart';
 import 'package:lumbung_common/utils/log.dart';
 import 'package:lumbung_common/base/base_repository.dart';
 
-class BookApiImpl extends BookApi {
+class JournalApiImpl extends JournalApi {
   late final String url;
 
   final String firebase = "lumbungalgo";
 
-  BookApiImpl({
+  JournalApiImpl({
     required this.url,
   });
 
   @override
-  Future<List<BookModel>> getBook(String subWalletId) async {
+  Future<List<JournalModel>> getJournal(String subWalletId) async {
     try {
       final data = await request(
         '$url/book?id=$subWalletId',
@@ -23,7 +24,7 @@ class BookApiImpl extends BookApi {
         firebase: firebase,
       );
 
-      return data.map<BookModel>((e) => BookModel.fromMap(e)).toList();
+      return data.map<JournalModel>((e) => JournalModel.fromMap(e)).toList();
     } catch (e, s) {
       Log.setLog("$e $s", method: "getBook");
       rethrow;
@@ -31,7 +32,7 @@ class BookApiImpl extends BookApi {
   }
 
   @override
-  Future<BookModel> setBook(BookModel book) async {
+  Future<JournalModel> setJournal(JournalModel book) async {
     if (book.memberBookList.isEmpty) {
       throw Exception("Member list cant be empty");
     }
@@ -44,7 +45,7 @@ class BookApiImpl extends BookApi {
         firebase: firebase,
       );
 
-      return BookModel.fromMap(data);
+      return JournalModel.fromMap(data);
     } catch (e, s) {
       Log.setLog("$e $s", method: "setBook");
       rethrow;
@@ -52,7 +53,8 @@ class BookApiImpl extends BookApi {
   }
 
   @override
-  Future<List<BookMessageDataModel>> getBookMessageData(String topicId) async {
+  Future<List<ConcensusMessageDataModel>> getJournalMessageData(
+      String topicId) async {
     try {
       final data = await request(
         '$url/consensus/message/$topicId',
@@ -62,7 +64,8 @@ class BookApiImpl extends BookApi {
       );
 
       return data
-          .map<BookMessageDataModel>((e) => BookMessageDataModel.fromMap(e))
+          .map<ConcensusMessageDataModel>(
+              (e) => ConcensusMessageDataModel.fromMap(e))
           .toList();
     } catch (e, s) {
       Log.setLog("$e $s", method: "getBookMessageData");

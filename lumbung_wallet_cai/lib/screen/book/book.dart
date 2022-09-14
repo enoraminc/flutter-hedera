@@ -1,8 +1,8 @@
 import 'package:core/blocs/auth/auth_bloc.dart';
-import 'package:core/blocs/book/book_cubit.dart';
+import 'package:core/blocs/journal/journal_cubit.dart';
 import 'package:core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
-import 'package:core/model/book_model.dart';
+import 'package:core/model/journal_model.dart';
 import 'package:core/model/hedera_sub_wallet.dart';
 import 'package:core_cai_v3/base/base_cai_screen.dart';
 import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';

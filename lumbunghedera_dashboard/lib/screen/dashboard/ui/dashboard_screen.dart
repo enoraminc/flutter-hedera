@@ -11,7 +11,8 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
   Future<void> onRefresh() async {
     context.read<SubWalletCubit>().fetchSubWallet();
     context.read<MainWalletCubit>().fetchMainWallet();
-    context.read<BookCubit>().getBook("");
+    context.read<JournalCubit>().getJournal("");
+    context.read<JobCubit>().fetchAllJob();
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -35,7 +36,9 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
           const SizedBox(height: 20),
           mainInfoWidget(),
           const SizedBox(height: 20),
-          booksTableWidget(),
+          journalsTableWidget(),
+          const SizedBox(height: 20),
+          jobTableWidget(),
           const SizedBox(height: 20),
           mainWalletTableWidget(),
           const SizedBox(height: 20),
@@ -46,20 +49,20 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
     );
   }
 
-  Builder booksTableWidget() {
+  Builder journalsTableWidget() {
     return Builder(builder: (context) {
-      final isLoading =
-          context.select((BookCubit element) => element.state is BookLoading);
+      final isLoading = context
+          .select((JournalCubit element) => element.state is JournalLoading);
       final books =
-          context.select((BookCubit element) => element.state.bookList);
+          context.select((JournalCubit element) => element.state.journalList);
       return CustomTableWidget(
-        title: 'Books',
+        title: 'Journal',
         isLoading: isLoading,
         onTap: (String topicId) {
-          context.push("${Routes.book}/?id=$topicId");
+          context.push("${Routes.journal}/?id=$topicId");
         },
         onSeeAllTap: () {
-          context.go(Routes.book);
+          context.go(Routes.journal);
         },
         columns: const [
           "ID",
@@ -72,6 +75,39 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
                   book.topicId,
                   book.title,
                   book.description,
+                ])
+            .toList(),
+      );
+    });
+  }
+
+  Builder jobTableWidget() {
+    return Builder(builder: (context) {
+      final isLoading =
+          context.select((JobCubit element) => element.state is JobLoading);
+      final jobs = context.select((JobCubit element) => element.state.jobList);
+      return CustomTableWidget(
+        title: 'Job',
+        isLoading: isLoading,
+        onTap: (String topicId) {
+          context.push("${Routes.job}/?id=$topicId");
+        },
+        onSeeAllTap: () {
+          context.go(Routes.journal);
+        },
+        columns: const [
+          "ID",
+          "Title",
+          "Description",
+          "Type",
+        ],
+        rows: jobs
+            .take(5)
+            .map((job) => [
+                  job.id,
+                  job.title,
+                  job.description,
+                  job.type,
                 ])
             .toList(),
       );
@@ -154,13 +190,28 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
       children: [
         Expanded(
           child: Builder(builder: (context) {
-            final isLoading = context
-                .select((BookCubit element) => element.state is BookLoading);
-            final value = context
-                .select((BookCubit element) => element.state.bookList.length);
+            final isLoading = context.select(
+                (JournalCubit element) => element.state is JournalLoading);
+            final value = context.select(
+                (JournalCubit element) => element.state.journalList.length);
             return BoxContentWidget(
               icon: FontAwesomeIcons.book,
-              title: "Books",
+              title: "Journal",
+              value: formatNumber(value.toString()),
+              isLoading: isLoading,
+            );
+          }),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Builder(builder: (context) {
+            final isLoading = context
+                .select((JobCubit element) => element.state is JobLoading);
+            final value = context
+                .select((JobCubit element) => element.state.jobList.length);
+            return BoxContentWidget(
+              icon: Icons.work_history_rounded,
+              title: "Job",
               value: formatNumber(value.toString()),
               isLoading: isLoading,
             );

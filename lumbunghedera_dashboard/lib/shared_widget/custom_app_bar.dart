@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumbunghedera_dashboard/core/routes/routes.dart';
+import 'package:lumbunghedera_dashboard/shared_widget/rounded_button.dart';
 
 import '../core/utils/custom_function.dart';
 import '../core/utils/text_styles.dart';
@@ -92,13 +93,18 @@ class CustomAppBar extends StatelessWidget {
                         ),
                         tabWidget(
                           context,
-                          route: Routes.book,
-                          title: "Book",
+                          route: Routes.journal,
+                          title: "Journal",
                         ),
                         tabWidget(
                           context,
                           route: "${Routes.wallet}/${Routes.mainWallet}",
                           title: "Wallet",
+                        ),
+                        tabWidget(
+                          context,
+                          route: Routes.job,
+                          title: "Job",
                         ),
                       ],
                     ),
@@ -168,6 +174,80 @@ class CustomAppBar extends StatelessWidget {
                     ? Colors.white
                     : Colors.black
                 : Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomSecondAppBar extends StatelessWidget {
+  const CustomSecondAppBar({
+    Key? key,
+    required this.title,
+    this.onActionTap,
+    this.actionTitle = "Save",
+  }) : super(key: key);
+  final String title;
+  final Function()? onActionTap;
+  final String actionTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 56.0,
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        border: Border(
+          right: BorderSide(
+            width: 1,
+            color: Theme.of(context).appBarTheme.backgroundColor!,
+          ),
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+        ),
+        width: CustomFunctions.getMediaWidth(context),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.pop(),
+                color: Theme.of(context).textSelectionTheme.cursorColor,
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: RichText(
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.bodyText1,
+                      text: title,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15.0),
+              if (onActionTap != null)
+                SizedBox(
+                  height: 50,
+                  width: 100,
+                  child: RoundedButton(
+                    text: actionTitle,
+                    onPressed: onActionTap,
+                    selected: true,
+                    selectedColor: Colors.orange,
+                    isSmall: true,
+                  ),
+                ),
+            ],
           ),
         ),
       ),

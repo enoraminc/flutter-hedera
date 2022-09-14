@@ -7,14 +7,14 @@ class BookSidebarListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       // Sub Wallet
-      final isLoading =
-          context.select((BookCubit element) => element.state is BookLoading);
+      final isLoading = context
+          .select((JournalCubit element) => element.state is JournalLoading);
 
-      final selectedBook =
-          context.select((BookCubit element) => element.state.selectedBook);
+      final selectedBook = context
+          .select((JournalCubit element) => element.state.selectedJournal);
 
       final bookList =
-          context.select((BookCubit element) => element.state.bookList);
+          context.select((JournalCubit element) => element.state.journalList);
 
       if (isLoading) {
         return const Center(
@@ -28,16 +28,19 @@ class BookSidebarListWidget extends StatelessWidget {
         );
       }
 
-      return ChatItemScreen<BookModel>(
-        isCurrentSelected: (BookModel data) => data.id == selectedBook?.id,
+      return ChatItemScreen<JournalModel>(
+        isCurrentSelected: (JournalModel data) => data.id == selectedBook?.id,
         items: bookList,
-        itemTitle: (BookModel data) => data.title,
-        subTitle: (BookModel data) => data.description,
-        subTitle2: (BookModel data) => ContentTagLabelWidget(title: data.type),
-        leadingWidget: (BookModel data) => LeadingIconWidget(title: data.title),
-        trailingWidget: (BookModel data) => const SizedBox(height: 5, width: 5),
-        onTapItem: (BookModel data) {
-          context.read<BookCubit>().changeSelectedData(data);
+        itemTitle: (JournalModel data) => data.title,
+        subTitle: (JournalModel data) => data.description,
+        subTitle2: (JournalModel data) =>
+            ContentTagLabelWidget(title: data.type),
+        leadingWidget: (JournalModel data) =>
+            LeadingIconWidget(title: data.title),
+        trailingWidget: (JournalModel data) =>
+            const SizedBox(height: 5, width: 5),
+        onTapItem: (JournalModel data) {
+          context.read<JournalCubit>().changeSelectedData(data);
 
           context
               .read<ChatMessageBloc>()

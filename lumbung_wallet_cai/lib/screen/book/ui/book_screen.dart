@@ -17,7 +17,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
   }
 
   Future<void> onRefresh() async {
-    context.read<BookCubit>().getBook("");
+    context.read<JournalCubit>().getJournal("");
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -32,11 +32,11 @@ class _BookScreenState extends BaseStateful<BookScreen> {
   Widget body() {
     return Builder(builder: (context) {
       return Scaffold(
-        body: BlocListener<BookCubit, BookState>(
+        body: BlocListener<JournalCubit, JournalState>(
           listener: (context, state) {
-            if (state is SetBookSuccess) {
+            if (state is SetJournalSuccess) {
               onRefresh();
-            } else if (state is BookFailed) {
+            } else if (state is JournalFailed) {
               showSnackBar(state.message, isError: true);
             }
           },
@@ -194,7 +194,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
   Widget _contentList() {
     return Builder(builder: (context) {
       final bookList =
-          context.select((BookCubit element) => element.state.bookList);
+          context.select((JournalCubit element) => element.state.journalList);
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
@@ -248,7 +248,8 @@ class _BookScreenState extends BaseStateful<BookScreen> {
 
   Widget _dataListWidget() {
     return Builder(builder: (context) {
-      final book = context.select((BookCubit element) => element.state.bookList
+      final book = context.select((JournalCubit element) => element
+          .state.journalList
           .firstWhereOrNull((element) => element.id == selectedComponent));
       return Container(
         height: double.infinity,

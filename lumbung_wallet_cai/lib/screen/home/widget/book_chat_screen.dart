@@ -12,8 +12,8 @@ class _BookChatScreenState extends BaseChatScreen<BookChatScreen> {
   Widget appBar() {
     return Builder(
       builder: (context) {
-        final selectedData =
-            context.select((BookCubit element) => element.state.selectedBook);
+        final selectedData = context
+            .select((JournalCubit element) => element.state.selectedJournal);
         return ChatMessageHeader(
           leadingWidget: CircleAvatar(
             radius: 18,
@@ -65,8 +65,8 @@ class _BookChatScreenState extends BaseChatScreen<BookChatScreen> {
   Builder builder({required Widget child}) {
     return Builder(
       builder: (context) {
-        final selectedData =
-            context.select((BookCubit element) => element.state.selectedBook);
+        final selectedData = context
+            .select((JournalCubit element) => element.state.selectedJournal);
 
         if (selectedData == null) {
           return unselectedChatWidget(context);
@@ -78,15 +78,15 @@ class _BookChatScreenState extends BaseChatScreen<BookChatScreen> {
 
   @override
   String currentChatId() {
-    return context.read<BookCubit>().state.selectedBook?.id ?? "";
+    return context.read<JournalCubit>().state.selectedJournal?.id ?? "";
   }
 
   @override
   Widget detailContentsWidget() {
     return Builder(
       builder: (context) {
-        final selectedData =
-            context.select((BookCubit element) => element.state.selectedBook);
+        final selectedData = context
+            .select((JournalCubit element) => element.state.selectedJournal);
 
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -126,8 +126,8 @@ class _BookChatScreenState extends BaseChatScreen<BookChatScreen> {
       final user =
           context.select((AuthBloc element) => element.state.currentUser);
 
-      final book =
-          context.select((BookCubit element) => element.state.selectedBook);
+      final book = context
+          .select((JournalCubit element) => element.state.selectedJournal);
       // if (ground == null) return const SizedBox();
 
       return Column(
@@ -153,7 +153,7 @@ class _BookChatScreenState extends BaseChatScreen<BookChatScreen> {
                 title: "Delete Book",
                 description: "Are you sure you want to delete this book?",
                 onTap: () {
-                  context.read<BookCubit>().deleteBook();
+                  context.read<JournalCubit>().deleteJournal();
                 },
               );
             },

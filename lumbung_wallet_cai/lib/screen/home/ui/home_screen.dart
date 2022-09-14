@@ -13,7 +13,7 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
   Future<void> onRefresh() async {
     context.read<SubWalletCubit>().fetchSubWallet();
     context.read<MainWalletCubit>().fetchMainWallet();
-    context.read<BookCubit>().getBook("");
+    context.read<JournalCubit>().getJournal("");
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -127,23 +127,23 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
     );
   }
 
-  BlocListener<BookCubit, BookState> bookListener() {
-    return BlocListener<BookCubit, BookState>(
+  BlocListener<JournalCubit, JournalState> bookListener() {
+    return BlocListener<JournalCubit, JournalState>(
       listener: (context, state) {
-        if (state is SubmitBookLoading) {
+        if (state is SubmitJournalLoading) {
           loading = LoadingUtil.build(context);
           loading?.show();
         } else {
           loading?.dismiss();
         }
-        if (state is DeleteBookSuccess || state is SetBookSuccess) {
+        if (state is DeleteJournalSuccess || state is SetJournalSuccess) {
           onRefresh();
         }
 
-        if (state is BookFailed) {
+        if (state is JournalFailed) {
           showSnackBar(state.message, isError: true);
         }
-        if (state is DeleteBookFailed) {
+        if (state is DeleteJournalFailed) {
           showSnackBar(state.message, isError: true);
         }
       },

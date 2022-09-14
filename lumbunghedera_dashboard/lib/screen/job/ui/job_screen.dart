@@ -1,48 +1,26 @@
-part of '../book.dart';
+part of '../job.dart';
 
-class BookScreen extends StatefulWidget {
-  const BookScreen({
+class JobScreen extends StatefulWidget {
+  const JobScreen({
     super.key,
     required this.id,
   });
 
   final String id;
   @override
-  State<BookScreen> createState() => _BookScreenState();
+  State<JobScreen> createState() => _JobScreenState();
 }
 
-class _BookScreenState extends BaseStateful<BookScreen> {
+class _JobScreenState extends BaseStateful<JobScreen> {
   String? selectedTopicId;
 
-  List<BookMessageDataModel> bookMessageList = [
-    // Dummy Data For Testing
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":100000,\"credit\":0}",
-    //   topicSequenceNumber: 4,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":0,\"credit\":50000}",
-    //   topicSequenceNumber: 3,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":0,\"credit\":50000}",
-    //   topicSequenceNumber: 2,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":200000,\"credit\":0}",
-    //   topicSequenceNumber: 1,
-    // )
-  ];
+  List<ConcensusMessageDataModel> jobMessageList = [];
 
   Future<void> onRefresh() async {
-    context.read<BookCubit>().getBook("");
+    context.read<JobCubit>().fetchAllJob();
 
     if (selectedTopicId?.isNotEmpty ?? false) {
-      context.read<BookCubit>().getBookMessageData(selectedTopicId!);
+      context.read<JobCubit>().getJobMessageData(selectedTopicId!);
     }
 
     await Future.delayed(const Duration(milliseconds: 100));
@@ -59,14 +37,17 @@ class _BookScreenState extends BaseStateful<BookScreen> {
   Widget body() {
     return MultiBlocListener(
       listeners: [
-        bookListener(),
+        jobListener(),
       ],
       child: Builder(builder: (context) {
         final isLoading =
-            context.select((BookCubit element) => element.state is BookLoading);
+            context.select((JobCubit element) => element.state is JobLoading);
 
-        final bookList =
-            context.select((BookCubit element) => element.state.bookList);
+        final jobList =
+            context.select((JobCubit element) => element.state.jobList);
+
+        final user =
+            context.select((AuthBloc element) => element.state.currentUser);
 
         return BaseScreen2(
           selectedId: selectedTopicId,
@@ -78,25 +59,30 @@ class _BookScreenState extends BaseStateful<BookScreen> {
               selectedTopicId = null;
             });
           },
-          sidebarChildren: sidebarListWidget(bookList),
-          mainChild: bookInfoWidget(),
+          sidebarChildren: sidebarListWidget(jobList),
+          mainChild: jobInfoWidget(),
+          onCreateTap:
+              // (user?.isAdmin() ?? false)
+              //     ? () => context.push("${Routes.journal}/${Routes.create}")
+              //     :
+              null,
         );
       }),
     );
   }
 
-  List<Widget> sidebarListWidget(List<BookModel> books) {
-    return books
+  List<Widget> sidebarListWidget(List<JobModel> jobs) {
+    return jobs
         .map(
-          (book) => InkWell(
+          (job) => InkWell(
             onTap: () {
               setState(() {
-                selectedTopicId = book.topicId;
+                selectedTopicId = job.id;
               });
-              context.read<BookCubit>().getBookMessageData(book.topicId);
+              context.read<JobCubit>().getJobMessageData(job.id);
               Router.neglect(
                 context,
-                () => context.go("${Routes.book}?id=${book.topicId}"),
+                () => context.go("${Routes.job}?id=${job.id}"),
               );
             },
             child: Container(
@@ -110,7 +96,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
               decoration: BoxDecoration(
                 color: Theme.of(context).appBarTheme.backgroundColor,
                 borderRadius: BorderRadius.circular(5),
-                gradient: selectedTopicId == book.topicId
+                gradient: selectedTopicId == job.id
                     ? LinearGradient(
                         stops: const [0.02, 0.02],
                         colors: [
@@ -125,7 +111,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    book.title,
+                    job.title,
                     style: Styles.commonTextStyle(
                       size: 16,
                       fontWeight: FontWeight.bold,
@@ -133,7 +119,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    book.description,
+                    job.description,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: Styles.commonTextStyle(
@@ -143,7 +129,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
                   const SizedBox(height: 10),
                   Chip(
                     label: Text(
-                      book.type,
+                      job.type,
                       style: Styles.commonTextStyle(
                         size: 12,
                         color: Colors.white,
@@ -159,20 +145,16 @@ class _BookScreenState extends BaseStateful<BookScreen> {
         .toList();
   }
 
-  Builder bookInfoWidget() {
+  Builder jobInfoWidget() {
     return Builder(builder: (context) {
       final isLoading = context
-          .select((BookCubit element) => element.state is BookMessageLoading);
+          .select((JobCubit element) => element.state is JobMessageLoading);
 
-      final bookSelected = context.select((BookCubit element) => element
-          .state.bookList
-          .firstWhereOrNull((element) => element.topicId == selectedTopicId));
+      final jobSelected = context.select((JobCubit element) => element
+          .state.jobList
+          .firstWhereOrNull((element) => element.id == selectedTopicId));
 
-      // final subWalletSelected = context.select((SubWalletCubit element) =>
-      //     element.state.subWalletList.firstWhereOrNull((element) =>
-      //         element.accountId == bookSelected?.subWalletId));
-
-      if (bookSelected == null) {
+      if (jobSelected == null) {
         return Center(
           child: Text(
             "No Item Selected",
@@ -192,7 +174,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
             children: [
               Expanded(
                 child: Text(
-                  bookSelected.title,
+                  jobSelected.title,
                   style: Styles.commonTextStyle(
                     size: 18,
                     fontWeight: FontWeight.bold,
@@ -202,7 +184,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
               const SizedBox(width: 10),
               Chip(
                 label: Text(
-                  bookSelected.type,
+                  jobSelected.type,
                   style: Styles.commonTextStyle(
                     size: 16,
                     color: Colors.white,
@@ -214,7 +196,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            bookSelected.description,
+            jobSelected.description,
             style: Styles.commonTextStyle(
               size: 14,
             ),
@@ -228,17 +210,17 @@ class _BookScreenState extends BaseStateful<BookScreen> {
               isLoading: isLoading,
               isWithPadding: false,
               buttonList: [
-                RoundedButton(
-                  text: "Convert Raw Data",
-                  selected: true,
-                  isSmall: true,
-                  selectedColor: Colors.orange,
-                  onPressed: () {
-                    context.push(
-                        "${Routes.book}/${Routes.convertBook}/$selectedTopicId");
-                  },
-                ),
-                const SizedBox(width: 10),
+                // RoundedButton(
+                //   text: "Convert Raw Data",
+                //   selected: true,
+                //   isSmall: true,
+                //   selectedColor: Colors.orange,
+                //   onPressed: () {
+                //     context.push(
+                //         "${Routes.journal}/${Routes.convertJournal}/$selectedTopicId");
+                //   },
+                // ),
+                // const SizedBox(width: 10),
                 RoundedButton(
                   text: "Track Explorer",
                   selected: true,
@@ -254,10 +236,10 @@ class _BookScreenState extends BaseStateful<BookScreen> {
                 "Sequence Number",
                 "Message",
               ],
-              rows: bookMessageList.map((bookMessage) {
+              rows: jobMessageList.map((message) {
                 return [
-                  formatNumber(bookMessage.topicSequenceNumber.toString()),
-                  bookMessage.data,
+                  formatNumber(message.topicSequenceNumber.toString()),
+                  message.data,
                 ];
               }).toList(),
             ),
@@ -268,10 +250,10 @@ class _BookScreenState extends BaseStateful<BookScreen> {
     });
   }
 
-  BlocListener<BookCubit, BookState> bookListener() {
-    return BlocListener<BookCubit, BookState>(
+  BlocListener<JobCubit, JobState> jobListener() {
+    return BlocListener<JobCubit, JobState>(
       listener: (context, state) {
-        if (state is SubmitBookLoading) {
+        if (state is SubmitJobLoading) {
           loading = LoadingUtil.build(context);
           loading?.show();
         } else {
@@ -279,15 +261,19 @@ class _BookScreenState extends BaseStateful<BookScreen> {
         }
         // Log.setLog(state.toString(), method: "LoginScreen");
 
-        if (state is GetBookMessageDataFailed) {
+        if (state is GetJobMessageDataFailed) {
           showSnackBar(state.message, isError: true);
         }
-        if (state is GetBookMessageDataSuccess) {
+        if (state is GetJobMessageDataSuccess) {
           setState(() {
-            bookMessageList = state.data;
+            jobMessageList = state.data;
           });
         }
-        if (state is ExportBookFailed) {
+
+        // if (state is SetJobSuccess) {
+        //   onRefresh();
+        // } else
+        if (state is JobFailed) {
           showSnackBar(state.message, isError: true);
         }
       },

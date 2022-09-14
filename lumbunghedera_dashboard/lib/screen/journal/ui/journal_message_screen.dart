@@ -1,18 +1,18 @@
-part of '../book.dart';
+part of '../journal.dart';
 
-class BookMessageScreen extends StatefulWidget {
-  const BookMessageScreen({super.key, required this.topicId});
+class JournalMessageScreen extends StatefulWidget {
+  const JournalMessageScreen({super.key, required this.topicId});
   final String topicId;
 
   @override
-  State<BookMessageScreen> createState() => _BookMessageScreenState();
+  State<JournalMessageScreen> createState() => _JournalMessageScreenState();
 }
 
-class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
-  BookModel? currentBook;
+class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
+  JournalModel? currentBook;
   MemberBook? payableMemberSelected;
 
-  List<BookMessageDataModel> bookMessageList = [
+  List<ConcensusMessageDataModel> bookMessageList = [
     // Dummy Data For Testing
     // BookMessageDataModel(
     //   data:
@@ -37,7 +37,7 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
   ];
 
   Future<void> onRefresh() async {
-    context.read<BookCubit>().getBookMessageData(widget.topicId);
+    context.read<JournalCubit>().getJournalMessageData(widget.topicId);
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -45,9 +45,9 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
   @override
   void initState() {
     currentBook = context
-        .read<BookCubit>()
+        .read<JournalCubit>()
         .state
-        .bookList
+        .journalList
         .firstWhereOrNull((element) => element.topicId == widget.topicId);
 
     payableMemberSelected = currentBook?.memberBookList.first;
@@ -60,11 +60,11 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
   Widget body() {
     return MultiBlocListener(
       listeners: [
-        bookListener(),
+        journalListener(),
       ],
       child: BaseScreen(
         onRefresh: onRefresh,
-        appBar: const CustomAppBar(),
+        appBar: _appBar(),
         children: [
           const SizedBox(height: 10),
           bookInfoWidget(),
@@ -132,8 +132,8 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
 
   Builder receivableBookWidget() {
     return Builder(builder: (context) {
-      final isLoading = context
-          .select((BookCubit element) => element.state is BookMessageLoading);
+      final isLoading = context.select(
+          (JournalCubit element) => element.state is JournalMessageLoading);
 
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -150,7 +150,7 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
               isLoading: isLoading,
               isWithPadding: false,
               onExport: () {
-                context.read<BookCubit>().exportBook(bookMessageList);
+                context.read<JournalCubit>().exportJournal(bookMessageList);
               },
               columns: const [
                 // "Sequence Number",
@@ -167,7 +167,7 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
                         CashbonBookItemModel.fromJson(bookMessage.data);
                     int balance = 0;
 
-                    for (BookMessageDataModel element in bookMessageList) {
+                    for (ConcensusMessageDataModel element in bookMessageList) {
                       if (element.topicSequenceNumber <=
                           bookMessage.topicSequenceNumber) {
                         final check =
@@ -203,10 +203,10 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
     return Builder(builder: (context) {
       if (currentBook == null) return const SizedBox();
 
-      final isLoading = context
-          .select((BookCubit element) => element.state is BookMessageLoading);
+      final isLoading = context.select(
+          (JournalCubit element) => element.state is JournalMessageLoading);
 
-      List<BookMessageDataModel> memberBookMessageList = [];
+      List<ConcensusMessageDataModel> memberBookMessageList = [];
 
       bookMessageList.forEach((bookMessage) {
         final cashbon = CashbonBookItemModel.fromJson(bookMessage.data);
@@ -298,7 +298,7 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
                         CashbonBookItemModel.fromJson(bookMessage.data);
                     int balance = 0;
 
-                    for (BookMessageDataModel element
+                    for (ConcensusMessageDataModel element
                         in memberBookMessageList) {
                       if (element.topicSequenceNumber <=
                           bookMessage.topicSequenceNumber) {
@@ -329,10 +329,16 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
     });
   }
 
-  BlocListener<BookCubit, BookState> bookListener() {
-    return BlocListener<BookCubit, BookState>(
+  Widget _appBar() {
+    return CustomSecondAppBar(
+      title: "Journal Converted ",
+    );
+  }
+
+  BlocListener<JournalCubit, JournalState> journalListener() {
+    return BlocListener<JournalCubit, JournalState>(
       listener: (context, state) {
-        if (state is SubmitBookLoading) {
+        if (state is SubmitJournalLoading) {
           loading = LoadingUtil.build(context);
           loading?.show();
         } else {
@@ -340,15 +346,15 @@ class _BookMessageScreenState extends BaseStateful<BookMessageScreen> {
         }
         // Log.setLog(state.toString(), method: "LoginScreen");
 
-        if (state is GetBookMessageDataFailed) {
+        if (state is GetJournalMessageDataFailed) {
           showSnackBar(state.message, isError: true);
         }
-        if (state is GetBookMessageDataSuccess) {
+        if (state is GetJournalMessageDataSuccess) {
           setState(() {
             bookMessageList = state.data;
           });
         }
-        if (state is ExportBookFailed) {
+        if (state is ExportJournalFailed) {
           showSnackBar(state.message, isError: true);
         }
       },

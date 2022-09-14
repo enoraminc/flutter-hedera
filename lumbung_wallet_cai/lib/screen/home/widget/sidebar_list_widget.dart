@@ -235,7 +235,7 @@ class SideBarListWidget extends StatelessWidget {
 
           context.read<SubWalletCubit>().changeSelectedData(null);
           context.read<MainWalletCubit>().changeSelectedData(null);
-          context.read<BookCubit>().changeSelectedData(null);
+          context.read<JournalCubit>().changeSelectedData(null);
         },
       ),
     );

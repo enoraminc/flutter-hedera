@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 
-class BookModel {
+class JournalModel {
   final String id;
   final String topicId;
   final String title;
@@ -15,7 +15,7 @@ class BookModel {
   final String network;
   final String state;
 
-  BookModel({
+  JournalModel({
     required this.id,
     required this.topicId,
     required this.title,
@@ -36,7 +36,7 @@ class BookModel {
 
   static List<String> typeList = [cashbonType];
 
-  BookModel copyWith({
+  JournalModel copyWith({
     String? id,
     String? topicId,
     String? title,
@@ -49,7 +49,7 @@ class BookModel {
     String? network,
     String? state,
   }) {
-    return BookModel(
+    return JournalModel(
       id: id ?? this.id,
       topicId: topicId ?? this.topicId,
       title: title ?? this.title,
@@ -80,8 +80,8 @@ class BookModel {
     };
   }
 
-  factory BookModel.fromMap(Map<String, dynamic> map) {
-    return BookModel(
+  factory JournalModel.fromMap(Map<String, dynamic> map) {
+    return JournalModel(
       id: map['id'] ?? '',
       topicId: map['topicId'] ?? '',
       title: map['title'] ?? '',
@@ -103,8 +103,8 @@ class BookModel {
 
   String toJson() => json.encode(toMap());
 
-  factory BookModel.fromJson(String source) =>
-      BookModel.fromMap(json.decode(source));
+  factory JournalModel.fromJson(String source) =>
+      JournalModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -116,7 +116,7 @@ class BookModel {
     if (identical(this, other)) return true;
     final listEquals = const DeepCollectionEquality().equals;
 
-    return other is BookModel &&
+    return other is JournalModel &&
         other.id == id &&
         other.topicId == topicId &&
         other.title == title &&
@@ -205,58 +205,4 @@ class MemberBook {
 
   @override
   int get hashCode => name.hashCode ^ email.hashCode ^ limitPayable.hashCode;
-}
-
-class BookMessageDataModel {
-  final String data;
-  final int topicSequenceNumber;
-  BookMessageDataModel({
-    required this.data,
-    required this.topicSequenceNumber,
-  });
-
-  BookMessageDataModel copyWith({
-    String? data,
-    int? topicSequenceNumber,
-  }) {
-    return BookMessageDataModel(
-      data: data ?? this.data,
-      topicSequenceNumber: topicSequenceNumber ?? this.topicSequenceNumber,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'data': data,
-      'topicSequenceNumber': topicSequenceNumber,
-    };
-  }
-
-  factory BookMessageDataModel.fromMap(Map<String, dynamic> map) {
-    return BookMessageDataModel(
-      data: map['data'] ?? '',
-      topicSequenceNumber: map['topicSequenceNumber']?.toInt() ?? 0,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory BookMessageDataModel.fromJson(String source) =>
-      BookMessageDataModel.fromMap(json.decode(source));
-
-  @override
-  String toString() =>
-      'BookMessageDataModel(data: $data, topicSequenceNumber: $topicSequenceNumber)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is BookMessageDataModel &&
-        other.data == data &&
-        other.topicSequenceNumber == topicSequenceNumber;
-  }
-
-  @override
-  int get hashCode => data.hashCode ^ topicSequenceNumber.hashCode;
 }

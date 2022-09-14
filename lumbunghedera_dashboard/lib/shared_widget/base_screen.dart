@@ -9,15 +9,18 @@ class BaseScreen extends StatelessWidget {
     required this.appBar,
     required this.children,
     required this.onRefresh,
+    this.backgroundColor,
   });
 
   final Widget appBar;
   final List<Widget> children;
   final Future<void> Function() onRefresh;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: Column(
         children: [
           appBar,
@@ -56,6 +59,8 @@ class BaseScreen2 extends StatelessWidget {
     required this.onBack,
     required this.isLoading,
     this.tabWidget,
+    this.onCreateTap,
+    this.customButton,
   });
 
   final Widget appBar;
@@ -66,6 +71,8 @@ class BaseScreen2 extends StatelessWidget {
   final Function() onBack;
   final Widget? tabWidget;
   final bool isLoading;
+  final Function()? onCreateTap;
+  final Widget? customButton;
 
   @override
   Widget build(BuildContext context) {
@@ -159,47 +166,71 @@ class BaseScreen2 extends StatelessWidget {
         vertical: 10,
         horizontal: isMobile ? 18 : 0,
       ),
-      child: Column(
+      child: Stack(
         children: [
-          if (tabWidget != null) ...[
-            tabWidget!,
-            const SizedBox(height: 10),
-          ],
-          if (isLoading)
-            const Expanded(
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: Colors.orange,
-                ),
-              ),
-            )
-          else ...[
-            if (sidebarChildren.isEmpty)
-              Expanded(
-                child: Center(
-                  child: Text(
-                    "Data is empty",
-                    textAlign: TextAlign.center,
-                    style: Styles.commonTextStyle(
-                      size: 18,
+          Column(
+            children: [
+              if (tabWidget != null) ...[
+                tabWidget!,
+                const SizedBox(height: 10),
+              ],
+              if (isLoading)
+                const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.orange,
                     ),
                   ),
-                ),
-              )
-            else
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: onRefresh,
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(
-                      parent: BouncingScrollPhysics(),
+                )
+              else ...[
+                if (sidebarChildren.isEmpty)
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Data is empty",
+                        textAlign: TextAlign.center,
+                        style: Styles.commonTextStyle(
+                          size: 18,
+                        ),
+                      ),
                     ),
-                    controller: ScrollController(),
-                    children: sidebarChildren,
+                  )
+                else
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: onRefresh,
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        controller: ScrollController(),
+                        children: sidebarChildren,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-          ],
+              ],
+            ],
+          ),
+          if (onCreateTap != null || customButton != null)
+            Positioned(
+              right: 0,
+              bottom: 10,
+              child: customButton != null
+                  ? customButton!
+                  : InkWell(
+                      onTap: () {
+                        onCreateTap?.call();
+                      },
+                      child: const CircleAvatar(
+                        backgroundColor: Colors.orange,
+                        radius: 25,
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+            ),
         ],
       ),
     );

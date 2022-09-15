@@ -13,6 +13,7 @@ import '../../screen/auth/auth.dart';
 class Routes {
   static String set = "set";
   static String create = "create";
+  static String concensus = "consensus";
 
   static String splash = "/";
   static String login = "/login";
@@ -23,7 +24,6 @@ class Routes {
   static String subWallet = "sub";
 
   static String journal = "/journal";
-  static String convertJournal = "convert";
 
   static String job = "/job";
 
@@ -87,10 +87,10 @@ class Routes {
             },
             routes: [
               GoRoute(
-                path: "$convertJournal/:id",
+                path: "$concensus/:id",
                 builder: (BuildContext context, GoRouterState state) {
                   final id = state.params["id"] ?? "";
-                  return JournalMessageScreen(topicId: id);
+                  return JournalConcensusDataScreen(topicId: id);
                 },
               ),
               GoRoute(
@@ -153,6 +153,15 @@ class Routes {
                         FadeTransition(opacity: animation, child: child),
               );
             },
+            routes: [
+              GoRoute(
+                path: "$concensus/:id",
+                builder: (BuildContext context, GoRouterState state) {
+                  final id = state.params["id"] ?? "";
+                  return JobConcensusDataScreen(topicId: id);
+                },
+              ),
+            ],
           ),
         ],
         redirect: (GoRouterState state) {

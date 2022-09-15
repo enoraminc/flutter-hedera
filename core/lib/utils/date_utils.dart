@@ -8,6 +8,13 @@ class CustomDateUtils {
     return df.format(dateTime);
   }
 
+   static String simpleFormatWithTime(DateTime? dateTime) {
+    if (dateTime == null) return "-";
+    final DateFormat df = DateFormat('dd/MM/yyyy HH:mm:ss');
+
+    return df.format(dateTime);
+  }
+
   static isoStringToDateFormat(String isoDateString) {
     // DateFormat df = DateFormat('dd/MM/yyyy HH:mm');
 

@@ -31,22 +31,22 @@ class _SetMainWalletScreenState extends BaseStateful<SetMainWalletScreen> {
       email: emailController.text.toLowerCase(),
     );
 
-    context.read<MainWalletCubit>().setMainWallet(wallet);
+    // context.read<MainWalletCubit>().setMainWallet(wallet);
 
-    // // Use Job Request
-    // final jobReq = JobRequestModel(
-    //   type: JobRequestModel.walletType,
-    //   data: wallet.toJobReqMap(),
-    //   users: [
-    //     wallet.email,
-    //   ],
-    //   id: 0,
-    //   topicId: "",
-    //   state: "",
-    //   message: "",
-    //   network: "",
-    // );
-    // context.read<JobCubit>().submitJobRequestSuccess(jobReq);
+    // Use Job Request
+    final jobReq = JobRequestModel(
+      type: JobRequestModel.walletType,
+      data: wallet.toJobReqMap(),
+      users: [
+        wallet.email,
+      ],
+      id: 0,
+      topicId: "",
+      state: "",
+      message: "",
+      network: "",
+    );
+    context.read<JobCubit>().submitJobRequestSuccess(jobReq);
   }
 
   @override
@@ -158,6 +158,9 @@ class _SetMainWalletScreenState extends BaseStateful<SetMainWalletScreen> {
         }
 
         if (state is SubmitJobRequestSuccess) {
+          showSnackBar(
+              "Succesfully submit new job request for create new wallet. Please wait..");
+
           context.pop();
         } else if (state is JobFailed) {
           showSnackBar(state.message, isError: true);

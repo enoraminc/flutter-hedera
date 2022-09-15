@@ -93,7 +93,7 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
           context.push("${Routes.job}/?id=$topicId");
         },
         onSeeAllTap: () {
-          context.go(Routes.journal);
+          context.go(Routes.job);
         },
         columns: const [
           "ID",

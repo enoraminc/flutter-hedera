@@ -84,7 +84,7 @@ class ExcelUtils {
 
         sheet.cell(
             CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex))
-          ..value = CustomDateUtils.simpleFormat(cashbon.date)
+          ..value = CustomDateUtils.simpleFormatWithTime(cashbon.date)
           ..cellStyle = cellStyle;
 
         sheet.cell(

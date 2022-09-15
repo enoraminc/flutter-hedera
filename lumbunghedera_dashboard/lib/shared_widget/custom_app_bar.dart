@@ -98,13 +98,13 @@ class CustomAppBar extends StatelessWidget {
                         ),
                         tabWidget(
                           context,
-                          route: "${Routes.wallet}/${Routes.mainWallet}",
-                          title: "Wallet",
+                          route: Routes.job,
+                          title: "Job",
                         ),
                         tabWidget(
                           context,
-                          route: Routes.job,
-                          title: "Job",
+                          route: "${Routes.wallet}/${Routes.mainWallet}",
+                          title: "Wallet",
                         ),
                       ],
                     ),

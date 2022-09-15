@@ -18,6 +18,7 @@ class CustomTableWidget extends StatelessWidget {
     this.onSeeAllTap,
     this.onExport,
     this.isWithPadding = true,
+    this.rowHeight,
   }) : super(key: key);
 
   final String title;
@@ -30,6 +31,7 @@ class CustomTableWidget extends StatelessWidget {
   final Function()? onSeeAllTap;
   final bool isWithPadding;
   final Function()? onExport;
+  final double? rowHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +97,7 @@ class CustomTableWidget extends StatelessWidget {
                   width: double.infinity,
                   child: DataTable(
                     showCheckboxColumn: false, // <-- this is important
-
+                    dataRowHeight: rowHeight,
                     columns: columns
                         .map(
                           (item) => DataColumn(
@@ -149,6 +151,7 @@ class CustomTableWidget2 extends StatelessWidget {
     this.onTap,
     this.isWithPadding = true,
     this.buttonList = const [],
+    this.specificRowHeight = 150,
   }) : super(key: key);
 
   final String title;
@@ -160,6 +163,7 @@ class CustomTableWidget2 extends StatelessWidget {
   final Function(String id)? onTap;
   final bool isWithPadding;
   final List<Widget> buttonList;
+  final double specificRowHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +232,7 @@ class CustomTableWidget2 extends StatelessWidget {
                           onSelectChanged: (newValue) {
                             onTap?.call(items.first);
                           },
-                          specificRowHeight: 150,
+                          specificRowHeight: specificRowHeight,
                           cells: items
                               .map(
                                 (item) => DataCell(

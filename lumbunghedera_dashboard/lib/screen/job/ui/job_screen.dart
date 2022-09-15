@@ -204,46 +204,59 @@ class _JobScreenState extends BaseStateful<JobScreen> {
           const SizedBox(height: 5),
           const Divider(),
           const SizedBox(height: 5),
-          Expanded(
-            child: CustomTableWidget2(
-              title: 'Hedera Consensus Service',
-              isLoading: isLoading,
-              isWithPadding: false,
-              buttonList: [
-                // RoundedButton(
-                //   text: "Convert Raw Data",
-                //   selected: true,
-                //   isSmall: true,
-                //   selectedColor: Colors.orange,
-                //   onPressed: () {
-                //     context.push(
-                //         "${Routes.journal}/${Routes.convertJournal}/$selectedTopicId");
-                //   },
-                // ),
-                // const SizedBox(width: 10),
-                RoundedButton(
-                  text: "Track Explorer",
-                  selected: true,
-                  isSmall: true,
-                  selectedColor: Colors.orange,
-                  onPressed: () {
-                    launchUrlString(
-                        "${HederaUtils.getHederaExplorerUrl()}/search-details/topic/$selectedTopicId");
-                  },
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Hedera Consensus Service",
+                  style: Styles.commonTextStyle(
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ],
-              columns: const [
-                "Sequence Number",
-                "Message",
-              ],
-              rows: jobMessageList.map((message) {
-                return [
-                  formatNumber(message.topicSequenceNumber.toString()),
-                  message.data,
-                ];
-              }).toList(),
-            ),
+              ),
+              const SizedBox(width: 10),
+              RoundedButton(
+                text: "View Data",
+                selected: true,
+                isSmall: true,
+                selectedColor: Colors.orange,
+                onPressed: () {
+                  context.push(
+                      "${Routes.job}/${Routes.concensus}/$selectedTopicId");
+                },
+              ),
+              const SizedBox(width: 10),
+              RoundedButton(
+                text: "Track Explorer",
+                selected: true,
+                isSmall: true,
+                selectedColor: Colors.orange,
+                onPressed: () {
+                  launchUrlString(
+                      "${HederaUtils.getHederaExplorerUrl()}/search-details/topic/$selectedTopicId");
+                },
+              ),
+            ],
           ),
+          // Expanded(
+          //   child: CustomTableWidget2(
+          //     title: 'Hedera Consensus Service',
+          //     isLoading: isLoading,
+          //     isWithPadding: false,
+          //     buttonList: [],
+          //     columns: const [
+          //       "Sequence Number",
+          //       "Message",
+          //     ],
+          //     rows: jobMessageList.map((message) {
+          //       return [
+          //         formatNumber(message.topicSequenceNumber.toString()),
+          //         message.data,
+          //       ];
+          //     }).toList(),
+          //   ),
+          // ),
           const SizedBox(height: 10),
         ],
       );

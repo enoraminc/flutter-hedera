@@ -35,7 +35,7 @@ import '../../shared_widget/main_wallet_selector.dart';
 import '../../shared_widget/rounded_button.dart';
 import '../../shared_widget/sub_wallet_selector.dart';
 
-part 'ui/journal_message_screen.dart';
+part 'ui/journal_concensus_data_screen.dart';
 part 'ui/journal_screen.dart';
 part 'ui/create_journal_screen.dart';
 

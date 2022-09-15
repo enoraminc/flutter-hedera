@@ -68,8 +68,7 @@ abstract class BaseStateful<S extends StatefulWidget> extends State<S> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          backgroundColor:
-              isError ? Colors.red : Theme.of(context).colorScheme.secondary,
+          backgroundColor: isError ? Colors.red : Colors.orange,
           content: Text(
             message,
             style: const TextStyle(color: Colors.white),

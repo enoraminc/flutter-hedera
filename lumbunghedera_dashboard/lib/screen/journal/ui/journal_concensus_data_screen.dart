@@ -1,18 +1,34 @@
 part of '../journal.dart';
 
-class JournalMessageScreen extends StatefulWidget {
-  const JournalMessageScreen({super.key, required this.topicId});
+enum ViewData {
+  pretty("Pretty Data"),
+  raw("Raw Data");
+
+  final String label;
+
+  const ViewData(this.label);
+
+  @override
+  String toString() => label;
+}
+
+class JournalConcensusDataScreen extends StatefulWidget {
+  const JournalConcensusDataScreen({super.key, required this.topicId});
   final String topicId;
 
   @override
-  State<JournalMessageScreen> createState() => _JournalMessageScreenState();
+  State<JournalConcensusDataScreen> createState() =>
+      _JournalConcensusDataScreenState();
 }
 
-class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
+class _JournalConcensusDataScreenState
+    extends BaseStateful<JournalConcensusDataScreen> {
   JournalModel? currentBook;
   MemberBook? payableMemberSelected;
 
-  List<ConcensusMessageDataModel> bookMessageList = [
+  ViewData viewData = ViewData.pretty;
+
+  List<ConcensusMessageDataModel> concensusMessageDataList = [
     // Dummy Data For Testing
     // BookMessageDataModel(
     //   data:
@@ -62,19 +78,28 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
       listeners: [
         journalListener(),
       ],
-      child: BaseScreen(
-        onRefresh: onRefresh,
-        appBar: _appBar(),
-        children: [
-          const SizedBox(height: 10),
-          bookInfoWidget(),
-          const SizedBox(height: 10),
-          payableBookWidget(),
-          const SizedBox(height: 10),
-          receivableBookWidget(),
-          const SizedBox(height: 20),
-          // messageListWidget(),
-        ],
+      child: DefaultTabController(
+        length: 2,
+        child: BaseScreen(
+          onRefresh: onRefresh,
+          appBar: _appBar(),
+          children: [
+            const SizedBox(height: 10),
+            bookInfoWidget(),
+            const SizedBox(height: 10),
+            if (viewData == ViewData.pretty) ...[
+              payableBookWidget(),
+              const SizedBox(height: 10),
+              receivableBookWidget(),
+              const SizedBox(height: 20),
+            ] else ...[
+              rawTableWidget(),
+              const SizedBox(height: 20),
+            ],
+
+            // messageListWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -84,7 +109,7 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
       if (currentBook == null) return const SizedBox();
 
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.fromLTRB(20, 20, 10, 0),
         decoration: BoxDecoration(
           color: Theme.of(context).appBarTheme.backgroundColor,
           borderRadius: BorderRadius.circular(5),
@@ -124,8 +149,111 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
                 size: 14,
               ),
             ),
+            const SizedBox(height: 10),
+            TabBar(
+              indicatorColor: Colors.orange,
+              tabs: [
+                Tab(
+                  text: ViewData.pretty.toString(),
+                ),
+                Tab(
+                  text: ViewData.raw.toString(),
+                ),
+              ],
+              onTap: (index) {
+                if (index == 0) {
+                  setState(() {
+                    viewData = ViewData.pretty;
+                  });
+                } else if (index == 1) {
+                  setState(() {
+                    viewData = ViewData.raw;
+                  });
+                }
+              },
+            ),
           ],
         ),
+      );
+    });
+  }
+
+  Widget rawTableWidget() {
+    return Builder(builder: (context) {
+      final isLoading = context.select(
+          (JournalCubit element) => element.state is JournalMessageLoading);
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).appBarTheme.backgroundColor,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            Row(
+              children: const [
+                Expanded(
+                  flex: 1,
+                  child: Text("Sequence Number"),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Text("Message"),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            if (isLoading)
+              FadeShimmer(
+                height: 300,
+                width: double.infinity,
+                radius: 4,
+                fadeTheme: CustomFunctions.isDarkTheme(context)
+                    ? FadeTheme.dark
+                    : FadeTheme.light,
+              )
+            else
+              ...concensusMessageDataList.map((bookMessage) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          formatNumber(
+                              bookMessage.topicSequenceNumber.toString()),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                          bookMessage.data,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            const SizedBox(height: 10),
+          ],
+        ),
+        // CustomTableWidget2(
+        //   title: 'Hedera Consensus Service',
+        //   isLoading: isLoading,
+        //   isWithPadding: false,
+        //   columns: const [
+        //     "Sequence Number",
+        //     "Message",
+        //   ],
+        //   rows: bookMessageList.map((bookMessage) {
+        //     return [
+        //       formatNumber(bookMessage.topicSequenceNumber.toString()),
+        //       bookMessage.data,
+        //     ];
+        //   }).toList(),
+        // ),
       );
     });
   }
@@ -150,7 +278,9 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
               isLoading: isLoading,
               isWithPadding: false,
               onExport: () {
-                context.read<JournalCubit>().exportJournal(bookMessageList);
+                context
+                    .read<JournalCubit>()
+                    .exportJournal(concensusMessageDataList);
               },
               columns: const [
                 // "Sequence Number",
@@ -161,13 +291,14 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
                 "Credit",
                 "Balanced",
               ],
-              rows: bookMessageList
+              rows: concensusMessageDataList
                   .map((bookMessage) {
                     final cashbon =
                         CashbonBookItemModel.fromJson(bookMessage.data);
                     int balance = 0;
 
-                    for (ConcensusMessageDataModel element in bookMessageList) {
+                    for (ConcensusMessageDataModel element
+                        in concensusMessageDataList) {
                       if (element.topicSequenceNumber <=
                           bookMessage.topicSequenceNumber) {
                         final check =
@@ -180,7 +311,7 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
 
                     return [
                       // formatNumber(bookMessage.topicSequenceNumber.toString()),
-                      CustomDateUtils.simpleFormat(cashbon.date),
+                      CustomDateUtils.simpleFormatWithTime(cashbon.date),
                       cashbon.memberBook.name,
                       formatAmount(cashbon.memberBook.limitPayable),
                       formatAmount(cashbon.debit),
@@ -208,7 +339,7 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
 
       List<ConcensusMessageDataModel> memberBookMessageList = [];
 
-      bookMessageList.forEach((bookMessage) {
+      concensusMessageDataList.forEach((bookMessage) {
         final cashbon = CashbonBookItemModel.fromJson(bookMessage.data);
         if (cashbon.memberBook.email == payableMemberSelected?.email) {
           memberBookMessageList.add(bookMessage);
@@ -247,7 +378,7 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
                         },
                         child: Chip(
                           backgroundColor: payableMemberSelected == member
-                              ? Colors.orange
+                              ? Colors.green
                               : Colors.grey,
                           padding: const EdgeInsets.symmetric(
                             vertical: 5,
@@ -312,7 +443,7 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
 
                     return [
                       // cashbon.memberBook.email,
-                      CustomDateUtils.simpleFormat(cashbon.date),
+                      CustomDateUtils.simpleFormatWithTime(cashbon.date),
                       formatAmount(cashbon.debit),
                       formatAmount(cashbon.credit),
                       formatAmount(balance),
@@ -330,8 +461,8 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
   }
 
   Widget _appBar() {
-    return CustomSecondAppBar(
-      title: "Journal Converted ",
+    return const CustomSecondAppBar(
+      title: "Journal Concensus Data ",
     );
   }
 
@@ -351,7 +482,7 @@ class _JournalMessageScreenState extends BaseStateful<JournalMessageScreen> {
         }
         if (state is GetJournalMessageDataSuccess) {
           setState(() {
-            bookMessageList = state.data;
+            concensusMessageDataList = state.data;
           });
         }
         if (state is ExportJournalFailed) {

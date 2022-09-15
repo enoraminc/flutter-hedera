@@ -14,36 +14,14 @@ class JournalScreen extends StatefulWidget {
 class _JournalScreenState extends BaseStateful<JournalScreen> {
   String? selectedTopicId;
 
-  List<ConcensusMessageDataModel> bookMessageList = [
-    // Dummy Data For Testing
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":100000,\"credit\":0}",
-    //   topicSequenceNumber: 4,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":0,\"credit\":50000}",
-    //   topicSequenceNumber: 3,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":0,\"credit\":50000}",
-    //   topicSequenceNumber: 2,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":0,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":200000,\"credit\":0}",
-    //   topicSequenceNumber: 1,
-    // )
-  ];
+  List<ConcensusMessageDataModel> bookMessageList = [];
 
   Future<void> onRefresh() async {
     context.read<JournalCubit>().getJournal("");
 
-    if (selectedTopicId?.isNotEmpty ?? false) {
-      context.read<JournalCubit>().getJournalMessageData(selectedTopicId!);
-    }
+    // if (selectedTopicId?.isNotEmpty ?? false) {
+    //   context.read<JournalCubit>().getJournalMessageData(selectedTopicId!);
+    // }
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -99,7 +77,7 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
               setState(() {
                 selectedTopicId = book.topicId;
               });
-              context.read<JournalCubit>().getJournalMessageData(book.topicId);
+              // context.read<JournalCubit>().getJournalMessageData(book.topicId);
               Router.neglect(
                 context,
                 () => context.go("${Routes.journal}?id=${book.topicId}"),
@@ -228,46 +206,59 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
           const SizedBox(height: 5),
           const Divider(),
           const SizedBox(height: 5),
-          Expanded(
-            child: CustomTableWidget2(
-              title: 'Hedera Consensus Service',
-              isLoading: isLoading,
-              isWithPadding: false,
-              buttonList: [
-                RoundedButton(
-                  text: "Convert Raw Data",
-                  selected: true,
-                  isSmall: true,
-                  selectedColor: Colors.orange,
-                  onPressed: () {
-                    context.push(
-                        "${Routes.journal}/${Routes.convertJournal}/$selectedTopicId");
-                  },
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Hedera Consensus Service",
+                  style: Styles.commonTextStyle(
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(width: 10),
-                RoundedButton(
-                  text: "Track Explorer",
-                  selected: true,
-                  isSmall: true,
-                  selectedColor: Colors.orange,
-                  onPressed: () {
-                    launchUrlString(
-                        "${HederaUtils.getHederaExplorerUrl()}/search-details/topic/$selectedTopicId");
-                  },
-                ),
-              ],
-              columns: const [
-                "Sequence Number",
-                "Message",
-              ],
-              rows: bookMessageList.map((bookMessage) {
-                return [
-                  formatNumber(bookMessage.topicSequenceNumber.toString()),
-                  bookMessage.data,
-                ];
-              }).toList(),
-            ),
+              ),
+              const SizedBox(width: 10),
+              RoundedButton(
+                text: "View Data",
+                selected: true,
+                isSmall: true,
+                selectedColor: Colors.orange,
+                onPressed: () {
+                  context.push(
+                      "${Routes.journal}/${Routes.concensus}/$selectedTopicId");
+                },
+              ),
+              const SizedBox(width: 10),
+              RoundedButton(
+                text: "Track Explorer",
+                selected: true,
+                isSmall: true,
+                selectedColor: Colors.orange,
+                onPressed: () {
+                  launchUrlString(
+                      "${HederaUtils.getHederaExplorerUrl()}/search-details/topic/$selectedTopicId");
+                },
+              ),
+            ],
           ),
+          // Expanded(
+          //   child: CustomTableWidget2(
+          //     title: 'Hedera Consensus Service',
+          //     isLoading: isLoading,
+          //     isWithPadding: false,
+          //     buttonList: [],
+          //     columns: const [
+          //       "Sequence Number",
+          //       "Message",
+          //     ],
+          //     rows: bookMessageList.map((bookMessage) {
+          //       return [
+          //         formatNumber(bookMessage.topicSequenceNumber.toString()),
+          //         bookMessage.data,
+          //       ];
+          //     }).toList(),
+          //   ),
+          // ),
           const SizedBox(height: 10),
         ],
       );

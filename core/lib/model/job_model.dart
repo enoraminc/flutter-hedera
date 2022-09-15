@@ -148,10 +148,10 @@ class JobRequestModel {
       state: map['state'] ?? '',
       type: map['type'] ?? '',
       data: Map<String, dynamic>.from(map['data']),
-      createdAt: map['createdAt'] != null
+      createdAt: map['createdAt'] != 0
           ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
           : null,
-      executeAt: map['executeAt'] != null
+      executeAt: map['executeAt'] != 0
           ? DateTime.fromMillisecondsSinceEpoch(map['executeAt'])
           : null,
       message: map['message'] ?? '',

@@ -2,6 +2,8 @@ import 'package:core/blocs/auth/auth_bloc.dart';
 import 'package:core/blocs/job/job_cubit.dart';
 import 'package:core/model/concensus_model.dart';
 import 'package:core/model/job_model.dart';
+import 'package:core/utils/date_utils.dart';
+import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,6 +14,7 @@ import 'package:collection/collection.dart';
 
 import '../../core/base/base_stateful.dart';
 import '../../core/routes/routes.dart';
+import '../../core/utils/custom_function.dart';
 import '../../core/utils/hedera_utils.dart';
 import '../../core/utils/loading_util.dart';
 import '../../core/utils/text_styles.dart';
@@ -21,3 +24,4 @@ import '../../shared_widget/custom_table_widget.dart';
 import '../../shared_widget/rounded_button.dart';
 
 part 'ui/job_screen.dart';
+part 'ui/job_concensus_data_screen.dart';

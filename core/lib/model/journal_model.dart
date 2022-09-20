@@ -9,7 +9,7 @@ class JournalModel {
   final String description;
   final String subWalletId;
   final String type;
-  final List<MemberBook> memberBookList;
+  final List<MemberModel> memberList;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String network;
@@ -22,7 +22,7 @@ class JournalModel {
     required this.description,
     required this.subWalletId,
     required this.type,
-    required this.memberBookList,
+    required this.memberList,
     this.createdAt,
     this.updatedAt,
     required this.network,
@@ -43,7 +43,7 @@ class JournalModel {
     String? description,
     String? subWalletId,
     String? type,
-    List<MemberBook>? memberBookList,
+    List<MemberModel>? memberList,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? network,
@@ -56,7 +56,7 @@ class JournalModel {
       description: description ?? this.description,
       subWalletId: subWalletId ?? this.subWalletId,
       type: type ?? this.type,
-      memberBookList: memberBookList ?? this.memberBookList,
+      memberList: memberList ?? this.memberList,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       network: network ?? this.network,
@@ -72,7 +72,7 @@ class JournalModel {
       'description': description,
       'subWalletId': subWalletId,
       'type': type,
-      'memberBookList': memberBookList.map((x) => x.toMap()).toList(),
+      'memberList': memberList.map((x) => x.toMap()).toList(),
       'createdAt': createdAt?.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
       'network': network,
@@ -88,8 +88,8 @@ class JournalModel {
       description: map['description'] ?? '',
       subWalletId: map['subWalletId'] ?? '',
       type: map['type'] ?? '',
-      memberBookList: List<MemberBook>.from(
-          map['memberBookList']?.map((x) => MemberBook.fromMap(x))),
+      memberList: List<MemberModel>.from(
+          map['memberList']?.map((x) => MemberModel.fromMap(x))),
       createdAt: map['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
           : null,
@@ -108,7 +108,7 @@ class JournalModel {
 
   @override
   String toString() {
-    return 'BookModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, type: $type, memberBookList: $memberBookList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network, state: $state)';
+    return 'JournalModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, type: $type, memberList: $memberList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network, state: $state)';
   }
 
   @override
@@ -123,7 +123,7 @@ class JournalModel {
         other.description == description &&
         other.subWalletId == subWalletId &&
         other.type == type &&
-        listEquals(other.memberBookList, memberBookList) &&
+        listEquals(other.memberList, memberList) &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
         other.network == network &&
@@ -138,7 +138,7 @@ class JournalModel {
         description.hashCode ^
         subWalletId.hashCode ^
         type.hashCode ^
-        memberBookList.hashCode ^
+        memberList.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode ^
         network.hashCode ^
@@ -146,22 +146,22 @@ class JournalModel {
   }
 }
 
-class MemberBook {
+class MemberModel {
   final String name;
   final String email;
   final int limitPayable;
-  MemberBook({
+  MemberModel({
     required this.name,
     required this.email,
     required this.limitPayable,
   });
 
-  MemberBook copyWith({
+  MemberModel copyWith({
     String? name,
     String? email,
     int? limitPayable,
   }) {
-    return MemberBook(
+    return MemberModel(
       name: name ?? this.name,
       email: email ?? this.email,
       limitPayable: limitPayable ?? this.limitPayable,
@@ -176,8 +176,8 @@ class MemberBook {
     };
   }
 
-  factory MemberBook.fromMap(Map<String, dynamic> map) {
-    return MemberBook(
+  factory MemberModel.fromMap(Map<String, dynamic> map) {
+    return MemberModel(
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       limitPayable: map['limitPayable']?.toInt() ?? 0,
@@ -186,18 +186,18 @@ class MemberBook {
 
   String toJson() => json.encode(toMap());
 
-  factory MemberBook.fromJson(String source) =>
-      MemberBook.fromMap(json.decode(source));
+  factory MemberModel.fromJson(String source) =>
+      MemberModel.fromMap(json.decode(source));
 
   @override
   String toString() =>
-      'MemberBook(name: $name, email: $email, limitPayable: $limitPayable)';
+      'MemberModel(name: $name, email: $email, limitPayable: $limitPayable)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is MemberBook &&
+    return other is MemberModel &&
         other.name == name &&
         other.email == email &&
         other.limitPayable == limitPayable;

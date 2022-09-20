@@ -23,34 +23,12 @@ class JournalConcensusDataScreen extends StatefulWidget {
 
 class _JournalConcensusDataScreenState
     extends BaseStateful<JournalConcensusDataScreen> {
-  JournalModel? currentBook;
-  MemberBook? payableMemberSelected;
+  JournalModel? currentJournal;
+  MemberModel? payableMemberSelected;
 
   ViewData viewData = ViewData.pretty;
 
-  List<ConcensusMessageDataModel> concensusMessageDataList = [
-    // Dummy Data For Testing
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":4,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":100000,\"credit\":0}",
-    //   topicSequenceNumber: 4,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":3,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":0,\"credit\":50000}",
-    //   topicSequenceNumber: 3,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":2,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":0,\"credit\":50000}",
-    //   topicSequenceNumber: 2,
-    // ),
-    // BookMessageDataModel(
-    //   data:
-    //       "{\"sequenceNumber\":1,\"bookId\":\"book_VoJfvpyzyTrfQIEREX7mDjIn2ETs\",\"subWalletId\":\"subWallet_jxMtIEfTZcEDDKMIA4z0RO6N3dAT\",\"date\":1662352450040,\"memberBook\":{\"name\":\"Oen Enoram\",\"email\":\"oen@enoram.com\",\"limitPayable\":100000},\"debit\":200000,\"credit\":0}",
-    //   topicSequenceNumber: 1,
-    // )
-  ];
+  List<ConcensusMessageDataModel> concensusMessageDataList = [];
 
   Future<void> onRefresh() async {
     context.read<JournalCubit>().getJournalMessageData(widget.topicId);
@@ -60,13 +38,13 @@ class _JournalConcensusDataScreenState
 
   @override
   void initState() {
-    currentBook = context
+    currentJournal = context
         .read<JournalCubit>()
         .state
         .journalList
         .firstWhereOrNull((element) => element.topicId == widget.topicId);
 
-    payableMemberSelected = currentBook?.memberBookList.first;
+    payableMemberSelected = currentJournal?.memberList.first;
 
     onRefresh();
     super.initState();
@@ -106,7 +84,7 @@ class _JournalConcensusDataScreenState
 
   Widget bookInfoWidget() {
     return Builder(builder: (context) {
-      if (currentBook == null) return const SizedBox();
+      if (currentJournal == null) return const SizedBox();
 
       return Container(
         padding: const EdgeInsets.fromLTRB(20, 20, 10, 0),
@@ -122,7 +100,7 @@ class _JournalConcensusDataScreenState
               children: [
                 Expanded(
                   child: Text(
-                    currentBook?.title ?? "-",
+                    currentJournal?.title ?? "-",
                     style: Styles.commonTextStyle(
                       size: 18,
                       fontWeight: FontWeight.bold,
@@ -132,7 +110,7 @@ class _JournalConcensusDataScreenState
                 const SizedBox(width: 10),
                 Chip(
                   label: Text(
-                    currentBook?.type ?? "-",
+                    currentJournal?.type ?? "-",
                     style: Styles.commonTextStyle(
                       size: 16,
                       color: Colors.white,
@@ -144,7 +122,7 @@ class _JournalConcensusDataScreenState
             ),
             const SizedBox(height: 10),
             Text(
-              currentBook?.description ?? "-",
+              currentJournal?.description ?? "-",
               style: Styles.commonTextStyle(
                 size: 14,
               ),
@@ -214,7 +192,7 @@ class _JournalConcensusDataScreenState
                     : FadeTheme.light,
               )
             else
-              ...concensusMessageDataList.map((bookMessage) {
+              ...concensusMessageDataList.map((message) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Row(
@@ -222,14 +200,13 @@ class _JournalConcensusDataScreenState
                       Expanded(
                         flex: 1,
                         child: Text(
-                          formatNumber(
-                              bookMessage.topicSequenceNumber.toString()),
+                          formatNumber(message.topicSequenceNumber.toString()),
                         ),
                       ),
                       Expanded(
                         flex: 5,
                         child: Text(
-                          bookMessage.data,
+                          message.data,
                         ),
                       ),
                     ],
@@ -278,9 +255,9 @@ class _JournalConcensusDataScreenState
               isLoading: isLoading,
               isWithPadding: false,
               onExport: () {
-                context
-                    .read<JournalCubit>()
-                    .exportJournal(concensusMessageDataList);
+                // context
+                //     .read<JournalCubit>()
+                //     .exportJournal(concensusMessageDataList);
               },
               columns: const [
                 // "Sequence Number",
@@ -292,30 +269,29 @@ class _JournalConcensusDataScreenState
                 "Balanced",
               ],
               rows: concensusMessageDataList
-                  .map((bookMessage) {
-                    final cashbon =
-                        CashbonBookItemModel.fromJson(bookMessage.data);
+                  .map((message) {
+                    final cashbon = PodModel.fromJson(message.data);
+
                     int balance = 0;
 
                     for (ConcensusMessageDataModel element
                         in concensusMessageDataList) {
                       if (element.topicSequenceNumber <=
-                          bookMessage.topicSequenceNumber) {
-                        final check =
-                            CashbonBookItemModel.fromJson(element.data);
+                          message.topicSequenceNumber) {
+                        final podCheck = PodModel.fromJson(element.data);
 
-                        balance += check.debit;
-                        balance -= check.credit;
+                        balance += podCheck.laci?.debit ?? 0;
+                        balance -= podCheck.laci?.credit ?? 0;
                       }
                     }
 
                     return [
-                      // formatNumber(bookMessage.topicSequenceNumber.toString()),
-                      CustomDateUtils.simpleFormatWithTime(cashbon.date),
-                      cashbon.memberBook.name,
-                      formatAmount(cashbon.memberBook.limitPayable),
-                      formatAmount(cashbon.debit),
-                      formatAmount(cashbon.credit),
+                      // formatNumber(message.topicSequenceNumber.toString()),
+                      CustomDateUtils.simpleFormatWithTime(cashbon.laci?.date),
+                      cashbon.laci?.member.name ?? "",
+                      formatAmount(cashbon.laci?.member.limitPayable),
+                      formatAmount(cashbon.laci?.debit),
+                      formatAmount(cashbon.laci?.credit),
                       formatAmount(balance),
                     ];
                   })
@@ -332,7 +308,7 @@ class _JournalConcensusDataScreenState
 
   Builder payableBookWidget() {
     return Builder(builder: (context) {
-      if (currentBook == null) return const SizedBox();
+      if (currentJournal == null) return const SizedBox();
 
       final isLoading = context.select(
           (JournalCubit element) => element.state is JournalMessageLoading);
@@ -340,8 +316,8 @@ class _JournalConcensusDataScreenState
       List<ConcensusMessageDataModel> memberBookMessageList = [];
 
       concensusMessageDataList.forEach((bookMessage) {
-        final cashbon = CashbonBookItemModel.fromJson(bookMessage.data);
-        if (cashbon.memberBook.email == payableMemberSelected?.email) {
+        final cashbon = PodModel.fromJson(bookMessage.data);
+        if (cashbon.laci?.member.email == payableMemberSelected?.email) {
           memberBookMessageList.add(bookMessage);
         }
       });
@@ -369,7 +345,7 @@ class _JournalConcensusDataScreenState
               alignment: WrapAlignment.center,
               crossAxisAlignment: WrapCrossAlignment.start,
               spacing: 10,
-              children: (currentBook?.memberBookList ?? [])
+              children: (currentJournal?.memberList ?? [])
                   .map((member) => InkWell(
                         onTap: () {
                           setState(() {
@@ -425,27 +401,25 @@ class _JournalConcensusDataScreenState
               ],
               rows: memberBookMessageList
                   .map((bookMessage) {
-                    final cashbon =
-                        CashbonBookItemModel.fromJson(bookMessage.data);
+                    final cashbon = PodModel.fromJson(bookMessage.data);
                     int balance = 0;
 
                     for (ConcensusMessageDataModel element
                         in memberBookMessageList) {
                       if (element.topicSequenceNumber <=
                           bookMessage.topicSequenceNumber) {
-                        final check =
-                            CashbonBookItemModel.fromJson(element.data);
+                        final check = PodModel.fromJson(element.data);
 
-                        balance += check.debit;
-                        balance -= check.credit;
+                        balance += check.laci?.debit ?? 0;
+                        balance -= check.laci?.credit ?? 0;
                       }
                     }
 
                     return [
                       // cashbon.memberBook.email,
-                      CustomDateUtils.simpleFormatWithTime(cashbon.date),
-                      formatAmount(cashbon.debit),
-                      formatAmount(cashbon.credit),
+                      CustomDateUtils.simpleFormatWithTime(cashbon.laci?.date),
+                      formatAmount(cashbon.laci?.debit),
+                      formatAmount(cashbon.laci?.credit),
                       formatAmount(balance),
                     ];
                   })

@@ -19,9 +19,9 @@ class _JobScreenState extends BaseStateful<JobScreen> {
   Future<void> onRefresh() async {
     context.read<JobCubit>().fetchAllJob();
 
-    if (selectedTopicId?.isNotEmpty ?? false) {
-      context.read<JobCubit>().getJobMessageData(selectedTopicId!);
-    }
+    // if (selectedTopicId?.isNotEmpty ?? false) {
+    //   context.read<JobCubit>().getJobMessageData(selectedTopicId!);
+    // }
 
     await Future.delayed(const Duration(milliseconds: 100));
   }

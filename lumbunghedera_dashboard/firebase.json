@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "testnet-lumbungdashboard",
+    "site": "dashboard-lumbunghedera",
     "public": "build/web",
     "ignore": [
       "firebase.json",

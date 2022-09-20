@@ -44,42 +44,40 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD7J0LiKEnLNnvo4JGFwWHbOdCZfsLhnh8',
-    appId: '1:439332822960:web:06e0e43a2ce060a848c075',
-    messagingSenderId: '439332822960',
-    projectId: 'lumbungalgo',
-    authDomain: 'lumbungalgo.firebaseapp.com',
-    storageBucket: 'lumbungalgo.appspot.com',
-    measurementId: 'G-VBL24J3R82',
+    apiKey: 'AIzaSyBh_PATj7n5TRxynxL09CyGgurie1RgBZI',
+    appId: '1:381096331282:web:90e64eeeae567ccde170cb',
+    messagingSenderId: '381096331282',
+    projectId: 'lumbunghedera-test',
+    authDomain: 'lumbunghedera-test.firebaseapp.com',
+    storageBucket: 'lumbunghedera-test.appspot.com',
+    measurementId: 'G-TN8S06F9RR',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBMlrlptgQG3ibAJ0PJdJ_cLNeYxMmBerI',
-    appId: '1:439332822960:android:24b13ea3392fc25148c075',
-    messagingSenderId: '439332822960',
-    projectId: 'lumbungalgo',
-    storageBucket: 'lumbungalgo.appspot.com',
+    apiKey: 'AIzaSyDbZJHKtvFcVLClOg_Bfys79oBqGzY_QNw',
+    appId: '1:381096331282:android:fd538a1c3316b616e170cb',
+    messagingSenderId: '381096331282',
+    projectId: 'lumbunghedera-test',
+    storageBucket: 'lumbunghedera-test.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB-zz8ztp3oI6xFlyfydXtgLdD79W5_dnQ',
-    appId: '1:439332822960:ios:3959e5ea808a01f548c075',
-    messagingSenderId: '439332822960',
-    projectId: 'lumbungalgo',
-    storageBucket: 'lumbungalgo.appspot.com',
-    iosClientId:
-        '439332822960-bji7t2cnr5lqak3kqll3htkc00vi6jsj.apps.googleusercontent.com',
-    iosBundleId: 'com.example.lumbungWalletCai',
+    apiKey: 'AIzaSyBur2cI5F1_q75A4GjpZfWnMs9Mb6gKbpg',
+    appId: '1:381096331282:ios:33454d406dab4367e170cb',
+    messagingSenderId: '381096331282',
+    projectId: 'lumbunghedera-test',
+    storageBucket: 'lumbunghedera-test.appspot.com',
+    iosClientId: '381096331282-u55a5etmjj7h5is794dd5qebv94tdud4.apps.googleusercontent.com',
+    iosBundleId: 'com.example.lumbunghederaDashboard',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyB-zz8ztp3oI6xFlyfydXtgLdD79W5_dnQ',
-    appId: '1:439332822960:ios:3959e5ea808a01f548c075',
-    messagingSenderId: '439332822960',
-    projectId: 'lumbungalgo',
-    storageBucket: 'lumbungalgo.appspot.com',
-    iosClientId:
-        '439332822960-bji7t2cnr5lqak3kqll3htkc00vi6jsj.apps.googleusercontent.com',
-    iosBundleId: 'com.example.lumbungWalletCai',
+    apiKey: 'AIzaSyBur2cI5F1_q75A4GjpZfWnMs9Mb6gKbpg',
+    appId: '1:381096331282:ios:33454d406dab4367e170cb',
+    messagingSenderId: '381096331282',
+    projectId: 'lumbunghedera-test',
+    storageBucket: 'lumbunghedera-test.appspot.com',
+    iosClientId: '381096331282-u55a5etmjj7h5is794dd5qebv94tdud4.apps.googleusercontent.com',
+    iosBundleId: 'com.example.lumbunghederaDashboard',
   );
 }

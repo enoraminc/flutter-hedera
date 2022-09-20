@@ -7,7 +7,7 @@ import 'package:lumbung_common/base/base_repository.dart';
 class JobApiImpl extends JobApi {
   late final String url;
 
-  final String firebase = "lumbungalgo";
+  final String firebase = "lumbunghedera";
 
   JobApiImpl({
     required this.url,

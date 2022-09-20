@@ -120,7 +120,7 @@ class _SubmitCashbonMemberScreenState
             const SizedBox(height: 10),
             MainWalletSelector(
               activeWallet: selectedWallet,
-              memberWalletList: (book?.memberBookList ?? [])
+              memberWalletList: (book?.memberList ?? [])
                   .map((e) => HederaWallet.empty().copyWith(
                         email: e.email,
                         displayName: e.name,

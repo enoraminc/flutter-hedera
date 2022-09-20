@@ -8,7 +8,7 @@ import 'package:lumbung_common/model/hedera/wallet.dart';
 class HederaApiImpl extends HederaApi {
   late final String url;
 
-  final String firebase = "lumbungalgo";
+  final String firebase = "lumbunghedera";
 
   HederaApiImpl({
     required this.url,

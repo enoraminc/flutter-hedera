@@ -18,7 +18,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController limitController = TextEditingController();
 
-  List<MemberBook> memberBookList = [];
+  List<MemberModel> memberList = [];
 
   HederaWallet? activeWallet;
   List<HederaWallet> walletSelectedList = [];
@@ -41,7 +41,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
       subWalletId: subWalletSelected?.id ?? "-",
       title: titleController.text,
       description: descriptionController.text,
-      memberBookList: memberBookList,
+      memberList: memberList,
       network: "",
       type: journalType,
       state: JournalModel.activeState,
@@ -288,8 +288,8 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
                       setState(() {
                         if (activeWallet != null) {
                           walletSelectedList.add(activeWallet!);
-                          memberBookList.add(
-                            MemberBook(
+                          memberList.add(
+                            MemberModel(
                                 email: activeWallet?.email ?? "",
                                 name: activeWallet?.displayName ?? "",
                                 limitPayable: int.tryParse(limitController.text
@@ -312,7 +312,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              if (memberBookList.isEmpty)
+              if (memberList.isEmpty)
                 Center(
                   child: Text(
                     "Limit Payable Member List is Empty",
@@ -322,7 +322,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
                     ),
                   ),
                 ),
-              ...memberBookList
+              ...memberList
                   .map(
                     (book) => Container(
                       decoration: BoxDecoration(
@@ -367,7 +367,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
                               setState(() {
                                 walletSelectedList.removeWhere(
                                     (element) => element.email == book.email);
-                                memberBookList.removeWhere(
+                                memberList.removeWhere(
                                     (element) => element.email == book.email);
                               });
                             },

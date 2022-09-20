@@ -14,7 +14,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController limitController = TextEditingController();
 
-  List<MemberBook> memberBookList = [];
+  List<MemberModel> memberBookList = [];
 
   HederaWallet? activeWallet;
   List<HederaWallet> walletSelectedList = [];
@@ -37,7 +37,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
       subWalletId: subWalletSelected?.id ?? "-",
       title: titleController.text,
       description: descriptionController.text,
-      memberBookList: memberBookList,
+      memberList: memberBookList,
       network: "",
       type: bookType,
       state: JournalModel.activeState,
@@ -284,7 +284,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
                         if (activeWallet != null) {
                           walletSelectedList.add(activeWallet!);
                           memberBookList.add(
-                            MemberBook(
+                            MemberModel(
                                 email: activeWallet?.email ?? "",
                                 name: activeWallet?.displayName ?? "",
                                 limitPayable: int.tryParse(limitController.text

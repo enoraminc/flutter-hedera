@@ -6,7 +6,7 @@ import 'package:lumbung_common/base/base_repository.dart';
 class ConcensusApiImpl extends ConcensusApi {
   late final String url;
 
-  final String firebase = "lumbungalgo";
+  final String firebase = "lumbunghedera";
 
   ConcensusApiImpl({
     required this.url,

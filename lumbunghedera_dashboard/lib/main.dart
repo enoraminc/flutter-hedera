@@ -18,14 +18,13 @@ void main() async {
       hederaNetwork: HederaNetwork.testnet,
       appName: "Lumbung Hedera Dashboard",
       logoPath: "assets/logo.png",
-      versionNumber: '1.0.4',
-      versionDate: "15 September 2022",
+      versionNumber: '1.0.5',
+      versionDate: "20 September 2022",
       rempahApiUrl:
           "https://rempah-prod-dot-lumbungdemo.as.r.appspot.com/_api/lumbungrempah",
       // hederaApiUrl:
       //     "https://hedera-prod-dot-lumbungdemo.as.r.appspot.com/_api/hedera",
-      hederaApiUrl:
-          "https://hedera-dev-dot-lumbungdemo.as.r.appspot.com/_api/hedera",
+      hederaApiUrl: "https://lumbunghedera-test.et.r.appspot.com/_api/hedera",
       // hederaApiUrl: "http://192.168.1.7:8080/_api/hedera",
     ),
   );

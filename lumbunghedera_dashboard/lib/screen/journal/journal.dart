@@ -7,6 +7,7 @@ import 'package:core/model/concensus_model.dart';
 import 'package:core/model/hedera_sub_wallet.dart';
 import 'package:core/model/journal_model.dart';
 import 'package:core/model/cashbon_book_model.dart';
+import 'package:core/model/pod_model.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/foundation.dart';

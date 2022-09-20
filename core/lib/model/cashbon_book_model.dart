@@ -7,7 +7,7 @@ class CashbonBookItemModel {
   final String bookId;
   final String subWalletId;
   final DateTime? date;
-  final MemberBook memberBook;
+  final MemberModel memberBook;
   final int debit;
   final int credit;
 
@@ -26,7 +26,7 @@ class CashbonBookItemModel {
     String? bookId,
     String? subWalletId,
     DateTime? date,
-    MemberBook? memberBook,
+    MemberModel? memberBook,
     int? debit,
     int? credit,
   }) {
@@ -61,7 +61,7 @@ class CashbonBookItemModel {
       date: map['date'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['date'])
           : null,
-      memberBook: MemberBook.fromMap(map['memberBook']),
+      memberBook: MemberModel.fromMap(map['memberBook']),
       debit: map['debit']?.toInt() ?? 0,
       credit: map['credit']?.toInt() ?? 0,
     );

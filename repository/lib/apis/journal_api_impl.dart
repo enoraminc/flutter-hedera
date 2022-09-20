@@ -8,7 +8,7 @@ import 'package:lumbung_common/base/base_repository.dart';
 class JournalApiImpl extends JournalApi {
   late final String url;
 
-  final String firebase = "lumbungalgo";
+  final String firebase = "lumbunghedera";
 
   JournalApiImpl({
     required this.url,
@@ -18,7 +18,7 @@ class JournalApiImpl extends JournalApi {
   Future<List<JournalModel>> getJournal(String subWalletId) async {
     try {
       final data = await request(
-        '$url/book?id=$subWalletId',
+        '$url/journal?id=$subWalletId',
         RequestType.get,
         useToken: true,
         firebase: firebase,
@@ -33,12 +33,12 @@ class JournalApiImpl extends JournalApi {
 
   @override
   Future<JournalModel> setJournal(JournalModel book) async {
-    if (book.memberBookList.isEmpty) {
+    if (book.memberList.isEmpty) {
       throw Exception("Member list cant be empty");
     }
     try {
       final data = await request(
-        '$url/book',
+        '$url/journal',
         RequestType.post,
         body: book.toMap(),
         useToken: true,
@@ -53,33 +53,12 @@ class JournalApiImpl extends JournalApi {
   }
 
   @override
-  Future<List<ConcensusMessageDataModel>> getJournalMessageData(
-      String topicId) async {
-    try {
-      final data = await request(
-        '$url/consensus/message/$topicId',
-        RequestType.get,
-        useToken: true,
-        firebase: firebase,
-      );
-
-      return data
-          .map<ConcensusMessageDataModel>(
-              (e) => ConcensusMessageDataModel.fromMap(e))
-          .toList();
-    } catch (e, s) {
-      Log.setLog("$e $s", method: "getBookMessageData");
-      rethrow;
-    }
-  }
-
-  @override
   Future<CashbonBookItemModel> submitCashbonMember(
       {required String bookId,
       required int amount,
       required String type}) async {
     if (bookId.isEmpty) {
-      throw Exception("Book id cant be empty");
+      throw Exception("Journal id cant be empty");
     }
     if (type.isEmpty) {
       throw Exception("Type cant be empty");
@@ -89,10 +68,10 @@ class JournalApiImpl extends JournalApi {
     }
     try {
       final data = await request(
-        '$url/book/cashbon/submit',
+        '$url/journal/pod/submit',
         RequestType.post,
         body: {
-          "bookId": bookId,
+          "journalId": bookId,
           "amount": amount,
           "type": type.toLowerCase(),
         },

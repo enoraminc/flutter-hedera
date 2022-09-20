@@ -7,7 +7,7 @@ import 'package:lumbung_common/utils/log.dart';
 class HederaSubWalletApiImpl extends HederaSubWalletApi {
   late final String url;
 
-  final String firebase = "lumbungalgo";
+  final String firebase = "lumbunghedera";
 
   HederaSubWalletApiImpl({
     required this.url,

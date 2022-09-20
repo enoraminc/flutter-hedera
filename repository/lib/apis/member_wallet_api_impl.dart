@@ -8,7 +8,7 @@ import 'package:lumbung_common/utils/log.dart';
 class MemberWalletApiImpl extends MemberWalletApi {
   late final String url;
 
-  final String firebase = "lumbungalgo";
+  final String firebase = "lumbunghedera";
 
   MemberWalletApiImpl({
     required this.url,

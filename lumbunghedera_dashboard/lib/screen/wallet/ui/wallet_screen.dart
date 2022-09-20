@@ -76,6 +76,7 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
               setState(() {
                 selectedWalletId = null;
               });
+              context.read<SubWalletCubit>().changeSelectedData(null);
             },
             sidebarChildren: typeWallet == Routes.mainWallet
                 ? mainWalletSidebarListWidget(mainWalletList)
@@ -223,6 +224,7 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
               setState(() {
                 selectedWalletId = wallet.accountId;
               });
+              context.read<SubWalletCubit>().changeSelectedData(wallet);
               Router.neglect(
                 context,
                 () => context
@@ -350,6 +352,30 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
             ),
           ),
           const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Action",
+                  style: Styles.commonTextStyle(
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              RoundedButton(
+                text: "Edit",
+                selected: true,
+                isSmall: true,
+                selectedColor: Colors.orange,
+                onPressed: () {
+                  context.push(
+                      "${Routes.wallet}/${Routes.subWallet}/${Routes.set}");
+                },
+              ),
+            ],
+          ),
         ],
       );
     });

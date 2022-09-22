@@ -139,9 +139,11 @@ abstract class BaseStateful<S extends StatefulWidget> extends State<S> {
     setSize(context);
     calculateBottomInsets();
     // setStatusBarColorToPrimary();
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      child: body(),
+    return SelectionArea(
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        child: body(),
+      ),
     );
   }
 

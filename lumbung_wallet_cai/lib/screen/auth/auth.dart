@@ -8,6 +8,8 @@ import 'package:lumbung_wallet_cai/core/utils/custom_function.dart';
 
 import '../../core/routes/routes.dart';
 import '../../core/utils/loading_util.dart';
+import '../../core/utils/text_styles.dart';
+import '../../flavor_config.dart';
 import '../../shared_widget/rounded_button.dart';
 
 part 'ui/login_screen.dart';

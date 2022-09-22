@@ -1,3 +1,5 @@
 enum MainScreenType {
-  walletDetail,
+  mainWalletDetail,
+  subWalletDetail,
+  bookDetail,
 }

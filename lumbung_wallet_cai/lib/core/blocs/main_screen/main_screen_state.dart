@@ -6,7 +6,7 @@ class MainScreenState {
   final bool? expandMainButton;
 
   const MainScreenState(
-      {this.currentScreen = MainScreenType.walletDetail,
+      {this.currentScreen = MainScreenType.mainWalletDetail,
       this.expandMainButton = false});
 
   MainScreenState copyWith(

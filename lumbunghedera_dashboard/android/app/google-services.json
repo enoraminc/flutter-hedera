@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "381096331282",
+    "project_id": "lumbunghedera-test",
+    "storage_bucket": "lumbunghedera-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381096331282:android:fd538a1c3316b616e170cb",
+        "android_client_info": {
+          "package_name": "com.example.lumbunghedera_dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381096331282-5qrf5kh57i9v14dndsebn1chf32m3lbi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbZJHKtvFcVLClOg_Bfys79oBqGzY_QNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381096331282-5qrf5kh57i9v14dndsebn1chf32m3lbi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

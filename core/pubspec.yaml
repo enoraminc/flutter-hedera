@@ -16,6 +16,11 @@ dependencies:
 
   lumbung_localizations:
     path: ../../lumbung_localizations
+    
+  excel:
+    git:
+      url: https://github.com/justkawal/excel.git
+      ref: null-safety
 
   flutter_bloc: ^7.3.1
   get_it: ^7.0.0

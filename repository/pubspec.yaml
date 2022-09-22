@@ -14,6 +14,9 @@ dependencies:
   core:
     path: ../core
 
+  core_cai_v3:
+    path: ../../core-cai-v3/core_cai_v3
+    
   firebase_auth: ^3.7.0
   google_sign_in: ^5.2.3
 

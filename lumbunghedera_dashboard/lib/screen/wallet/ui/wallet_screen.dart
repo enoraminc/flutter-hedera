@@ -352,30 +352,6 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Action",
-                  style: Styles.commonTextStyle(
-                    size: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              RoundedButton(
-                text: "Edit",
-                selected: true,
-                isSmall: true,
-                selectedColor: Colors.orange,
-                onPressed: () {
-                  context.push(
-                      "${Routes.wallet}/${Routes.subWallet}/${Routes.set}");
-                },
-              ),
-            ],
-          ),
         ],
       );
     });
@@ -442,6 +418,30 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
             ),
           ),
           const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Action",
+                  style: Styles.commonTextStyle(
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              RoundedButton(
+                text: "Edit",
+                selected: true,
+                isSmall: true,
+                selectedColor: Colors.orange,
+                onPressed: () {
+                  context.push(
+                      "${Routes.wallet}/${Routes.subWallet}/${Routes.set}");
+                },
+              ),
+            ],
+          ),
         ],
       );
     });

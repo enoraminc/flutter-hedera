@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:core/utils/log.dart';
+import 'package:hedera_core/utils/log.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class StorageUtils {

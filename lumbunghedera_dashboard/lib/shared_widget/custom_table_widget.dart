@@ -1,12 +1,14 @@
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:lumbunghedera_dashboard/core/base/base_stateless.dart';
 import 'package:lumbunghedera_dashboard/shared_widget/rounded_button.dart';
 
 import '../core/utils/custom_function.dart';
 import '../core/utils/text_styles.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-class CustomTableWidget extends StatelessWidget {
+class CustomTableWidget extends BaseStateless {
   const CustomTableWidget({
     Key? key,
     required this.title,
@@ -34,7 +36,7 @@ class CustomTableWidget extends StatelessWidget {
   final double? rowHeight;
 
   @override
-  Widget build(BuildContext context) {
+  Widget body(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(isWithPadding ? 10 : 0),
       decoration: BoxDecoration(
@@ -120,8 +122,20 @@ class CustomTableWidget extends StatelessWidget {
                         cells: items
                             .map(
                               (item) => DataCell(
+                                onTap: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: item),
+                                  );
+
+                                  if (onTap == null) {
+                                    showSnackBar(
+                                        context, "Copied to clipboard..");
+                                  }
+
+                                  onTap?.call(items.first);
+                                },
                                 Text(
-                                  item,
+                                  item.crop(),
                                   style: Styles.commonTextStyle(
                                     size: 16,
                                     // fontWeight: FontWeight.bold,
@@ -254,5 +268,15 @@ class CustomTableWidget2 extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+extension CropExtension on String {
+  String crop() {
+    if (length > 65) {
+      return "${substring(0, 65)}...";
+    }
+
+    return this;
   }
 }

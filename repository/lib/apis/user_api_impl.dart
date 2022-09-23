@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:lumbung_common/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 
-import 'package:core/utils/log.dart';
+import 'package:hedera_core/utils/log.dart';
 
-import 'package:core/apis/auth_api.dart';
-import 'package:core/apis/user_api.dart';
+import 'package:hedera_core/apis/auth_api.dart';
+import 'package:hedera_core/apis/user_api.dart';
 
 import '../utils/api_utils.dart';
 

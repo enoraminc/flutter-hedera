@@ -155,13 +155,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  core:
-    dependency: "direct main"
-    description:
-      path: "../core"
-      relative: true
-    source: path
-    version: "0.0.1"
   core_cai_v3:
     dependency: "direct main"
     description:
@@ -545,6 +538,13 @@ packages:
     dependency: transitive
     description:
       path: "../../core-grain-2/core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  hedera_core:
+    dependency: "direct main"
+    description:
+      path: "../hedera_core"
       relative: true
     source: path
     version: "0.0.1"

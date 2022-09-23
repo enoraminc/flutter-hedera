@@ -18,8 +18,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  core:
-    path: ../core
+  hedera_core:
+    path: ../hedera_core
 
   repository:
     path: ../repository

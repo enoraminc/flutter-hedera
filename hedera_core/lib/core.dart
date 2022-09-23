@@ -1,4 +1,4 @@
-library core;
+library hedera_core;
 
 /// A Calculator.
 class Calculator {

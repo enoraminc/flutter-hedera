@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  core:
-    path: ../core
+  hedera_core:
+    path: ../hedera_core
 
   core_cai_v3:
     path: ../../core-cai-v3/core_cai_v3

@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
-import 'package:core/blocs/auth/auth_bloc.dart';
-import 'package:core/blocs/journal/journal_cubit.dart';
-import 'package:core/blocs/main_wallet/main_wallet_cubit.dart';
-import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
-import 'package:core/model/hedera_sub_wallet.dart';
+import 'package:hedera_core/blocs/auth/auth_bloc.dart';
+import 'package:hedera_core/blocs/journal/journal_cubit.dart';
+import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
+import 'package:hedera_core/blocs/sub_wallet/sub_wallet_cubit.dart';
+import 'package:hedera_core/model/hedera_sub_wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';

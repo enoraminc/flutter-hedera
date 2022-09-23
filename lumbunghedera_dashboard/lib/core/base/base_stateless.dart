@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:core/utils/log.dart';
+import 'package:hedera_core/utils/log.dart';
 
 abstract class BaseStateless extends StatelessWidget {
   const BaseStateless({Key? key}) : super(key: key);

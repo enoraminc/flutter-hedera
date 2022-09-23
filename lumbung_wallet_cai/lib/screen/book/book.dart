@@ -1,9 +1,9 @@
-import 'package:core/blocs/auth/auth_bloc.dart';
-import 'package:core/blocs/journal/journal_cubit.dart';
-import 'package:core/blocs/main_wallet/main_wallet_cubit.dart';
-import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
-import 'package:core/model/journal_model.dart';
-import 'package:core/model/hedera_sub_wallet.dart';
+import 'package:hedera_core/blocs/auth/auth_bloc.dart';
+import 'package:hedera_core/blocs/journal/journal_cubit.dart';
+import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
+import 'package:hedera_core/blocs/sub_wallet/sub_wallet_cubit.dart';
+import 'package:hedera_core/model/journal_model.dart';
+import 'package:hedera_core/model/hedera_sub_wallet.dart';
 import 'package:core_cai_v3/base/base_cai_screen.dart';
 import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';
 import 'package:core_cai_v3/widgets/chat_item_screen.dart';

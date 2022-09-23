@@ -1,5 +1,6 @@
-import 'package:core/apis/job_api.dart';
-import 'package:core/model/job_model.dart';
+
+import 'package:lumbung_common/model/hedera/job_model.dart';
+import 'package:lumbung_common/api/hedera/job_api.dart';
 
 import 'package:lumbung_common/utils/log.dart';
 import 'package:lumbung_common/base/base_repository.dart';
@@ -12,6 +13,7 @@ class JobApiImpl extends JobApi {
   JobApiImpl({
     required this.url,
   });
+
   @override
   Future<List<JobModel>> fetchAllJob() async {
     try {

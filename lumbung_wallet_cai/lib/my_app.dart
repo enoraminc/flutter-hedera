@@ -1,21 +1,21 @@
-import 'package:core/blocs/journal/journal_cubit.dart';
+import 'package:hedera_core/blocs/journal/journal_cubit.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumbung_localizations/lumbung_localizations.dart';
 
-import 'package:core/apis/auth_api.dart';
-import 'package:core/apis/user_api.dart';
-import 'package:core/apis/hedera_sub_wallet_api.dart';
-import 'package:core/apis/member_wallet_api.dart';
-import 'package:core/apis/journal_api.dart';
-import 'package:core/apis/concensus_api.dart';
+import 'package:hedera_core/apis/auth_api.dart';
+import 'package:hedera_core/apis/user_api.dart';
+import 'package:hedera_core/apis/hedera_sub_wallet_api.dart';
+import 'package:hedera_core/apis/member_wallet_api.dart';
+import 'package:hedera_core/apis/journal_api.dart';
+import 'package:hedera_core/apis/concensus_api.dart';
 
 import 'package:core_cai_v3/api/chat_message_api.dart';
 import 'package:lumbung_common/api/hedera/hedera_api.dart';
 
-import 'package:core/blocs/auth/auth_bloc.dart';
+import 'package:hedera_core/blocs/auth/auth_bloc.dart';
 import 'package:lumbung_common/bloc/hedera/hedera_cubit.dart';
 
 import 'package:lumbung_wallet_cai/core/routes/routes.dart';
@@ -24,8 +24,8 @@ import 'core/blocs/main_screen/main_screen_bloc.dart';
 import 'core/blocs/sidebar/sidebar_bloc.dart';
 
 import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';
-import 'package:core/blocs/main_wallet/main_wallet_cubit.dart';
-import 'package:core/blocs/sub_wallet/sub_wallet_cubit.dart';
+import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
+import 'package:hedera_core/blocs/sub_wallet/sub_wallet_cubit.dart';
 
 import 'core/utils/scroll_behavior.dart';
 import 'core/utils/themes.dart';

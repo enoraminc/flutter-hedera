@@ -174,11 +174,12 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
                   wallet.accountId,
                   wallet.title,
                   wallet.description,
-                  wallet.users.fold(
-                      "",
-                      (previousValue, element) => (previousValue.isEmpty)
-                          ? element
-                          : "$previousValue, $element")
+                  "${wallet.users.length} Users",
+                  // wallet.users.fold(
+                  //     "",
+                  //     (previousValue, element) => (previousValue.isEmpty)
+                  //         ? element
+                  //         : "$previousValue, $element")
                 ])
             .toList(),
       );

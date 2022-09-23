@@ -155,13 +155,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  core:
-    dependency: "direct main"
-    description:
-      path: "../core"
-      relative: true
-    source: path
-    version: "0.0.1"
   core_cai_v3:
     dependency: transitive
     description:
@@ -562,6 +555,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  hedera_core:
+    dependency: "direct main"
+    description:
+      path: "../hedera_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   hex:
     dependency: transitive
     description:
@@ -925,7 +925,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.26.0"
+    version: "0.27.5"
   shared_preferences:
     dependency: transitive
     description:

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:core/apis/hedera_sub_wallet_api.dart';
-import 'package:core/model/hedera_sub_wallet.dart';
+import 'package:hedera_core/apis/hedera_sub_wallet_api.dart';
+import 'package:hedera_core/model/hedera_sub_wallet.dart';
 import 'package:meta/meta.dart';
 
 import 'package:equatable/equatable.dart';

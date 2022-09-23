@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:core/model/journal_model.dart';
+import 'package:hedera_core/model/journal_model.dart';
 
 class CashbonBookItemModel {
   final int sequenceNumber;

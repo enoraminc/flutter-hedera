@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:core/apis/member_wallet_api.dart';
+import 'package:hedera_core/apis/member_wallet_api.dart';
 import 'package:lumbung_common/model/hedera/token.dart';
 import 'package:lumbung_common/model/hedera/wallet.dart';
 import 'package:meta/meta.dart';

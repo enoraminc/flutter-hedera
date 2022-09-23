@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:core/apis/auth_api.dart';
-import 'package:core/utils/log.dart';
+import 'package:hedera_core/apis/auth_api.dart';
+import 'package:hedera_core/utils/log.dart';
 
 class AuthApiImpl extends AuthApi {
   late FirebaseAuth _auth;

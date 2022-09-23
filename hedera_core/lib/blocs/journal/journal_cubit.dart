@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:core/apis/concensus_api.dart';
-import 'package:core/apis/journal_api.dart';
+import 'package:hedera_core/apis/concensus_api.dart';
+import 'package:hedera_core/apis/journal_api.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 

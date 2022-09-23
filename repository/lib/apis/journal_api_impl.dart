@@ -1,7 +1,7 @@
-import 'package:core/apis/journal_api.dart';
-import 'package:core/model/concensus_model.dart';
-import 'package:core/model/journal_model.dart';
-import 'package:core/model/cashbon_book_model.dart';
+import 'package:hedera_core/apis/journal_api.dart';
+import 'package:hedera_core/model/concensus_model.dart';
+import 'package:hedera_core/model/journal_model.dart';
+import 'package:hedera_core/model/cashbon_book_model.dart';
 import 'package:lumbung_common/utils/log.dart';
 import 'package:lumbung_common/base/base_repository.dart';
 

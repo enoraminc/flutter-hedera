@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:core/model/journal_model.dart';
-import 'package:core/model/cashbon_book_model.dart';
+import 'package:hedera_core/model/journal_model.dart';
+import 'package:hedera_core/model/cashbon_book_model.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/src/intl/date_format.dart';

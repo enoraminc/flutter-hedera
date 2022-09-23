@@ -2,13 +2,13 @@ import 'package:get_it/get_it.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:core/apis/auth_api.dart';
-import 'package:core/apis/user_api.dart';
-import 'package:core/apis/hedera_sub_wallet_api.dart';
-import 'package:core/apis/member_wallet_api.dart';
-import 'package:core/apis/journal_api.dart';
-import 'package:core/apis/job_api.dart';
-import 'package:core/apis/concensus_api.dart';
+import 'package:hedera_core/apis/auth_api.dart';
+import 'package:hedera_core/apis/user_api.dart';
+import 'package:hedera_core/apis/hedera_sub_wallet_api.dart';
+import 'package:hedera_core/apis/member_wallet_api.dart';
+import 'package:hedera_core/apis/journal_api.dart';
+import 'package:lumbung_common/api/hedera/job_api.dart';
+import 'package:hedera_core/apis/concensus_api.dart';
 
 import 'package:core_cai_v3/api/chat_message_api.dart';
 import 'package:lumbung_common/api/hedera/hedera_api.dart';

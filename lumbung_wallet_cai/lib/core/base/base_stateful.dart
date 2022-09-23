@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:ndialog/ndialog.dart';
 
-import 'package:core/utils/log.dart';
+import 'package:hedera_core/utils/log.dart';
 import '../../flavor_config.dart';
 
 abstract class BaseStateful<S extends StatefulWidget> extends State<S> {

@@ -1,5 +1,5 @@
-import 'package:core/blocs/auth/auth_bloc.dart';
-import 'package:core/utils/log.dart';
+import 'package:hedera_core/blocs/auth/auth_bloc.dart';
+import 'package:hedera_core/utils/log.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumbung_wallet_cai/screen/book/book.dart';

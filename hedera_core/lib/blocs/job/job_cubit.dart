@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
-import 'package:core/apis/concensus_api.dart';
-import 'package:core/apis/job_api.dart';
-import 'package:core/utils/log.dart';
+import 'package:hedera_core/apis/concensus_api.dart';
+import 'package:lumbung_common/model/hedera/job_model.dart';
+import 'package:lumbung_common/api/hedera/job_api.dart';
+import 'package:hedera_core/utils/log.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/concensus_model.dart';
-import '../../model/job_model.dart';
 part 'job_state.dart';
 
 class JobCubit extends Cubit<JobState> {

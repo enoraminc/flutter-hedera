@@ -49,13 +49,13 @@ class JournalCubit extends Cubit<JournalState> {
     });
   }
 
-  Future<void> getJournal(String subWalletId) async {
+  Future<void> getJournal({String? subWalletId}) async {
     emit(JournalLoading(
       journalList: state.journalList,
       selectedJournal: state.selectedJournal,
     ));
 
-    await journalApi.getJournal(subWalletId).then((value) {
+    await journalApi.getJournal(subWalletId: subWalletId).then((value) {
       Log.setLog(
         "Total Book : ${value.length}",
         method: "getBook Bloc",

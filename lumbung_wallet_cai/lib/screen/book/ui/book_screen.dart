@@ -17,7 +17,7 @@ class _BookScreenState extends BaseStateful<BookScreen> {
   }
 
   Future<void> onRefresh() async {
-    context.read<JournalCubit>().getJournal("");
+    context.read<JournalCubit>().getJournal();
 
     await Future.delayed(const Duration(milliseconds: 100));
   }

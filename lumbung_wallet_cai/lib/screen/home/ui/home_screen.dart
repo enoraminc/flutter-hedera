@@ -13,7 +13,7 @@ class _HomeScreenState extends BaseStateful<HomeScreen> {
   Future<void> onRefresh() async {
     context.read<SubWalletCubit>().fetchSubWallet();
     context.read<MainWalletCubit>().fetchMainWallet();
-    context.read<JournalCubit>().getJournal("");
+    context.read<JournalCubit>().getJournal();
 
     await Future.delayed(const Duration(milliseconds: 100));
   }

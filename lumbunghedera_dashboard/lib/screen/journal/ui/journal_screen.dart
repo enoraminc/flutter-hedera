@@ -17,7 +17,7 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
   List<ConcensusMessageDataModel> bookMessageList = [];
 
   Future<void> onRefresh() async {
-    context.read<JournalCubit>().getJournal("");
+    context.read<JournalCubit>().getJournal();
 
     // if (selectedTopicId?.isNotEmpty ?? false) {
     //   context.read<JournalCubit>().getJournalMessageData(selectedTopicId!);

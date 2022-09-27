@@ -35,7 +35,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
     //     context.read<MemberWalletCubit>().state.selectedWallet ??
     //         HederaWallet.empty();
 
-    final book = JournalModel(
+    final journal = JournalModel(
       id: "",
       topicId: "",
       subWalletId: subWalletSelected?.id ?? "-",
@@ -47,7 +47,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
       state: JournalModel.activeState,
     );
 
-    context.read<JournalCubit>().setJournal(book);
+    context.read<JournalCubit>().setJournal(journal);
   }
 
   @override

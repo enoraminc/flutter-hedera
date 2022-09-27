@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 
 class JournalModel {
   final String id;
@@ -10,7 +11,7 @@ class JournalModel {
   final String subWalletId;
   final String type;
   final List<MemberModel> memberList;
-  final DateTime? createdAt;
+  final DateTime? createdDate;
   final DateTime? updatedAt;
   final String network;
   final String state;
@@ -23,7 +24,7 @@ class JournalModel {
     required this.subWalletId,
     required this.type,
     required this.memberList,
-    this.createdAt,
+    this.createdDate,
     this.updatedAt,
     required this.network,
     required this.state,
@@ -44,7 +45,7 @@ class JournalModel {
     String? subWalletId,
     String? type,
     List<MemberModel>? memberList,
-    DateTime? createdAt,
+    DateTime? createdDate,
     DateTime? updatedAt,
     String? network,
     String? state,
@@ -57,7 +58,7 @@ class JournalModel {
       subWalletId: subWalletId ?? this.subWalletId,
       type: type ?? this.type,
       memberList: memberList ?? this.memberList,
-      createdAt: createdAt ?? this.createdAt,
+      createdDate: createdDate ?? this.createdDate,
       updatedAt: updatedAt ?? this.updatedAt,
       network: network ?? this.network,
       state: state ?? this.state,
@@ -73,7 +74,7 @@ class JournalModel {
       'subWalletId': subWalletId,
       'type': type,
       'memberList': memberList.map((x) => x.toMap()).toList(),
-      'createdAt': createdAt?.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
       'network': network,
       'state': state,
@@ -90,8 +91,8 @@ class JournalModel {
       type: map['type'] ?? '',
       memberList: List<MemberModel>.from(
           map['memberList']?.map((x) => MemberModel.fromMap(x))),
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'])
           : null,
       updatedAt: map['updatedAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
@@ -108,13 +109,12 @@ class JournalModel {
 
   @override
   String toString() {
-    return 'JournalModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, type: $type, memberList: $memberList, createdAt: $createdAt, updatedAt: $updatedAt, network: $network, state: $state)';
+    return 'JournalModel(id: $id, topicId: $topicId, title: $title, description: $description, subWalletId: $subWalletId, type: $type, memberList: $memberList, createdDate: $createdDate, updatedAt: $updatedAt, network: $network, state: $state)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    final listEquals = const DeepCollectionEquality().equals;
 
     return other is JournalModel &&
         other.id == id &&
@@ -124,7 +124,7 @@ class JournalModel {
         other.subWalletId == subWalletId &&
         other.type == type &&
         listEquals(other.memberList, memberList) &&
-        other.createdAt == createdAt &&
+        other.createdDate == createdDate &&
         other.updatedAt == updatedAt &&
         other.network == network &&
         other.state == state;
@@ -139,7 +139,7 @@ class JournalModel {
         subWalletId.hashCode ^
         type.hashCode ^
         memberList.hashCode ^
-        createdAt.hashCode ^
+        createdDate.hashCode ^
         updatedAt.hashCode ^
         network.hashCode ^
         state.hashCode;

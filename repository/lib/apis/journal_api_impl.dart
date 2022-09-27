@@ -15,7 +15,7 @@ class JournalApiImpl extends JournalApi {
   });
 
   @override
-  Future<List<JournalModel>> getJournal(String subWalletId) async {
+  Future<List<JournalModel>> getJournal({String? subWalletId}) async {
     try {
       final data = await request(
         '$url/journal?id=$subWalletId',

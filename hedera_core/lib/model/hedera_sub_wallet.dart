@@ -18,9 +18,11 @@ class HederaSubWallet {
   final List<UserData> userList;
 
   static String activeState = "Active";
+  static String pendingState = "Pending";
   static String deletedState = "Deleted";
 
   bool isDeleted() => state == deletedState;
+  bool isPending() => state == pendingState;
 
   HederaSubWallet({
     required this.id,

@@ -1,7 +1,7 @@
 import 'package:hedera_core/apis/journal_api.dart';
-import 'package:hedera_core/model/concensus_model.dart';
-import 'package:hedera_core/model/journal_model.dart';
-import 'package:hedera_core/model/cashbon_book_model.dart';
+import 'package:lumbung_common/model/hedera/concensus_model.dart';
+import 'package:lumbung_common/model/hedera/journal_model.dart';
+import 'package:lumbung_common/model/hedera/cashbon_journal_model.dart';
 import 'package:lumbung_common/utils/log.dart';
 import 'package:lumbung_common/base/base_repository.dart';
 
@@ -53,7 +53,7 @@ class JournalApiImpl extends JournalApi {
   }
 
   @override
-  Future<CashbonBookItemModel> submitCashbonMember(
+  Future<CashbonJournalItemModel> submitCashbonMember(
       {required String bookId,
       required int amount,
       required String type}) async {
@@ -79,7 +79,7 @@ class JournalApiImpl extends JournalApi {
         firebase: firebase,
       );
 
-      return CashbonBookItemModel.fromMap(data);
+      return CashbonJournalItemModel.fromMap(data);
     } catch (e, s) {
       Log.setLog("$e $s", method: "submitCashbonMember");
       rethrow;

@@ -2,7 +2,7 @@ import 'package:hedera_core/blocs/auth/auth_bloc.dart';
 import 'package:hedera_core/blocs/job/job_cubit.dart';
 import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:hedera_core/blocs/sub_wallet/sub_wallet_cubit.dart';
-import 'package:hedera_core/model/hedera_sub_wallet.dart';
+import 'package:lumbung_common/model/hedera/hedera_sub_wallet.dart';
 import 'package:lumbung_common/model/hedera/job_model.dart';
 import 'package:lumbung_common/model/hedera/wallet.dart';
 import 'package:flutter/material.dart';

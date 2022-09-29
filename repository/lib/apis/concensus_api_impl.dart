@@ -1,5 +1,5 @@
 import 'package:hedera_core/apis/concensus_api.dart';
-import 'package:hedera_core/model/concensus_model.dart';
+import 'package:lumbung_common/model/hedera/concensus_model.dart';
 import 'package:lumbung_common/utils/log.dart';
 import 'package:lumbung_common/base/base_repository.dart';
 

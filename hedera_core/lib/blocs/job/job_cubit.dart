@@ -6,7 +6,7 @@ import 'package:hedera_core/utils/log.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../model/concensus_model.dart';
+import 'package:lumbung_common/model/hedera/concensus_model.dart';
 part 'job_state.dart';
 
 class JobCubit extends Cubit<JobState> {

@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:hedera_core/apis/auth_api.dart';
 import 'package:hedera_core/apis/user_api.dart';
-import 'package:hedera_core/apis/hedera_sub_wallet_api.dart';
+import 'package:lumbung_common/api/hedera/hedera_sub_wallet_api.dart';
 import 'package:hedera_core/apis/member_wallet_api.dart';
 import 'package:hedera_core/apis/journal_api.dart';
 import 'package:hedera_core/apis/concensus_api.dart';

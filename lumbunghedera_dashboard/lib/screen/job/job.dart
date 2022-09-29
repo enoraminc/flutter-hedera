@@ -1,6 +1,6 @@
 import 'package:hedera_core/blocs/auth/auth_bloc.dart';
 import 'package:hedera_core/blocs/job/job_cubit.dart';
-import 'package:hedera_core/model/concensus_model.dart';
+import 'package:lumbung_common/model/hedera/concensus_model.dart';
 import 'package:lumbung_common/model/hedera/job_model.dart';
 import 'package:hedera_core/utils/date_utils.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';

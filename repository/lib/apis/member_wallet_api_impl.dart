@@ -1,5 +1,5 @@
 import 'package:hedera_core/apis/member_wallet_api.dart';
-import 'package:hedera_core/model/log_model.dart';
+import 'package:lumbung_common/model/hedera/log_model.dart';
 import 'package:lumbung_common/base/base_repository.dart';
 import 'package:lumbung_common/model/hedera/token.dart';
 import 'package:lumbung_common/model/hedera/wallet.dart';

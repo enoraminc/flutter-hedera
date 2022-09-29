@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:hedera_core/model/journal_model.dart';
-import 'package:hedera_core/model/cashbon_book_model.dart';
+import 'package:lumbung_common/model/hedera/journal_model.dart';
+import 'package:lumbung_common/model/hedera/cashbon_journal_model.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/src/intl/date_format.dart';
@@ -13,7 +13,7 @@ import 'package:lumbung_common/model/rab_kedai_token.dart';
 import 'package:lumbung_common/utils/log.dart';
 import 'package:intl/intl.dart';
 
-import '../model/concensus_model.dart';
+import 'package:lumbung_common/model/hedera/concensus_model.dart';
 import 'date_utils.dart';
 
 class ExcelUtils {
@@ -68,12 +68,12 @@ class ExcelUtils {
       for (int i = 0; i < bookMessageList.length; i++) {
         final bookMessage = bookMessageList[i];
 
-        final cashbon = CashbonBookItemModel.fromJson(bookMessage.data);
+        final cashbon = CashbonJournalItemModel.fromJson(bookMessage.data);
         int balance = 0;
 
         for (ConcensusMessageDataModel element in bookMessageList) {
           if (element.topicSequenceNumber <= bookMessage.topicSequenceNumber) {
-            final check = CashbonBookItemModel.fromJson(element.data);
+            final check = CashbonJournalItemModel.fromJson(element.data);
 
             balance += check.debit;
             balance -= check.credit;

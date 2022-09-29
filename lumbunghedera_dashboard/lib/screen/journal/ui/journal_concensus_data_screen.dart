@@ -395,8 +395,8 @@ class _JournalConcensusDataScreenState
               columns: const [
                 // "tes",
                 "Date",
-                "Credit",
                 "Debit",
+                "Credit",
                 "Balanced",
               ],
               rows: memberBookMessageList

@@ -1,6 +1,6 @@
 import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:hedera_core/blocs/sub_wallet/sub_wallet_cubit.dart';
-import 'package:hedera_core/model/hedera_sub_wallet.dart';
+import 'package:lumbung_common/model/hedera/hedera_sub_wallet.dart';
 import 'package:core_cai_v3/base/base_cai_screen.dart';
 import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';
 import 'package:core_cai_v3/widgets/chat_item_screen.dart';

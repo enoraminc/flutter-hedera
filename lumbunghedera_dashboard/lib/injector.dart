@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:hedera_core/apis/auth_api.dart';
 import 'package:hedera_core/apis/user_api.dart';
-import 'package:hedera_core/apis/hedera_sub_wallet_api.dart';
+import 'package:lumbung_common/api/hedera/hedera_sub_wallet_api.dart';
 import 'package:hedera_core/apis/member_wallet_api.dart';
 import 'package:hedera_core/apis/journal_api.dart';
 import 'package:lumbung_common/api/hedera/job_api.dart';
@@ -19,7 +19,7 @@ import 'package:repository/apis/hedera_sub_wallet_api_impl.dart';
 import 'package:repository/apis/member_wallet_api_impl.dart';
 import 'package:repository/apis/chat_message_api_impl.dart';
 import 'package:repository/apis/journal_api_impl.dart';
-import 'package:repository/apis/job_api_impl.dart';
+import 'package:lumbung_common/go_api/hedera/job_api_impl.dart';
 import 'package:repository/apis/concensus_api_impl.dart';
 
 import 'package:lumbung_common/go_api/hedera/hedera_api_impl.dart';
@@ -104,6 +104,7 @@ Future<void> setupLocator() async {
   ///
   locator.registerSingleton<JobApi>(
     JobApiImpl(
+      firebase: JobApiImpl.lumbunghederaFirebase,
       url: FlavorConfig.instance.values.hederaApiUrl,
     ),
     signalsReady: true,

@@ -55,6 +55,8 @@ Future<void> setupLocator() async {
     signalsReady: true,
   );
 
+  
+
   ///
   /// Wallet
   ///

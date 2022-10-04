@@ -255,7 +255,7 @@ class _SubWalletChatScreenState extends BaseChatScreen<SubWalletChatScreen> {
   }
 
   @override
-  Widget getCustomMessageChatWidget(String msgType) {
+  Widget getCustomMessageChatWidget(String msgType, ChatMessage message) {
     return Container();
   }
 }

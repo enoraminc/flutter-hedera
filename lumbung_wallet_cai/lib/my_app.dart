@@ -27,6 +27,8 @@ import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';
 import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:hedera_core/blocs/sub_wallet/sub_wallet_cubit.dart';
 
+import 'package:repository/apis/upload_media_api_impl.dart';
+
 import 'core/utils/scroll_behavior.dart';
 import 'core/utils/themes.dart';
 import 'flavor_config.dart';
@@ -71,6 +73,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<ChatMessageBloc>(
           create: (_) => ChatMessageBloc(
             locator.get<ChatMessageApi>(),
+            UploadMediaApiImpl(),
           ),
         ),
         BlocProvider<SidebarBloc>(create: (_) => SidebarBloc()),

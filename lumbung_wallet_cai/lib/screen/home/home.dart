@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:core_cai_v3/model/chat_message.dart';
 import 'package:hedera_core/blocs/auth/auth_bloc.dart';
 import 'package:hedera_core/blocs/journal/journal_cubit.dart';
 import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';

@@ -24,6 +24,8 @@ class Routes {
   static String subWallet = "sub";
 
   static String journal = "/journal";
+  static String createCashbonJournal = "cashbon/$create";
+  static String createVoteJournal = "vote/$create";
 
   static String job = "/job";
 
@@ -94,9 +96,15 @@ class Routes {
                 },
               ),
               GoRoute(
-                path: create,
+                path: createCashbonJournal,
                 builder: (BuildContext context, GoRouterState state) {
-                  return const CreateJournalScreen();
+                  return const CreateCashbonJournalScreen();
+                },
+              ),
+              GoRoute(
+                path: createVoteJournal,
+                builder: (BuildContext context, GoRouterState state) {
+                  return const CreateVoteJournalScreen();
                 },
               ),
             ],

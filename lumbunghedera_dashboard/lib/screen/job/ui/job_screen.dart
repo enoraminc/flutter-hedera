@@ -54,6 +54,7 @@ class _JobScreenState extends BaseStateful<JobScreen> {
           onRefresh: onRefresh,
           isLoading: isLoading,
           appBar: const CustomAppBar(),
+          bottomNavBar: const SizedBox(),
           onBack: () {
             setState(() {
               selectedTopicId = null;

@@ -3,6 +3,7 @@ import 'package:hedera_core/blocs/journal/journal_cubit.dart';
 import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
 import 'package:hedera_core/blocs/sub_wallet/sub_wallet_cubit.dart';
 import 'package:lumbung_common/model/hedera/journal_model.dart';
+import 'package:lumbung_common/model/hedera/cashbon_journal_model.dart';
 import 'package:lumbung_common/model/hedera/hedera_sub_wallet.dart';
 import 'package:core_cai_v3/base/base_cai_screen.dart';
 import 'package:core_cai_v3/bloc/chat_message/chat_message_bloc.dart';

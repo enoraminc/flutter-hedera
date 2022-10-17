@@ -24,7 +24,7 @@ class SubWalletSelector extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(12)),
           border: Border.all(
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).dividerColor,
             width: 1.0,
           ),
           color: Theme.of(context).appBarTheme.backgroundColor,
@@ -51,6 +51,29 @@ class SubWalletSelector extends StatelessWidget {
                 border: const OutlineInputBorder(),
                 hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
               ),
+            ),
+            itemBuilder: (context, item, isSelected) => Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                  color: Colors.grey.withOpacity(.4),
+                ),
+              ),
+              child: Text(
+                item.title,
+                style: Styles.commonTextStyle(
+                  size: 16,
+                ),
+              ),
+            ),
+          ),
+          dropdownBuilder: (context, item) => Text(
+            item != null ? item.title : "Select Sub Wallet",
+            style: Styles.commonTextStyle(
+              size: 16,
             ),
           ),
           dropdownSearchTextStyle: Theme.of(context).primaryTextTheme.bodyText1,

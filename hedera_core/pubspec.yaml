@@ -22,7 +22,7 @@ dependencies:
       url: https://github.com/justkawal/excel.git
       ref: null-safety
 
-  flutter_bloc: ^7.3.1
+  flutter_bloc: ^8.1.1
   get_it: ^7.0.0
   intl: ^0.17.0
   shared_preferences: ^2.0.6

@@ -190,7 +190,7 @@ class _MainWalletChatScreenState extends BaseChatScreen<MainWalletChatScreen> {
   }
 
   @override
-  Widget getCustomMessageChatWidget(String msgType,ChatMessage message) {
+  Widget getCustomMessageChatWidget(ChatMessage message) {
     return Container();
   }
 }

@@ -26,7 +26,7 @@ class MainWalletSelector extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(12)),
           border: Border.all(
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).dividerColor,
             width: 1.0,
           ),
           color: Theme.of(context).appBarTheme.backgroundColor,

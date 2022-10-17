@@ -2,15 +2,20 @@ part of 'auth_bloc.dart';
 
 class AuthState {
   final User? currentUser;
+  final Permissions? permissions;
 
   AuthState({
     this.currentUser,
+    this.permissions,
   });
 
-  AuthState copyWith(
-      {User? currentUser}) {
+  AuthState copyWith({
+    User? currentUser,
+    Permissions? permissions,
+  }) {
     return AuthState(
       currentUser: currentUser,
+      permissions: permissions,
     );
   }
 }
@@ -22,6 +27,7 @@ class AuthLoading extends AuthState {
 class LoginSuccess extends AuthState {
   LoginSuccess({
     super.currentUser,
+    super.permissions,
   });
 
   @override
@@ -63,6 +69,7 @@ class LogoutFailure extends AuthState {
 class UserAlreadyLoginSuccess extends AuthState {
   UserAlreadyLoginSuccess({
     super.currentUser,
+    super.permissions,
   });
 
   @override

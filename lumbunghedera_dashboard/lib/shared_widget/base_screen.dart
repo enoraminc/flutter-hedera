@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumbunghedera_dashboard/core/utils/text_styles.dart';
+import '../core/utils/text_styles.dart';
 
 import '../core/utils/custom_function.dart';
 
@@ -25,18 +25,24 @@ class BaseScreen extends StatelessWidget {
         children: [
           appBar,
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: onRefresh,
-              child: SingleChildScrollView(
-                controller: ScrollController(),
-                physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics(),
-                ),
-                child: Container(
-                  width: CustomFunctions.getMediaWidth(context),
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Column(
-                    children: children,
+            child: Container(
+              color: backgroundColor ??
+                  Theme.of(context).appBarTheme.backgroundColor,
+              child: RefreshIndicator(
+                onRefresh: onRefresh,
+                child: SingleChildScrollView(
+                  controller: ScrollController(),
+                  physics: const AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics(),
+                  ),
+                  child: Container(
+                    width: CustomFunctions.getMediaWidth(context),
+                    padding: CustomFunctions.isMobile(context)
+                        ? null
+                        : const EdgeInsets.symmetric(horizontal: 18),
+                    child: Column(
+                      children: children,
+                    ),
                   ),
                 ),
               ),
@@ -52,6 +58,7 @@ class BaseScreen2 extends StatelessWidget {
   const BaseScreen2({
     super.key,
     required this.appBar,
+    required this.bottomNavBar,
     required this.mainChild,
     required this.onRefresh,
     required this.sidebarChildren,
@@ -61,9 +68,11 @@ class BaseScreen2 extends StatelessWidget {
     this.tabWidget,
     this.onCreateTap,
     this.customButton,
+    this.searchWidget,
   });
 
   final Widget appBar;
+  final Widget bottomNavBar;
   final Widget mainChild;
   final List<Widget> sidebarChildren;
   final Future<void> Function() onRefresh;
@@ -73,13 +82,14 @@ class BaseScreen2 extends StatelessWidget {
   final bool isLoading;
   final Function()? onCreateTap;
   final Widget? customButton;
+  final Widget? searchWidget;
 
   @override
   Widget build(BuildContext context) {
     bool isMobile = CustomFunctions.isMobile(context);
     bool hasSelectedItem = false;
     if (isMobile) {
-      hasSelectedItem = selectedId != null;
+      hasSelectedItem = selectedId?.isNotEmpty ?? false;
     } else {
       hasSelectedItem = true;
     }
@@ -110,6 +120,8 @@ class BaseScreen2 extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar:
+          (!hasSelectedItem && !isMobile) ? bottomNavBar : null,
     );
   }
 
@@ -172,6 +184,10 @@ class BaseScreen2 extends StatelessWidget {
             children: [
               if (tabWidget != null) ...[
                 tabWidget!,
+                const SizedBox(height: 10),
+              ],
+              if (searchWidget != null) ...[
+                searchWidget!,
                 const SizedBox(height: 10),
               ],
               if (isLoading)

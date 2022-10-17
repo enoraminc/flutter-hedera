@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:lumbung_common/model/user.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lumbung_common/model/permissions.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../apis/auth_api.dart';
@@ -19,89 +20,100 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     required this.authApi,
     required this.userApi,
-  }) : super(AuthState());
+  }) : super(AuthState()) {
+    on<LoginWithGoogle>((event, emit) async {
+      await _loginWithGoogle(event, emit);
+    });
 
-  @override
-  Stream<AuthState> mapEventToState(AuthEvent event) async* {
-    if (event is LoginWithGoogle) {
-      yield* _loginWithGoogle(event);
-    } else if (event is SilentLogin) {
-      yield* _silentLogin(event);
-    } else if (event is LogoutButtonPressed) {
-      yield* _logout();
-    }
+    on<SilentLogin>((event, emit) async {
+      await _silentLogin(event, emit);
+    });
+
+    on<LogoutButtonPressed>((event, emit) async {
+      await _logout(event, emit);
+    });
   }
 
-  Stream<AuthState> _loginWithGoogle(LoginWithGoogle event) async* {
-    yield AuthLoading();
+  Future<void> _loginWithGoogle(
+      LoginWithGoogle event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
 
     try {
       bool isLoginSuccessful = await authApi.loginWithGoogle();
 
       if (!isLoginSuccessful) {
-        yield LoginFailure(error: 'Google login error');
+        emit(LoginFailure(error: 'Google login error'));
       }
 
-      User? user = await userApi.currentUser();
-      Log.setLog('user ${user.toString()} ', method: "Auth Bloc");
+      UserData? userData = await userApi.currentUser();
+      Log.setLog('user ${userData?.user.toString()} ', method: "Auth Bloc");
 
-      if (user == null) {
+      if (userData?.user == null) {
         Log.setLog('Unauthorized user ', method: "Auth Bloc");
         await authApi.logout();
-        yield LoginFailure(error: 'Unauthorized user');
+        emit(LoginFailure(error: 'Unauthorized user'));
       } else {
-        yield LoginSuccess(
-          currentUser: user,
-        );
+        emit(LoginSuccess(
+          currentUser: userData?.user,
+          permissions: userData?.permissions,
+        ));
       }
     } on Exception catch (e, s) {
       Log.setLog('error _loginWithGoogle: $e, $s', method: "Auth Bloc");
 
-      yield LoginFailure(error: e.toString());
+      emit(LoginFailure(error: e.toString()));
     } catch (e, s) {
       Log.setLog('error _loginWithGoogle: $e, $s', method: "Auth Bloc");
 
-      yield LoginFailure(error: e.toString());
+      emit(LoginFailure(error: e.toString()));
     }
   }
 
-  Stream<AuthState> _silentLogin(SilentLogin event) async* {
-    yield AuthLoading();
+  Future<void> _silentLogin(SilentLogin event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
 
     try {
       // await Future.delayed(const Duration(milliseconds: 500));
       bool userAlreadyLoggedIn = await authApi.isUserLoggedIn();
       if (userAlreadyLoggedIn) {
-        User? user = await userApi.currentUser();
+        UserData? userData = await userApi.currentUser();
 
-        if (user != null) {
-          yield UserAlreadyLoginSuccess(
-            currentUser: user,
-          );
+        if (userData?.user != null) {
+          emit(UserAlreadyLoginSuccess(
+            currentUser: userData?.user,
+            permissions: userData?.permissions,
+          ));
         } else {
           await authApi.logout();
-          yield SilentLoginFailure();
+          emit(SilentLoginFailure());
         }
       } else {
-        yield SilentLoginFailure();
+        emit(SilentLoginFailure());
       }
     } on Exception catch (e, s) {
       Log.setLog('error: $e, $s', method: "Auth Bloc");
-      yield LoginFailure(error: e.toString());
+      emit(LoginFailure(error: e.toString()));
+    } catch (e, s) {
+      Log.setLog('error: $e, $s', method: "Auth Bloc");
+      emit(LoginFailure(error: e.toString()));
     }
   }
 
-  Stream<AuthState> _logout() async* {
-    yield AuthLoading();
+  Future<void> _logout(
+      LogoutButtonPressed event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
     try {
       await authApi.logout();
-      yield LogoutSuccess();
-      yield state.copyWith(
+      emit(LogoutSuccess());
+      emit(state.copyWith(
         currentUser: null,
-      );
+      ));
     } on Exception catch (e, s) {
       Log.setLog('error: $e, $s', method: "Auth Bloc");
-      yield LogoutFailure(error: e.toString());
+      emit(LogoutFailure(error: e.toString()));
+    } catch (e, s) {
+      Log.setLog('error: $e, $s', method: "Auth Bloc");
+      emit(LoginFailure(error: e.toString()));
     }
   }
 }

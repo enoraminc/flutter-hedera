@@ -139,7 +139,7 @@ class _SubWalletChatScreenState extends BaseChatScreen<SubWalletChatScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: Theme.of(context).buttonColor,
+                        color: Theme.of(context).dividerColor,
                         width: 1.0,
                       ),
                     ),
@@ -255,7 +255,7 @@ class _SubWalletChatScreenState extends BaseChatScreen<SubWalletChatScreen> {
   }
 
   @override
-  Widget getCustomMessageChatWidget(String msgType, ChatMessage message) {
+  Widget getCustomMessageChatWidget(ChatMessage message) {
     return Container();
   }
 }

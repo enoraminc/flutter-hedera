@@ -31,7 +31,7 @@ class AppColors {
   static const Color fullBackgroundDark = Color(0xff303030);
   static const Color fullBackgroundLight = Color(0xff303030);
 
-  static const Color hoursButtonColor = Color(0xFF5ac5af);
+  static const Color hoursdividerColor = Color(0xFF5ac5af);
 
   // static const Color appBarDark = Color(0xFF232d36);
 

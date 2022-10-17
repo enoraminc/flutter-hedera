@@ -31,6 +31,7 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
       ],
       child: BaseScreen(
         onRefresh: onRefresh,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: const CustomAppBar(),
         children: [
           const SizedBox(height: 20),
@@ -67,14 +68,16 @@ class _DashboardScreenState extends BaseStateful<DashboardScreen> {
         columns: const [
           "ID",
           "Title",
-          "Description",
+          "Type",
+          "State",
         ],
         rows: books
             .take(5)
-            .map((book) => [
-                  book.topicId,
-                  book.title,
-                  book.description,
+            .map((journal) => [
+                  journal.topicId,
+                  journal.title,
+                  journal.type,
+                  journal.state,
                 ])
             .toList(),
       );

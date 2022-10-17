@@ -46,13 +46,13 @@ class SubWalletCubit extends Cubit<SubWalletState> {
     });
   }
 
-  Future<void> fetchSubWallet() async {
+  Future<void> fetchSubWallet({String? type}) async {
     emit(SubWalletLoading(
       selectedSubWallet: state.selectedSubWallet,
       subWalletList: state.subWalletList,
     ));
 
-    await subWalletApi.fetchAllSubWallet().then((value) {
+    await subWalletApi.fetchAllSubWallet(type: type).then((value) {
       Log.setLog(
         "Total Sub Walet : ${value.length}",
         method: "getSubWallet Bloc",
@@ -67,7 +67,7 @@ class SubWalletCubit extends Cubit<SubWalletState> {
         SubWalletFailed(
           message: e.toString(),
           selectedSubWallet: state.selectedSubWallet,
-          subWalletList: state.subWalletList,
+          subWalletList: const [],
         ),
       );
     });

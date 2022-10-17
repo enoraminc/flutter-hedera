@@ -16,6 +16,9 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+
+  String typeSelected = "";
+
   HederaWallet? activeWallet;
 
   List<HederaWallet> walletSelectedList = [];
@@ -39,6 +42,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                 avatarUrl: e.profileImage,
               ))
           .toList(),
+      type: typeSelected,
     );
 
     context.read<SubWalletCubit>().setSubWallet(subWallet);
@@ -49,6 +53,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
     final selectedData = context.read<SubWalletCubit>().state.selectedSubWallet;
     titleController.text = selectedData?.title ?? "";
     descriptionController.text = selectedData?.description ?? "";
+    typeSelected = selectedData?.type ?? "";
     walletSelectedList = List<HederaWallet>.from(
         (selectedData?.userList ?? []).map((e) => HederaWallet.empty().copyWith(
               email: e.email,
@@ -87,11 +92,33 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
             const SizedBox(height: 15),
             descriptionField(),
             const SizedBox(height: 15),
+            bookTypeField(),
+            const SizedBox(height: 15),
             memberSelectorWidget(),
             const SizedBox(height: 20),
             // messageListWidget(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget bookTypeField() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: SubWalletTypeSelectorWidget(
+        onChange: (String? type) {
+          setState(() {
+            if (type?.isNotEmpty ?? false) {
+              typeSelected = type ?? "";
+            }
+          });
+        },
+        selectedType: typeSelected,
       ),
     );
   }
@@ -189,7 +216,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: Theme.of(context).buttonColor,
+                          color: Theme.of(context).dividerColor,
                           width: 1.0,
                         ),
                       ),

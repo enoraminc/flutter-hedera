@@ -78,7 +78,7 @@ class CustomTextFormField extends StatelessWidget {
             color: Theme.of(context).appBarTheme.backgroundColor,
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             border: Border.all(
-              color: Theme.of(context).buttonColor,
+              color: Theme.of(context).dividerColor,
               width: 1.0,
             ),
           ),

@@ -8,9 +8,16 @@ class CustomDateUtils {
     return df.format(dateTime);
   }
 
-   static String simpleFormatWithTime(DateTime? dateTime) {
+  static String simpleFormatWithTime(DateTime? dateTime) {
     if (dateTime == null) return "-";
     final DateFormat df = DateFormat('dd/MM/yyyy HH:mm:ss');
+
+    return df.format(dateTime);
+  }
+
+  static String monthOnly(DateTime? dateTime) {
+    if (dateTime == null) return "-";
+    final DateFormat df = DateFormat('MMMM yyyy');
 
     return df.format(dateTime);
   }
@@ -47,4 +54,14 @@ class CustomDateUtils {
       return null;
     }
   }
+}
+
+extension DateTimeExtension on DateTime {
+  DateTime get firstDayOfWeek => subtract(Duration(days: weekday - 1));
+
+  DateTime get lastDayOfWeek =>
+      add(Duration(days: DateTime.daysPerWeek - weekday));
+
+  DateTime get lastDayOfMonth =>
+      month < 12 ? DateTime(year, month + 1, 0) : DateTime(year + 1, 1, 0);
 }

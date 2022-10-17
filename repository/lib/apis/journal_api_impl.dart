@@ -33,7 +33,7 @@ class JournalApiImpl extends JournalApi {
 
   @override
   Future<JournalModel> setJournal(JournalModel book) async {
-    if (book.memberList.isEmpty) {
+    if (book.members.isEmpty) {
       throw Exception("Member list cant be empty");
     }
     try {

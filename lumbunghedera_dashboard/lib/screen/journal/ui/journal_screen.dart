@@ -12,9 +12,10 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends BaseStateful<JournalScreen> {
+  final CustomPopupMenuController _controller = CustomPopupMenuController();
   String? selectedTopicId;
 
-  List<ConcensusMessageDataModel> bookMessageList = [];
+  List<ConcensusMessageDataModel> journalMessageList = [];
 
   Future<void> onRefresh() async {
     context.read<JournalCubit>().getJournal();
@@ -38,12 +39,13 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
     return MultiBlocListener(
       listeners: [
         journalListener(),
+        voteListener(),
       ],
       child: Builder(builder: (context) {
         final isLoading = context
             .select((JournalCubit element) => element.state is JournalLoading);
 
-        final bookList =
+        final journalList =
             context.select((JournalCubit element) => element.state.journalList);
 
         final user =
@@ -54,215 +56,118 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
           onRefresh: onRefresh,
           isLoading: isLoading,
           appBar: const CustomAppBar(),
+          bottomNavBar: const SizedBox(),
           onBack: () {
             setState(() {
               selectedTopicId = null;
             });
           },
-          sidebarChildren: sidebarListWidget(bookList),
-          mainChild: bookInfoWidget(),
-          onCreateTap: (user?.isAdmin() ?? false)
-              ? () => context.push("${Routes.journal}/${Routes.create}")
-              : null,
+          sidebarChildren: sidebarListWidget(journalList),
+          mainChild: journalInfoWidget(),
+          // onCreateTap: (user?.isAdmin() ?? false)
+          //     ? () => context.push(Routes.createCashbonJournal)
+          //     : null,
+          customButton: createButtonWidget(),
         );
       }),
     );
   }
 
-  List<Widget> sidebarListWidget(List<JournalModel> books) {
-    return books
-        .map(
-          (book) => InkWell(
-            onTap: () {
-              setState(() {
-                selectedTopicId = book.topicId;
-              });
-              // context.read<JournalCubit>().getJournalMessageData(book.topicId);
-              Router.neglect(
-                context,
-                () => context.go("${Routes.journal}?id=${book.topicId}"),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 10,
-              ),
-              margin: const EdgeInsets.only(
-                bottom: 10,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).appBarTheme.backgroundColor,
-                borderRadius: BorderRadius.circular(5),
-                gradient: selectedTopicId == book.topicId
-                    ? LinearGradient(
-                        stops: const [0.02, 0.02],
-                        colors: [
-                          Colors.orange,
-                          Theme.of(context).appBarTheme.backgroundColor!
-                        ],
-                      )
-                    : null,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    book.title,
+  CustomPopupMenu createButtonWidget() {
+    return CustomPopupMenu(
+      menuBuilder: () => Builder(builder: (context) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: Container(
+            color: Theme.of(context).appBarTheme.backgroundColor,
+            padding: const EdgeInsets.all(20),
+            width: 300,
+            // height: 300,
+            child: Column(
+              children: [
+                ListTile(
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.orange,
+                  ),
+                  title: Text(
+                    'Create Cashbon Journal',
                     style: Styles.commonTextStyle(
-                      size: 16,
-                      fontWeight: FontWeight.bold,
+                      size: 18,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    book.description,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  onTap: () {
+                    _controller.hideMenu();
+                    context.push(
+                        "${Routes.journal}/${Routes.createCashbonJournal}");
+                  },
+                ),
+                const SizedBox(height: 5),
+                const Divider(
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 5),
+                ListTile(
+                  title: Text(
+                    'Create Vote Journal',
                     style: Styles.commonTextStyle(
-                      size: 14,
+                      size: 18,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Chip(
-                    label: Text(
-                      book.type,
-                      style: Styles.commonTextStyle(
-                        size: 12,
-                        color: Colors.white,
-                      ),
-                    ),
-                    backgroundColor: Colors.orange,
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.orange,
                   ),
-                ],
-              ),
-            ),
-          ),
-        )
-        .toList();
-  }
+                  onTap: () {
+                    _controller.hideMenu();
 
-  Builder bookInfoWidget() {
-    return Builder(builder: (context) {
-      final isLoading = context.select(
-          (JournalCubit element) => element.state is JournalMessageLoading);
-
-      final bookSelected = context.select((JournalCubit element) => element
-          .state.journalList
-          .firstWhereOrNull((element) => element.topicId == selectedTopicId));
-
-      // final subWalletSelected = context.select((SubWalletCubit element) =>
-      //     element.state.subWalletList.firstWhereOrNull((element) =>
-      //         element.accountId == bookSelected?.subWalletId));
-
-      if (bookSelected == null) {
-        return Center(
-          child: Text(
-            "No Item Selected",
-            textAlign: TextAlign.center,
-            style: Styles.commonTextStyle(
-              size: 18,
+                    context
+                        .push("${Routes.journal}/${Routes.createVoteJournal}");
+                  },
+                ),
+              ],
             ),
           ),
         );
-      }
+      }),
+      pressType: PressType.singleClick,
+      verticalMargin: -5,
+      controller: _controller,
+      position: PreferredPosition.top,
+      barrierColor: Colors.black.withOpacity(.7),
+      child: const CircleAvatar(
+        radius: 25,
+        backgroundColor: Colors.orange,
+        child: Icon(
+          Icons.add,
+        ),
+      ),
+    );
+  }
 
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  bookSelected.title,
-                  style: Styles.commonTextStyle(
-                    size: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Chip(
-                label: Text(
-                  bookSelected.type,
-                  style: Styles.commonTextStyle(
-                    size: 16,
-                    color: Colors.white,
-                  ),
-                ),
-                backgroundColor: Colors.orange,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            bookSelected.description,
-            style: Styles.commonTextStyle(
-              size: 14,
-            ),
-          ),
-          const SizedBox(height: 5),
-          const Divider(),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Hedera Consensus Service",
-                  style: Styles.commonTextStyle(
-                    size: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              RoundedButton(
-                text: "View Data",
-                selected: true,
-                isSmall: true,
-                selectedColor: Colors.orange,
-                onPressed: () {
-                  context.push(
-                      "${Routes.journal}/${Routes.concensus}/$selectedTopicId");
-                },
-              ),
-              const SizedBox(width: 10),
-              RoundedButton(
-                text: "Track Explorer",
-                selected: true,
-                isSmall: true,
-                selectedColor: Colors.orange,
-                onPressed: () {
-                  launchUrlString(
-                      "${HederaUtils.getHederaExplorerUrl()}/search-details/topic/$selectedTopicId");
-                },
-              ),
-            ],
-          ),
-          // Expanded(
-          //   child: CustomTableWidget2(
-          //     title: 'Hedera Consensus Service',
-          //     isLoading: isLoading,
-          //     isWithPadding: false,
-          //     buttonList: [],
-          //     columns: const [
-          //       "Sequence Number",
-          //       "Message",
-          //     ],
-          //     rows: bookMessageList.map((bookMessage) {
-          //       return [
-          //         formatNumber(bookMessage.topicSequenceNumber.toString()),
-          //         bookMessage.data,
-          //       ];
-          //     }).toList(),
-          //   ),
-          // ),
-          const SizedBox(height: 10),
-        ],
-      );
-    });
+  List<Widget> sidebarListWidget(List<JournalModel> journals) {
+    return journals
+        .map((journal) => SingleJournalWidget(
+              journal: journal,
+              onTap: () {
+                setState(() {
+                  selectedTopicId = journal.topicId;
+                });
+                // context.read<JournalCubit>().getJournalMessageData(book.topicId);
+                Router.neglect(
+                  context,
+                  () => context.go("${Routes.journal}?id=${journal.topicId}"),
+                );
+              },
+              isSelected: selectedTopicId == journal.topicId,
+            ))
+        .toList();
+  }
+
+  Widget journalInfoWidget() {
+    return DetailJournalWidget(
+      selectedId: selectedTopicId ?? "",
+    );
   }
 
   BlocListener<JournalCubit, JournalState> journalListener() {
@@ -281,7 +186,7 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
         }
         if (state is GetJournalMessageDataSuccess) {
           setState(() {
-            bookMessageList = state.data;
+            journalMessageList = state.data;
           });
         }
         if (state is ExportJournalFailed) {
@@ -290,6 +195,25 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
         if (state is SetJournalSuccess) {
           onRefresh();
         } else if (state is JournalFailed) {
+          showSnackBar(state.message, isError: true);
+        }
+      },
+    );
+  }
+
+  BlocListener<VoteCubit, VoteState> voteListener() {
+    return BlocListener<VoteCubit, VoteState>(
+      listener: (context, state) {
+        if (state is VoteSubmitLoading) {
+          loading = LoadingUtil.build(context);
+          loading?.show();
+        } else {
+          loading?.dismiss();
+        }
+
+        if (state is VoteSubmitSuccess) {
+          // onRefresh();
+        } else if (state is VoteFailed) {
           showSnackBar(state.message, isError: true);
         }
       },

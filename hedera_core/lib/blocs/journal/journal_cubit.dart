@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:hedera_core/apis/concensus_api.dart';
 import 'package:hedera_core/apis/journal_api.dart';
+import 'package:lumbung_common/api/hedera/job_api.dart';
+import 'package:lumbung_common/model/hedera/job_model.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,28 +16,30 @@ part 'journal_state.dart';
 class JournalCubit extends Cubit<JournalState> {
   final JournalApi journalApi;
   final ConcensusApi concensusApi;
+  final JobApi jobApi;
   JournalCubit({
     required this.journalApi,
     required this.concensusApi,
+    required this.jobApi,
   }) : super(JournalInitial());
 
-  Future<void> changeSelectedData(JournalModel? book) async {
+  Future<void> changeSelectedData(JournalModel? journal) async {
     emit(GetJournalSuccess(
       journalList: state.journalList,
-      selectedJournal: book,
+      selectedJournal: journal,
     ));
   }
 
-  Future<void> setJournal(JournalModel book) async {
+  Future<void> setJournal(JobRequestModel jobReq) async {
     emit(SubmitJournalLoading(
       journalList: state.journalList,
       selectedJournal: state.selectedJournal,
     ));
 
-    await journalApi.setJournal(book).then((value) {
+    jobApi.submitJobRequest(jobReq).then((value) {
       emit(SetJournalSuccess(
         journalList: state.journalList,
-        selectedJournal: value,
+        selectedJournal: state.selectedJournal,
       ));
     }).catchError((e, s) {
       Log.setLog("$e $s", method: "setSubWallet Bloc");

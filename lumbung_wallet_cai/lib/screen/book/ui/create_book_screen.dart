@@ -14,7 +14,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController limitController = TextEditingController();
 
-  List<MemberModel> memberBookList = [];
+  List<MemberModel> memberList = [];
 
   HederaWallet? activeWallet;
   List<HederaWallet> walletSelectedList = [];
@@ -37,10 +37,15 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
       subWalletId: subWalletSelected?.id ?? "-",
       title: titleController.text,
       description: descriptionController.text,
-      memberList: memberBookList,
       network: "",
       type: bookType,
       state: JournalModel.activeState,
+      members: memberList.map((e) => e.email).toList(),
+      additionalData: CashbonAdditionalDataModel(
+        amount: 0,
+        memberList: memberList,
+        effectiveDate: DateTime.now(),
+      ).toMap(),
     );
 
     context.read<JournalCubit>().setJournal(book);
@@ -283,7 +288,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
                       setState(() {
                         if (activeWallet != null) {
                           walletSelectedList.add(activeWallet!);
-                          memberBookList.add(
+                          memberList.add(
                             MemberModel(
                                 email: activeWallet?.email ?? "",
                                 name: activeWallet?.displayName ?? "",
@@ -307,7 +312,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              if (memberBookList.isEmpty)
+              if (memberList.isEmpty)
                 Center(
                   child: Text(
                     "Limit Payable Member List is Empty",
@@ -317,13 +322,13 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
                     ),
                   ),
                 ),
-              ...memberBookList
+              ...memberList
                   .map(
                     (book) => Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: Theme.of(context).buttonColor,
+                          color: Theme.of(context).dividerColor,
                           width: 1.0,
                         ),
                       ),
@@ -362,7 +367,7 @@ class _CreateBookScreenState extends BaseStateful<CreateBookScreen> {
                               setState(() {
                                 walletSelectedList.removeWhere(
                                     (element) => element.email == book.email);
-                                memberBookList.removeWhere(
+                                memberList.removeWhere(
                                     (element) => element.email == book.email);
                               });
                             },

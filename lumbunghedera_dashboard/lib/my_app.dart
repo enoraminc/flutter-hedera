@@ -1,5 +1,6 @@
 import 'package:hedera_core/blocs/job/job_cubit.dart';
 import 'package:hedera_core/blocs/journal/journal_cubit.dart';
+import 'package:hedera_core/blocs/vote/vote_cubit.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:hedera_core/apis/concensus_api.dart';
 
 import 'package:core_cai_v3/api/chat_message_api.dart';
 import 'package:lumbung_common/api/hedera/hedera_api.dart';
+import 'package:lumbung_common/api/hedera/journal_vote_api.dart';
 
 import 'package:hedera_core/blocs/auth/auth_bloc.dart';
 import 'package:lumbung_common/bloc/hedera/hedera_cubit.dart';
@@ -95,6 +97,13 @@ class _MyAppState extends State<MyApp> {
           create: (_) => JournalCubit(
             journalApi: locator.get<JournalApi>(),
             concensusApi: locator.get<ConcensusApi>(),
+            jobApi: locator.get<JobApi>(),
+          ),
+        ),
+        BlocProvider<VoteCubit>(
+          create: (_) => VoteCubit(
+            voteApi: locator.get<JournalVoteApi>(),
+            jobApi: locator.get<JobApi>(),
           ),
         ),
         BlocProvider<JobCubit>(

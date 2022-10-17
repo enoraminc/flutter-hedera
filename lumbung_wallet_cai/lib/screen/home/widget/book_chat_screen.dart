@@ -203,7 +203,7 @@ class _BookChatScreenState extends BaseChatScreen<BookChatScreen> {
   }
 
   @override
-  Widget getCustomMessageChatWidget(String msgType,ChatMessage message) {
+  Widget getCustomMessageChatWidget(ChatMessage message) {
     return Container();
   }
 }

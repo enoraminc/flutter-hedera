@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:hedera_core/blocs/auth/auth_bloc.dart';
 import 'package:hedera_core/blocs/job/job_cubit.dart';
 import 'package:hedera_core/blocs/main_wallet/main_wallet_cubit.dart';
@@ -27,3 +28,5 @@ import '../../shared_widget/rounded_button.dart';
 part 'ui/wallet_screen.dart';
 part 'ui/set_main_wallet_screen.dart';
 part 'ui/set_sub_wallet_screen.dart';
+
+part 'widget/sub_wallet_type_selector.dart';

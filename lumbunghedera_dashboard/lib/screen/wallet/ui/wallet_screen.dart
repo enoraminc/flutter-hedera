@@ -69,6 +69,7 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
             selectedId: selectedWalletId,
             onRefresh: onRefresh,
             appBar: const CustomAppBar(),
+            bottomNavBar: const SizedBox(),
             tabWidget: tabWidget(),
             isLoading: isLoading,
             customButton: createButtonWidget(),
@@ -275,7 +276,7 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
                   const SizedBox(height: 10),
                   Chip(
                     label: Text(
-                      wallet.accountId,
+                      wallet.type,
                       style: Styles.commonTextStyle(
                         size: 12,
                         color: Colors.white,
@@ -400,7 +401,7 @@ class _WalletScreenState extends BaseStateful<WalletScreen> {
               const SizedBox(width: 10),
               Chip(
                 label: Text(
-                  subWalletSelected.accountId,
+                  subWalletSelected.type,
                   style: Styles.commonTextStyle(
                     size: 16,
                     color: Colors.white,

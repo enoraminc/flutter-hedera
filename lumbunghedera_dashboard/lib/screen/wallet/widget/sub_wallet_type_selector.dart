@@ -1,10 +1,10 @@
-part of '../journal.dart';
+part of '../wallet.dart';
 
-class JournalTypeSelectorWidget extends StatelessWidget {
+class SubWalletTypeSelectorWidget extends StatelessWidget {
   final String? selectedType;
   final Function(String? type) onChange;
 
-  const JournalTypeSelectorWidget({
+  const SubWalletTypeSelectorWidget({
     super.key,
     required this.selectedType,
     required this.onChange,
@@ -17,7 +17,7 @@ class JournalTypeSelectorWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Journal Type",
+          "Sub Wallet Type",
           style: Styles.commonTextStyle(
             size: 18,
             fontWeight: FontWeight.bold,
@@ -72,12 +72,12 @@ class JournalTypeSelectorWidget extends StatelessWidget {
               dropdownSearchTextStyle:
                   Theme.of(context).primaryTextTheme.bodyText1,
               dropdownSearchDecoration: InputDecoration(
-                hintText: "Select Book Type",
+                hintText: "Select Sub Wallet Type",
                 contentPadding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
                 border: InputBorder.none,
                 hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
               ),
-              items: JournalModel.typeList.toList(),
+              items: HederaSubWallet.typeList.toList(),
               onChanged: onChange,
               itemAsString: (type) => type,
               selectedItem: selectedType,

@@ -189,7 +189,7 @@ class _SetSubWalletScreenState extends BaseStateful<SetSubWalletScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: Theme.of(context).buttonColor,
+                          color: Theme.of(context).dividerColor,
                           width: 1.0,
                         ),
                       ),

@@ -23,6 +23,7 @@ class CustomTextFormField extends StatelessWidget {
     this.prefix,
     required this.validator,
     this.fieldOnly = false,
+    this.onTap,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -40,6 +41,7 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffix;
   final Widget? prefix;
   final bool fieldOnly;
+  final Function()? onTap;
 
   final String? Function(String? t)? validator;
 
@@ -78,7 +80,7 @@ class CustomTextFormField extends StatelessWidget {
             color: Theme.of(context).appBarTheme.backgroundColor,
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             border: Border.all(
-              color: Theme.of(context).buttonColor,
+              color: Theme.of(context).dividerColor,
               width: 1.0,
             ),
           ),
@@ -117,6 +119,7 @@ class CustomTextFormField extends StatelessWidget {
                   autofocus: false,
                   onChanged: onChanged,
                   validator: validator,
+                  onTap: onTap,
                 ),
               ),
               suffix != null ? suffix! : const SizedBox(),

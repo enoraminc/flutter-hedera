@@ -1,14 +1,20 @@
 part of '../journal.dart';
 
-class CreateJournalScreen extends StatefulWidget {
-  const CreateJournalScreen({super.key});
+class CreateCashbonJournalScreen extends StatefulWidget {
+  const CreateCashbonJournalScreen({super.key});
 
   @override
-  State<CreateJournalScreen> createState() => _CreateJournalScreenState();
+  State<CreateCashbonJournalScreen> createState() =>
+      _CreateCashbonJournalScreenState();
 }
 
-class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
+class _CreateCashbonJournalScreenState
+    extends BaseStateful<CreateCashbonJournalScreen> {
   Future<void> onRefresh() async {
+    context.read<SubWalletCubit>().fetchSubWallet(
+          type: HederaSubWallet.kedaiType,
+        );
+
     await Future.delayed(const Duration(milliseconds: 100));
   }
 
@@ -17,14 +23,15 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController limitController = TextEditingController();
+  final TextEditingController effectiveDateController = TextEditingController();
+
+  DateTime? effectiveDate;
 
   List<MemberModel> memberList = [];
 
   HederaWallet? activeWallet;
   List<HederaWallet> walletSelectedList = [];
   HederaSubWallet? subWalletSelected;
-
-  String journalType = JournalModel.cashbonType;
 
   void onSave() {
     if (!_formKey.currentState!.validate()) {
@@ -35,47 +42,122 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
     //     context.read<MemberWalletCubit>().state.selectedWallet ??
     //         HederaWallet.empty();
 
-    final journal = JournalModel(
+    final journal = CashbonJournalModel(
       id: "",
       topicId: "",
       subWalletId: subWalletSelected?.id ?? "-",
-      title: titleController.text,
-      description: descriptionController.text,
+      title:
+          "${subWalletSelected?.title.replaceAll(" Wallet", "") ?? "-"} ${CustomDateUtils.monthOnly(effectiveDate)}",
+      description:
+          "Cashbon Journal for ${subWalletSelected?.title.replaceAll(" Wallet", "") ?? "-"} ${CustomDateUtils.monthOnly(effectiveDate)}",
       memberList: memberList,
+      effectiveDate: effectiveDate,
       network: "",
-      type: journalType,
+      type: JournalModel.cashbonType,
       state: JournalModel.activeState,
+      members: memberList.map((e) => e.email).toList(),
+      amount: 0,
+      additionalData: CashbonAdditionalDataModel(
+        amount: 0,
+        memberList: memberList,
+        effectiveDate: effectiveDate,
+      ).toMap(),
     );
 
-    context.read<JournalCubit>().setJournal(journal);
+    final jobRequest = JobRequestModel.createNewRequest(
+      type: JobRequestModel.createJournalType,
+      data: journal.toJobReqMap(),
+      users: [
+        journal.subWalletId,
+        ...journal.memberList.map((e) => e.email).toList()
+      ],
+    );
+
+    context.read<JournalCubit>().setJournal(jobRequest);
+  }
+
+  @override
+  void initState() {
+    onRefresh();
+    super.initState();
   }
 
   @override
   Widget body() {
-    return MultiBlocListener(
-      listeners: [
-        journalListener(),
-      ],
-      child: Form(
-        key: _formKey,
-        child: BaseScreen(
-          onRefresh: onRefresh,
-          appBar: _appBar(),
-          children: [
-            const SizedBox(height: 10),
-            setSubWalletWidget(),
-            const SizedBox(height: 15),
-            titleField(),
-            const SizedBox(height: 15),
-            descriptionField(),
-            const SizedBox(height: 15),
-            bookTypeField(),
-            const SizedBox(height: 15),
-            setLimitMemberWidget(),
-            const SizedBox(height: 20),
-            // messageListWidget(),
-          ],
+    return SafeArea(
+      child: MultiBlocListener(
+        listeners: [
+          journalListener(),
+        ],
+        child: Form(
+          key: _formKey,
+          child: BaseScreen(
+            onRefresh: onRefresh,
+            appBar: _appBar(),
+            children: [
+              // const SizedBox(height: 10),
+              setSubWalletWidget(),
+              // const SizedBox(height: 15),
+              // titleField(),
+              // const SizedBox(height: 15),
+              // descriptionField(),
+              effectiveDateField(),
+              // const SizedBox(height: 15),
+              setLimitMemberWidget(),
+              // const SizedBox(height: 20),
+
+              // messageListWidget(),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget effectiveDateField() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        // borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: CustomTextFormField(
+        controller: effectiveDateController,
+        text: "Valid Month",
+        keyboardType: TextInputType.text,
+        readOnly: true,
+        hint: "Valid month..",
+        onChanged: (value) {},
+        onTap: () {
+          showMonthPicker(
+            context: context,
+            // firstDate: DateTime(DateTime.now().year - 1, 5),
+            lastDate: DateTime.now().add(const Duration(days: 1000)),
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+          ).then((date) {
+            if (date != null) {
+              effectiveDate = DateTime(
+                date.lastDayOfMonth.year,
+                date.lastDayOfMonth.month,
+                date.lastDayOfMonth.day,
+                23,
+                59,
+                59,
+              );
+
+              effectiveDateController.text = CustomDateUtils.monthOnly(date);
+              setState(() {});
+            }
+          });
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Valid Month field is required';
+          }
+
+          return null;
+        },
       ),
     );
   }
@@ -84,7 +166,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).appBarTheme.backgroundColor,
-        borderRadius: BorderRadius.circular(5),
+        // borderRadius: BorderRadius.circular(5),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: CustomTextFormField(
@@ -108,7 +190,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).appBarTheme.backgroundColor,
-        borderRadius: BorderRadius.circular(5),
+        // borderRadius: BorderRadius.circular(5),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: CustomTextFormField(
@@ -125,26 +207,6 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
     );
   }
 
-  Widget bookTypeField() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).appBarTheme.backgroundColor,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: JournalTypeSelectorWidget(
-        onChange: (String? type) {
-          setState(() {
-            if (type?.isNotEmpty ?? false) {
-              journalType = type ?? "";
-            }
-          });
-        },
-        selectedType: journalType,
-      ),
-    );
-  }
-
   Builder setSubWalletWidget() {
     return Builder(
       builder: (context) {
@@ -157,7 +219,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).appBarTheme.backgroundColor,
-            borderRadius: BorderRadius.circular(5),
+            // borderRadius: BorderRadius.circular(5),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
@@ -165,7 +227,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Set Sub Wallet",
+                "Set Kedai",
                 style: Styles.commonTextStyle(
                   size: 18,
                   fontWeight: FontWeight.bold,
@@ -212,7 +274,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).appBarTheme.backgroundColor,
-            borderRadius: BorderRadius.circular(5),
+            // borderRadius: BorderRadius.circular(5),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
@@ -279,6 +341,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
                   RoundedButton(
                     text: "",
                     selected: true,
+                    isSmall: true,
                     icon: const Icon(
                       Icons.add,
                       color: Colors.white,
@@ -296,6 +359,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
                                         .replaceAll(".", "")) ??
                                     0),
                           );
+                          limitController.clear();
                         }
                         activeWallet = null;
                       });
@@ -328,7 +392,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: Theme.of(context).buttonColor,
+                          color: Theme.of(context).dividerColor,
                           width: 1.0,
                         ),
                       ),
@@ -390,7 +454,7 @@ class _CreateJournalScreenState extends BaseStateful<CreateJournalScreen> {
 
   Widget _appBar() {
     return CustomSecondAppBar(
-      title: "Create Journal",
+      title: "Create Cashbon Journal",
       onActionTap: onSave,
     );
   }

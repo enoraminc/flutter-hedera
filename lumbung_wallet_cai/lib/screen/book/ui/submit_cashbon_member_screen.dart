@@ -118,21 +118,21 @@ class _SubmitCashbonMemberScreenState
               ),
             ),
             const SizedBox(height: 10),
-            MainWalletSelector(
-              activeWallet: selectedWallet,
-              memberWalletList: (book?.memberList ?? [])
-                  .map((e) => HederaWallet.empty().copyWith(
-                        email: e.email,
-                        displayName: e.name,
-                        profileImage: "",
-                      ))
-                  .toList(),
-              onChange: (wallet) {
-                setState(() {
-                  selectedWallet = wallet;
-                });
-              },
-            ),
+            // MainWalletSelector(
+            //   activeWallet: selectedWallet,
+            //   memberWalletList: (book?.memberList ?? [])
+            //       .map((e) => HederaWallet.empty().copyWith(
+            //             email: e.email,
+            //             displayName: e.name,
+            //             profileImage: "",
+            //           ))
+            //       .toList(),
+            //   onChange: (wallet) {
+            //     setState(() {
+            //       selectedWallet = wallet;
+            //     });
+            //   },
+            // ),
           ],
         ),
       );
@@ -161,7 +161,7 @@ class _SubmitCashbonMemberScreenState
                 color: Theme.of(context).appBarTheme.backgroundColor,
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
                 border: Border.all(
-                  color: Theme.of(context).buttonColor,
+                  color: Theme.of(context).dividerColor,
                   width: 1.0,
                 ),
               ),

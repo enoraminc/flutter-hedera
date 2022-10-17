@@ -52,6 +52,11 @@ class DynamicTheme {
       highlightColor: AppColors.highlightLight,
       textSelectionTheme:
           TextSelectionThemeData(cursorColor: AppColors.blackColor),
+      colorScheme: ColorScheme.light(
+        primary: Colors.orange,
+      ),
+      dividerColor: Colors.grey.withOpacity(.6),
+      cardColor: AppColors.kGreyColor,
     );
   }
 
@@ -73,7 +78,7 @@ class DynamicTheme {
       tabBarTheme: TabBarTheme(
         labelStyle: TextStyles.tabLabelStyle(AppColors.kLightColor),
       ),
-      backgroundColor: AppColors.chatBGDark,
+      backgroundColor: Color(0xff12232D),
       inputDecorationTheme: InputDecorationTheme(
         border: InputBorder.none,
         hintStyle: TextStyles.hintStyle(AppColors.kLightColor.withOpacity(0.5)),
@@ -104,6 +109,11 @@ class DynamicTheme {
       highlightColor: AppColors.highlightDark,
       textSelectionTheme:
           TextSelectionThemeData(cursorColor: AppColors.kLightColor),
+      colorScheme: ColorScheme.dark(
+        primary: Colors.orange,
+      ),
+      dividerColor: Colors.grey.withOpacity(.6),
+      cardColor: AppColors.appBarDark,
     );
   }
 }

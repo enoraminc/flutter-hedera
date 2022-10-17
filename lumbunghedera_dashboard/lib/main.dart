@@ -18,8 +18,8 @@ void main() async {
       hederaNetwork: HederaNetwork.testnet,
       appName: "Lumbung Hedera Dashboard",
       logoPath: "assets/logo.png",
-      versionNumber: '1.0.6',
-      versionDate: "23 September 2022",
+      versionNumber: '1.0.7',
+      versionDate: "17 October 2022",
       rempahApiUrl:
           "https://rempah-prod-dot-lumbungdemo.as.r.appspot.com/_api/lumbungrempah",
       // hederaApiUrl:

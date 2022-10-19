@@ -96,7 +96,6 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<JournalCubit>(
           create: (_) => JournalCubit(
             journalApi: locator.get<JournalApi>(),
-            concensusApi: locator.get<ConcensusApi>(),
             jobApi: locator.get<JobApi>(),
           ),
         ),

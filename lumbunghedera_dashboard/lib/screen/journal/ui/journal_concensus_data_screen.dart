@@ -13,8 +13,8 @@ enum ViewData {
 }
 
 class JournalConcensusDataScreen extends StatefulWidget {
-  const JournalConcensusDataScreen({super.key, required this.topicId});
-  final String topicId;
+  const JournalConcensusDataScreen({super.key, required this.journalId});
+  final String journalId;
 
   @override
   State<JournalConcensusDataScreen> createState() =>
@@ -30,7 +30,7 @@ class _JournalConcensusDataScreenState
   List<ConcensusMessageDataModel> concensusMessageDataList = [];
 
   Future<void> onRefresh() async {
-    context.read<JournalCubit>().getJournalMessageData(widget.topicId);
+    context.read<JournalCubit>().getJournalMessageData(widget.journalId);
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
@@ -41,9 +41,7 @@ class _JournalConcensusDataScreenState
         .read<JournalCubit>()
         .state
         .journalList
-        .firstWhereOrNull((element) => element.topicId == widget.topicId);
-
-   
+        .firstWhereOrNull((element) => element.id == widget.journalId);
 
     onRefresh();
     super.initState();
@@ -77,6 +75,11 @@ class _JournalConcensusDataScreenState
                 const SizedBox(height: 20),
               ] else if (currentJournal?.isVoteType() ?? false) ...[
                 VoteConcensusWidget(
+                  concensusMessageDataList: concensusMessageDataList,
+                ),
+                const SizedBox(height: 20),
+              ] else if (currentJournal?.isGoalType() ?? false) ...[
+                GoalConcensusWidget(
                   concensusMessageDataList: concensusMessageDataList,
                 ),
                 const SizedBox(height: 20),

@@ -85,4 +85,25 @@ class JournalApiImpl extends JournalApi {
       rethrow;
     }
   }
+
+  @override
+  Future<List<ConcensusMessageDataModel>> getJournalConcensusMessage(
+      String journalId) async {
+    try {
+      final data = await request(
+        '$url/journal/message?journalId=$journalId',
+        RequestType.get,
+        useToken: true,
+        firebase: firebase,
+      );
+
+      return data
+          .map<ConcensusMessageDataModel>(
+              (e) => ConcensusMessageDataModel.fromMap(e))
+          .toList();
+    } catch (e, s) {
+      Log.setLog("$e $s", method: "getJournalConcensusMessage");
+      rethrow;
+    }
+  }
 }

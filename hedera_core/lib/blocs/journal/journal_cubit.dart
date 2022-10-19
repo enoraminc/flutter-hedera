@@ -15,11 +15,9 @@ part 'journal_state.dart';
 
 class JournalCubit extends Cubit<JournalState> {
   final JournalApi journalApi;
-  final ConcensusApi concensusApi;
   final JobApi jobApi;
   JournalCubit({
     required this.journalApi,
-    required this.concensusApi,
     required this.jobApi,
   }) : super(JournalInitial());
 
@@ -115,13 +113,13 @@ class JournalCubit extends Cubit<JournalState> {
     });
   }
 
-  Future<void> getJournalMessageData(String topicId) async {
+  Future<void> getJournalMessageData(String journalId) async {
     emit(JournalMessageLoading(
       journalList: state.journalList,
       selectedJournal: state.selectedJournal,
     ));
 
-    await concensusApi.getConcensusMessageData(topicId).then((value) {
+    await journalApi.getJournalConcensusMessage(journalId).then((value) {
       Log.setLog(
         "Total Book Message : ${value.length}",
         method: "getBookMessageData Bloc",

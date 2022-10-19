@@ -1,27 +1,37 @@
 part of '../journal.dart';
 
-class CreateVoteJournalScreen extends StatefulWidget {
-  const CreateVoteJournalScreen({super.key});
+class CreateGoalJournalScreen extends StatefulWidget {
+  const CreateGoalJournalScreen({super.key});
 
   @override
-  State<CreateVoteJournalScreen> createState() =>
-      _CreateVoteJournalScreenState();
+  State<CreateGoalJournalScreen> createState() =>
+      _CreateGoalJournalScreenState();
 }
 
-class _CreateVoteJournalScreenState
-    extends BaseStateful<CreateVoteJournalScreen> {
+class _CreateGoalJournalScreenState
+    extends BaseStateful<CreateGoalJournalScreen> {
   Future<void> onRefresh() async {
-    context.read<SubWalletCubit>().fetchSubWallet(
-          type: HederaSubWallet.voteType,
-        );
+    context
+        .read<SubWalletCubit>()
+        .fetchSubWallet(
+          type: HederaSubWallet.goalType,
+        )
+        .then((value) async {
+      await Future.delayed(const Duration(milliseconds: 100));
+      setState(() {
+        subWalletSelected =
+            context.read<SubWalletCubit>().state.subWalletList.firstOrNull;
+      });
+    });
 
     await Future.delayed(const Duration(milliseconds: 100));
   }
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController batchDateController = TextEditingController();
+
+  DateTime? batchDate;
 
   HederaSubWallet? subWalletSelected;
 
@@ -34,23 +44,24 @@ class _CreateVoteJournalScreenState
     //     context.read<MemberWalletCubit>().state.selectedWallet ??
     //         HederaWallet.empty();
 
-    final journal = VoteJournalModel(
+    final journal = GoalJournalModel(
       id: "",
       topicId: "",
-      network: "",
       subWalletId: subWalletSelected?.id ?? "-",
-      title: titleController.text,
-      description: descriptionController.text,
-      type: JournalModel.voteType,
+      title: "Goal Batch ${CustomDateUtils.monthOnly(batchDate)}",
+      description:
+          "Goal Journal Batch for ${CustomDateUtils.monthOnly(batchDate)}",
+      network: "",
+      type: JournalModel.goalType,
       state: JournalModel.activeState,
-      members: subWalletSelected?.users ?? [],
-      isEncrypted: false,
-      additionalData: VoteAdditionalDataModel(
+      members: [
+        subWalletSelected?.id ?? "-",
+      ],
+      isEncrypted: true,
+      additionalData: GoalAdditionalDataModel(
         refId: "",
-        participant: subWalletSelected?.users ?? [],
       ).toMap(),
-      refId: '',
-      participant: subWalletSelected?.users ?? [],
+      refId: "",
     );
 
     final jobRequest = JobRequestModel.createNewRequest(
@@ -58,7 +69,6 @@ class _CreateVoteJournalScreenState
       data: journal.toJobReqMap(),
       users: [
         journal.subWalletId,
-        ...journal.members,
       ],
     );
 
@@ -84,14 +94,8 @@ class _CreateVoteJournalScreenState
             onRefresh: onRefresh,
             appBar: _appBar(),
             children: [
-              // const SizedBox(height: 10),
               setSubWalletWidget(),
-              const SizedBox(height: 15),
-              titleField(),
-              const SizedBox(height: 15),
-              descriptionField(),
-              const SizedBox(height: 15),
-              // const SizedBox(height: 20),
+              batchDateField(),
 
               // messageListWidget(),
             ],
@@ -101,7 +105,7 @@ class _CreateVoteJournalScreenState
     );
   }
 
-  Widget titleField() {
+  Widget batchDateField() {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).appBarTheme.backgroundColor,
@@ -109,37 +113,40 @@ class _CreateVoteJournalScreenState
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: CustomTextFormField(
-        controller: titleController,
-        text: "Title",
+        controller: batchDateController,
+        text: "Batch Month",
         keyboardType: TextInputType.text,
-        hint: "title..",
+        readOnly: true,
+        hint: "Batch Month..",
         onChanged: (value) {},
+        onTap: () {
+          showMonthPicker(
+            context: context,
+            // firstDate: DateTime(DateTime.now().year - 1, 5),
+            lastDate: DateTime.now().add(const Duration(days: 1000)),
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+          ).then((date) {
+            if (date != null) {
+              batchDate = DateTime(
+                date.lastDayOfMonth.year,
+                date.lastDayOfMonth.month,
+                date.lastDayOfMonth.day,
+                23,
+                59,
+                59,
+              );
+
+              batchDateController.text = CustomDateUtils.monthOnly(date);
+              setState(() {});
+            }
+          });
+        },
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Title field is required';
+            return 'Valid Month field is required';
           }
 
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget descriptionField() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).appBarTheme.backgroundColor,
-        // borderRadius: BorderRadius.circular(5),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: CustomTextFormField(
-        controller: descriptionController,
-        text: "Description",
-        keyboardType: TextInputType.multiline,
-        maxLines: 5,
-        hint: "description..",
-        onChanged: (value) {},
-        validator: (value) {
           return null;
         },
       ),
@@ -166,7 +173,7 @@ class _CreateVoteJournalScreenState
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Set Kedai",
+                "Set Sub Wallet",
                 style: Styles.commonTextStyle(
                   size: 18,
                   fontWeight: FontWeight.bold,
@@ -203,7 +210,7 @@ class _CreateVoteJournalScreenState
 
   Widget _appBar() {
     return CustomSecondAppBar(
-      title: "Create Vote Journal",
+      title: "Create Goal Journal",
       onActionTap: onSave,
     );
   }

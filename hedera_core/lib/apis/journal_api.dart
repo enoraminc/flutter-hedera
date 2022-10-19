@@ -9,6 +9,9 @@ abstract class JournalApi extends BaseRepository {
   Future<JournalModel> setJournal(JournalModel book);
   Future<List<JournalModel>> getJournal({String? subWalletId});
 
+  Future<List<ConcensusMessageDataModel>> getJournalConcensusMessage(
+      String journalId);
+
   Future<CashbonJournalItemModel> submitCashbonMember({
     required String bookId,
     required int amount,

@@ -120,7 +120,7 @@ class DetailJournalWidget extends StatelessWidget {
                   selectedColor: Colors.orange,
                   onPressed: () {
                     context.push(
-                        "${Routes.journal}/${Routes.concensus}/$selectedId");
+                        "${Routes.journal}/${Routes.concensus}/${journalSelected.id}");
                   },
                 ),
                 const SizedBox(width: 10),

@@ -24,11 +24,13 @@ import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumbung_common/model/hedera/job_model.dart';
+import 'package:collection/collection.dart';
 
 import 'package:lumbung_common/model/user.dart';
 import 'package:lumbung_common/model/hedera/wallet.dart';
 import 'package:lumbung_common/model/hedera/cashbon_journal_model.dart';
 import 'package:lumbung_common/model/hedera/vote_journal_model.dart';
+import 'package:lumbung_common/model/hedera/journal_goal_model.dart';
 
 import '../../core/base/base_stateless.dart';
 import '../../core/routes/routes.dart';
@@ -47,6 +49,7 @@ part 'ui/journal_concensus_data_screen.dart';
 part 'ui/journal_screen.dart';
 part 'ui/create_cashbon_journal_screen.dart';
 part 'ui/create_vote_journal_screen.dart';
+part 'ui/create_goal_journal_screen.dart';
 
 part 'widget/journal_type_selector_widget.dart';
 part 'widget/detail_journal_widget.dart';
@@ -54,3 +57,4 @@ part 'widget/single_journal_widget.dart';
 part 'widget/cashbon_concensus_widget.dart';
 part 'widget/vote_concensus_widget.dart';
 part 'widget/journal_member_list_widget.dart';
+part 'widget/goal_concensus_widget.dart';

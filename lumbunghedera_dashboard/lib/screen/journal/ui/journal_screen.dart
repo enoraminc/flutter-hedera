@@ -125,6 +125,29 @@ class _JournalScreenState extends BaseStateful<JournalScreen> {
                         .push("${Routes.journal}/${Routes.createVoteJournal}");
                   },
                 ),
+                const SizedBox(height: 5),
+                const Divider(
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 5),
+                ListTile(
+                  title: Text(
+                    'Create Goal Journal',
+                    style: Styles.commonTextStyle(
+                      size: 18,
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.orange,
+                  ),
+                  onTap: () {
+                    _controller.hideMenu();
+
+                    context
+                        .push("${Routes.journal}/${Routes.createGoalJournal}");
+                  },
+                ),
               ],
             ),
           ),

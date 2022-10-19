@@ -26,6 +26,7 @@ class Routes {
   static String journal = "/journal";
   static String createCashbonJournal = "cashbon/$create";
   static String createVoteJournal = "vote/$create";
+  static String createGoalJournal = "goal/$create";
 
   static String job = "/job";
 
@@ -92,7 +93,7 @@ class Routes {
                 path: "$concensus/:id",
                 builder: (BuildContext context, GoRouterState state) {
                   final id = state.params["id"] ?? "";
-                  return JournalConcensusDataScreen(topicId: id);
+                  return JournalConcensusDataScreen(journalId: id);
                 },
               ),
               GoRoute(
@@ -105,6 +106,12 @@ class Routes {
                 path: createVoteJournal,
                 builder: (BuildContext context, GoRouterState state) {
                   return const CreateVoteJournalScreen();
+                },
+              ),
+              GoRoute(
+                path: createGoalJournal,
+                builder: (BuildContext context, GoRouterState state) {
+                  return const CreateGoalJournalScreen();
                 },
               ),
             ],

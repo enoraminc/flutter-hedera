@@ -50,18 +50,19 @@ class _CreateCashbonJournalScreenState
           "${subWalletSelected?.title.replaceAll(" Wallet", "") ?? "-"} ${CustomDateUtils.monthOnly(effectiveDate)}",
       description:
           "Cashbon Journal for ${subWalletSelected?.title.replaceAll(" Wallet", "") ?? "-"} ${CustomDateUtils.monthOnly(effectiveDate)}",
-      memberList: memberList,
-      effectiveDate: effectiveDate,
       network: "",
       type: JournalModel.cashbonType,
       state: JournalModel.activeState,
       members: memberList.map((e) => e.email).toList(),
-      amount: 0,
+      isEncrypted: false,
       additionalData: CashbonAdditionalDataModel(
         amount: 0,
         memberList: memberList,
         effectiveDate: effectiveDate,
       ).toMap(),
+      amount: 0,
+      memberList: memberList,
+      effectiveDate: effectiveDate,
     );
 
     final jobRequest = JobRequestModel.createNewRequest(
